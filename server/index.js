@@ -82,34 +82,83 @@ function generateOTP() {
 
 /* ================= AUTH ================= */
 
+
 app.post('/api/auth/send-otp', async (req, res) => {
   const { email } = req.body;
+  
+  console.log('📧 OTP request for:', email);
 
-  if (email !== 'debpriya3011@gmail.com')
+  if (email !== 'debpriya3011@gmail.com') {
+    console.log('❌ Unauthorized email:', email);
     return res.status(403).json({ error: 'Unauthorized email' });
+  }
 
   const otp = generateOTP();
   const expiry = Date.now() + 10 * 60 * 1000;
 
   try {
-    await db.query(
-      `UPDATE users SET otp=$1, otp_expires=$2 WHERE email=$3`,
+    console.log('🔐 Generated OTP:', otp, 'for:', email);
+    
+    // First, check if user exists
+    const userCheck = await db.query(`SELECT * FROM users WHERE email=$1`, [email]);
+    console.log('👤 User check result:', userCheck.rows);
+
+    // Update or insert OTP
+    const result = await db.query(
+      `UPDATE users SET otp=$1, otp_expires=$2 WHERE email=$3 RETURNING *`,
       [otp, expiry, email]
     );
+    console.log('✅ Database update result:', result.rows);
 
-    await transporter.sendMail({
+    // Send email
+    console.log('📨 Attempting to send email via Gmail...');
+    const mailResult = await transporter.sendMail({
       from: process.env.GMAIL_USER,
       to: email,
       subject: '🔐 Your Login OTP',
       html: `<h2>Your OTP: ${otp}</h2><p>Valid for 10 minutes</p>`
     });
+    console.log('✅ Email sent successfully:', mailResult.messageId);
 
     res.json({ success: true, message: 'OTP sent' });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Failed to send OTP' });
+    console.error('❌ OTP Error Details:', {
+      message: err.message,
+      stack: err.stack,
+      code: err.code
+    });
+    res.status(500).json({ error: 'Failed to send OTP: ' + err.message });
   }
 });
+
+// app.post('/api/auth/send-otp', async (req, res) => {
+//   const { email } = req.body;
+
+//   if (email !== 'debpriya3011@gmail.com')
+//     return res.status(403).json({ error: 'Unauthorized email' });
+
+//   const otp = generateOTP();
+//   const expiry = Date.now() + 10 * 60 * 1000;
+
+//   try {
+//     await db.query(
+//       `UPDATE users SET otp=$1, otp_expires=$2 WHERE email=$3`,
+//       [otp, expiry, email]
+//     );
+
+//     await transporter.sendMail({
+//       from: process.env.GMAIL_USER,
+//       to: email,
+//       subject: '🔐 Your Login OTP',
+//       html: `<h2>Your OTP: ${otp}</h2><p>Valid for 10 minutes</p>`
+//     });
+
+//     res.json({ success: true, message: 'OTP sent' });
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).json({ error: 'Failed to send OTP' });
+//   }
+// });
 
 app.post('/api/auth/verify-otp', async (req, res) => {
   const { email, otp } = req.body;
