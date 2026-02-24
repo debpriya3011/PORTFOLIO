@@ -39,7 +39,7 @@ export default function Posts() {
 
   const fetchPosts = async () => {
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/posts`);
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/posts`);
       if (response.ok) {
         const data = await response.json();
         console.log('Fetched posts:', data); // Debug: check the data format

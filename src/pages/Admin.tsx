@@ -245,7 +245,7 @@ function LinkedInPostManager() {
   const fetchPosts = async () => {
     setFetching(true);
     try {
-      const response = await fetch(`${API_BASE_URL}/posts`);
+      const response = await fetch(`${API_BASE_URL}/api/posts`);
       if (!response.ok) throw new Error('Failed to fetch');
       const data = await response.json();
       setPosts(data);
@@ -295,7 +295,7 @@ function LinkedInPostManager() {
     if (!scrapedData) return;
 
     try {
-      const response = await fetch(`${API_BASE_URL}/posts`, {
+      const response = await fetch(`${API_BASE_URL}/api/posts`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -327,7 +327,7 @@ function LinkedInPostManager() {
 
   const deletePost = async (id: number) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/posts/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/api/posts/${id}`, {
         method: 'DELETE'
       });
       if (!response.ok) throw new Error('Failed to delete');
