@@ -158,7 +158,7 @@ function LoginForm({ onLogin }: { onLogin: () => void }) {
           </div>
           <h1 className="text-2xl font-bold">Admin Login</h1>
           <p className="text-muted-foreground mt-2">
-            OTP will be sent to your Gmail
+            OTP will be sent to your Email
           </p>
         </div>
 
@@ -171,7 +171,7 @@ function LoginForm({ onLogin }: { onLogin: () => void }) {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="debpriya3011@gmail.com"
+                placeholder="abcd@gmail.com"
                 className="pl-10"
                 disabled={otpSent}
               />
