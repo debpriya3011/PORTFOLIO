@@ -303,7 +303,7 @@ function LinkedInPostManager() {
           author_name: scrapedData.author_name,
           author_image: scrapedData.author_image || '',
           content: scrapedData.content,
-          images: JSON.stringify(scrapedData.images || []),
+          images: scrapedData.images || [] ,
           likes: scrapedData.likes || 0,
           comments: scrapedData.comments || 0,
           comments_data: JSON.stringify(scrapedData.comments_data || [])

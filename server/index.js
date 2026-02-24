@@ -319,6 +319,16 @@ app.get('/api/scrape-linkedin', async (req, res) => {
       date: c.datePublished
     }));
 
+    let images = [];
+
+    if (Array.isArray(jsonLdData.image)) {
+      images = jsonLdData.image.map(i => i.url || i);
+    } else if (typeof jsonLdData.image === "object" && jsonLdData.image !== null) {
+      images = [jsonLdData.image.url];
+    } else if (typeof jsonLdData.image === "string") {
+      images = [jsonLdData.image];
+    }
+
     res.json({
       success: true,
       author_name: author,
@@ -327,7 +337,7 @@ app.get('/api/scrape-linkedin', async (req, res) => {
       likes: likes || 0,
       comments: commentsCount || 0,
       comments_data: commentsData,   // 🔥 THIS WAS MISSING
-      images: jsonLdData.image?.map(i => i.url) || []
+      images: images
     });
 
   } catch (error) {
