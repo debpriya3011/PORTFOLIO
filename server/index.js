@@ -124,7 +124,7 @@ app.post('/api/auth/send-otp', async (req, res) => {
     // Send email via Brevo
     console.log('📨 Attempting to send email via Brevo...');
     const mailResult = await transporter.sendMail({
-      from: process.env.BREVO_LOGIN, // Your Brevo sender email
+      from: email, // Your Brevo sender email
       to: email,
       subject: '🔐 Your Admin Login OTP',
       html: `
