@@ -121,24 +121,55 @@ app.post('/api/auth/send-otp', async (req, res) => {
     );
     console.log('✅ Database update result:', result.rows);
 
-    // Send email
-    console.log('📨 Attempting to send email via Gmail...');
+    // Send email via Brevo
+    console.log('📨 Attempting to send email via Brevo...');
     const mailResult = await transporter.sendMail({
-      from: process.env.GMAIL_USER,
+      from: process.env.BREVO_LOGIN, // Your Brevo sender email
       to: email,
-      subject: '🔐 Your Login OTP',
-      html: `<h2>Your OTP: ${otp}</h2><p>Valid for 10 minutes</p>`
+      subject: '🔐 Your Admin Login OTP',
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eaeaea; border-radius: 10px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+          <div style="background: white; padding: 30px; border-radius: 8px;">
+            <h2 style="color: #333; text-align: center; margin-bottom: 20px;">Admin Login Verification</h2>
+            <p style="font-size: 16px; color: #666; text-align: center;">Your One-Time Password (OTP) is:</p>
+            <div style="background: linear-gradient(135deg, #8b5cf6, #d946ef); padding: 20px; border-radius: 8px; text-align: center; margin: 20px 0;">
+              <h1 style="color: white; font-size: 48px; letter-spacing: 8px; margin: 0; font-family: monospace;">${otp}</h1>
+            </div>
+            <p style="font-size: 14px; color: #999; text-align: center;">This OTP is valid for <strong>10 minutes</strong>.</p>
+            <hr style="border: none; border-top: 1px solid #eaeaea; margin: 20px 0;">
+            <p style="font-size: 12px; color: #999; text-align: center;">If you didn't request this login, please ignore this email.</p>
+          </div>
+        </div>
+      `
     });
-    console.log('✅ Email sent successfully:', mailResult.messageId);
+    
+    console.log('✅ Email sent successfully via Brevo:', mailResult.messageId);
+    console.log('📧 Email details:', {
+      to: mailResult.envelope.to,
+      from: mailResult.envelope.from,
+      messageId: mailResult.messageId
+    });
 
-    res.json({ success: true, message: 'OTP sent' });
+    res.json({ success: true, message: 'OTP sent successfully to your email' });
   } catch (err) {
     console.error('❌ OTP Error Details:', {
       message: err.message,
       stack: err.stack,
-      code: err.code
+      code: err.code,
+      command: err.command
     });
-    res.status(500).json({ error: 'Failed to send OTP: ' + err.message });
+    
+    // Provide more specific error messages
+    let errorMessage = 'Failed to send OTP';
+    if (err.code === 'ETIMEDOUT') {
+      errorMessage = 'Connection timeout - please try again';
+    } else if (err.code === 'EAUTH') {
+      errorMessage = 'Authentication failed - check SMTP credentials';
+    } else if (err.code === 'ESOCKET') {
+      errorMessage = 'Socket error - network issue';
+    }
+    
+    res.status(500).json({ error: errorMessage + ': ' + err.message });
   }
 });
 
