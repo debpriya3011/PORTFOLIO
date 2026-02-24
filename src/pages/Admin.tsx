@@ -588,7 +588,7 @@ function SkillsManager() {
   const fetchSkills = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`${API_BASE_URL}/skills`);
+      const response = await fetch(`${API_BASE_URL}/api/skills`);
       if (!response.ok) throw new Error('Failed to fetch');
       const data = await response.json();
       setSkills(data);
@@ -607,7 +607,7 @@ function SkillsManager() {
     }
 
     try {
-      const response = await fetch(`${API_BASE_URL}/skills`, {
+      const response = await fetch(`${API_BASE_URL}/api/skills`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -632,7 +632,7 @@ function SkillsManager() {
 
   const deleteSkill = async (id: number) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/skills/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/api/skills/${id}`, {
         method: 'DELETE'
       });
       if (!response.ok) throw new Error('Failed to delete');
