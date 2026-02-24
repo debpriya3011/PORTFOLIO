@@ -267,7 +267,7 @@ function LinkedInPostManager() {
 
     try {
       const response = await fetch(
-        `${API_BASE_URL}/scrape-linkedin?url=${encodeURIComponent(url)}`
+        `${API_BASE_URL}/api/scrape-linkedin?url=${encodeURIComponent(url)}`
       );
 
       if (!response.ok) {
