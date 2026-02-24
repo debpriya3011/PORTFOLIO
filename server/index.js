@@ -40,17 +40,28 @@ const PORT = process.env.PORT || 3001;
 
 /* ================= EMAIL ================= */
 
+// const transporter = nodemailer.createTransport({
+//   service: 'gmail',
+//   auth: {
+//     user: process.env.GMAIL_USER,
+//     pass: process.env.GMAIL_APP_PASSWORD
+//   }
+// });
+
+
 const transporter = nodemailer.createTransport({
-  service: 'gmail',
+  host: 'smtp-relay.brevo.com',
+  port: 587,
+  secure: false, // TLS
   auth: {
-    user: process.env.GMAIL_USER,
-    pass: process.env.GMAIL_APP_PASSWORD
+    user: process.env.BREVO_LOGIN, // Your Brevo login email
+    pass: process.env.BREVO_SMTP_KEY // Your SMTP key from Brevo
   }
 });
 
 transporter.verify()
-  .then(() => console.log('✅ Gmail SMTP ready'))
-  .catch(err => console.error('❌ Gmail Error:', err.message));
+  .then(() => console.log('✅ BREVO SMTP ready'))
+  .catch(err => console.error('❌ BREVO Error:', err.message));
 
 /* ================= UPLOADS ================= */
 
