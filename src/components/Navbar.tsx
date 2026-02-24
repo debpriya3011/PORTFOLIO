@@ -15,7 +15,7 @@ export default function Navbar() {
   const navLinks = [
     { path: '/', label: 'Home' },
     { path: '/posts', label: 'Posts' },
-    ...(isAuthenticated ? [{ path: '/admin', label: 'Admin' }] : []),
+    { path: '/admin', label: 'Admin' },
   ];
 
   return (
