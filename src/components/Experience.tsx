@@ -172,7 +172,7 @@ export default function Experience() {
 
   const fetchAndMergeExperience = async () => {
     try {
-      const response = await fetch('http://localhost:3001/api/experience');
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/experience`);
       if (response.ok) {
         const dbExperience = await response.json();
         // Combine default with database records
