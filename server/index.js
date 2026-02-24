@@ -28,7 +28,9 @@ app.use(cors({
 app.use(express.json());
 
 // Health check
-app.get('/health', (req, res) => res.json({ status: 'ok', time: new Date() }));
+app.get('/health', (req, res) => {
+  res.json({ status: 'ok', routes: ['education', 'certifications', 'experience', 'auth'] });
+});
 
 
 const PORT = process.env.PORT || 3001;
