@@ -237,8 +237,8 @@ export default function Education() {
   const fetchAndMergeEducation = async () => {
     try {
       const [educationRes, certificationsRes] = await Promise.all([
-        fetch(`${import.meta.env.VITE_API_URL}/education`),
-        fetch(`${import.meta.env.VITE_API_URL}/certifications`)
+        fetch(`${import.meta.env.VITE_API_URL}/api/education`),
+        fetch(`${import.meta.env.VITE_API_URL}/api/certifications`)
       ]);
 
       if (educationRes.ok) {
