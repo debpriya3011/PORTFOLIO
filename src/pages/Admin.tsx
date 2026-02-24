@@ -734,7 +734,7 @@ function ExperienceManager() {
   const fetchExperiences = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`${API_BASE_URL}/experience`);
+      const response = await fetch(`${API_BASE_URL}/api/experience`);
       if (!response.ok) throw new Error('Failed to fetch');
       const data = await response.json();
       setExperiences(data);
@@ -753,7 +753,7 @@ function ExperienceManager() {
     }
 
     try {
-      const response = await fetch(`${API_BASE_URL}/experience`, {
+      const response = await fetch(`${API_BASE_URL}/api/experience`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -782,7 +782,7 @@ function ExperienceManager() {
 
   const deleteExperience = async (id: number) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/experience/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/api/experience/${id}`, {
         method: 'DELETE'
       });
       if (!response.ok) throw new Error('Failed to delete');
