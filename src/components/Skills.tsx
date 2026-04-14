@@ -58,6 +58,9 @@ const defaultSkillCategories: SkillCategory[] = [
       { name: 'Microsoft PowerPoint', sources: 'B.P. Poddar, M.D.B.D.A.V, Accenture' },
       { name: 'Microsoft Excel', sources: 'Data Engineer, Software Engineer, Accenture, PwC' },
       { name: 'n8n', sources: 'Data Engineer, Software Engineer at Capsule Labs' },
+      { name: 'AWS', sources: 'Data Engineer at Capsule Labs' },
+      { name: 'Git', sources: 'Data Engineer at Capsule Labs' },
+      { name: 'Wordpress', sources: 'Data Engineer at Capsule Labs' },
     ]
   },
   {
@@ -70,6 +73,9 @@ const defaultSkillCategories: SkillCategory[] = [
       { name: 'Problem Solving', sources: 'Data Engineer, B.P. Poddar, Accenture' },
       { name: 'Communication', sources: 'Data Engineer, Software Engineer, B.P. Poddar, M.D.B.D.A.V' },
       { name: 'Analytical Skills', sources: 'Data Engineer, Software Engineer, Accenture' },
+      { name: 'Creative Problem Solving', sources: 'Data Engineer at Capsule Labs' },
+      { name: 'Critical Thinking', sources: 'Data Engineer at Capsule Labs' },
+      { name: 'Research Skills', sources: 'Data Engineer at Capsule Labs' },
     ]
   },
   {
