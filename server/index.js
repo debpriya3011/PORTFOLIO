@@ -608,9 +608,18 @@ if (fs.existsSync(distPath)) {
 /* ================= SERVER ================= */
 
 app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
+  console.log(`\n🚀 Server running on port ${PORT}`);
+  console.log(`📁 Working directory: ${process.cwd()}`);
+  console.log(`📁 Server directory: ${__dirname}`);
   console.log(`📁 Uploads directory: ${uploadsDir}`);
+  console.log(`📁 Looking for dist at: ${distPath}`);
   if (fs.existsSync(distPath)) {
-    console.log(`📁 Serving static files from: ${distPath}`);
+    console.log(`✅ FOUND: Serving SPA from ${distPath}`);
+    const files = fs.readdirSync(distPath).slice(0, 5);
+    console.log(`📄 Sample files: ${files.join(', ')}`);
+  } else {
+    console.error(`❌ NOT FOUND: ${distPath}`);
+    console.error(`⚠️ Make sure to run: npm run build`);
   }
+  console.log('');
 });
