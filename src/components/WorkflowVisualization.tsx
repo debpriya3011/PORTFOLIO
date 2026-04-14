@@ -297,9 +297,9 @@ export default function WorkflowVisualization() {
           msOverflowStyle: 'none' // IE/Edge
         }}
       >
-        <style jsx>{`
+        <style>{`
           div::-webkit-scrollbar {
-            display: none; // Chrome/Safari
+            display: none; /* Chrome/Safari */
           }
         `}</style>
         {nodes.map((node, idx) => {

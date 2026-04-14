@@ -21,9 +21,6 @@ import {
   Upload,
   X,
   Save,
-  Calendar,
-  MapPin,
-  Building,
   User
 } from 'lucide-react';
 
