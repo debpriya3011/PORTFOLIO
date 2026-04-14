@@ -29,10 +29,10 @@ export default function Navbar() {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
-            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-violet-500 to-fuchsia-500 flex items-center justify-center">
-              <span className="text-white font-bold text-lg">D</span>
+            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-gradient-to-br from-violet-500 to-fuchsia-500 flex items-center justify-center">
+              <span className="text-white font-bold text-sm sm:text-lg">D</span>
             </div>
-            <span className="text-xl font-bold gradient-text hidden sm:block">Debpriya</span>
+            <span className="text-sm sm:text-xl font-bold gradient-text hidden sm:block">Debpriya</span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -79,7 +79,7 @@ export default function Navbar() {
                 <Linkedin className="w-5 h-5" />
               </a>
               <a
-                href="https://mail.google.com/mail/?view=cm&fs=1&to=debpriya3011@gmail.com"
+                href="mailto:debpriya3011@gmail.com"
                 className="p-2 rounded-lg hover:bg-muted transition-colors"
               >
                 <Mail className="w-5 h-5" />

@@ -275,7 +275,7 @@ export default function Education() {
             <span className="text-sm text-violet-500 font-medium">Background</span>
           </motion.div>
           
-          <h2 className="text-4xl font-bold mb-4">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4">
             Education & <span className="gradient-text">Certifications</span>
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
@@ -283,7 +283,7 @@ export default function Education() {
           </p>
         </motion.div>
 
-        <div className="grid lg:grid-cols-2 gap-12">
+        <div className="grid md:grid-cols-2 gap-8 md:gap-12">
           {/* Education Column */}
           <div>
             <h3 className="text-2xl font-bold mb-6 flex items-center gap-2">

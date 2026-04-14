@@ -347,17 +347,17 @@ function LinkedInPostManager() {
           <Linkedin className="w-5 h-5 text-violet-500" />
           Add LinkedIn Post
         </h3>
-        <div className="flex gap-4">
+        <div className="flex flex-col sm:flex-row gap-3">
           <Input
             value={url}
             onChange={(e) => setUrl(e.target.value)}
             placeholder="https://www.linkedin.com/posts/..."
-            className="flex-1"
+            className="flex-1 min-w-0"
           />
           <Button
             onClick={scrapePost}
             disabled={loading || !url}
-            className="bg-gradient-to-r from-violet-500 to-fuchsia-500"
+            className="bg-gradient-to-r from-violet-500 to-fuchsia-500 shrink-0"
           >
             {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <RefreshCw className="w-4 h-4" />}
             Preview
@@ -401,32 +401,38 @@ function LinkedInPostManager() {
               key={post.id}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="glass rounded-xl p-4 flex items-center justify-between"
+              className="glass rounded-xl p-4"
             >
-              <div className="flex items-center gap-4 flex-1">
-                {post.author_image ? (
-                  <img src={post.author_image} alt="" className="w-10 h-10 rounded-full object-cover" />
-                ) : (
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-r from-violet-500 to-fuchsia-500 flex items-center justify-center">
-                    <span className="text-white font-bold">{post.author_name?.[0] || 'U'}</span>
+              <div className="flex items-start gap-3">
+                <div className="flex-shrink-0">
+                  {post.author_image ? (
+                    <img src={post.author_image} alt="" className="w-10 h-10 rounded-full object-cover" />
+                  ) : (
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-r from-violet-500 to-fuchsia-500 flex items-center justify-center">
+                      <span className="text-white font-bold">{post.author_name?.[0] || 'U'}</span>
+                    </div>
+                  )}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="flex-1 min-w-0">
+                      <p className="font-medium truncate">{post.author_name || 'Unknown'}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {new Date(post.created_at).toLocaleDateString()}
+                      </p>
+                    </div>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => deletePost(post.id)}
+                      className="text-red-500 hover:text-red-600 flex-shrink-0"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
                   </div>
-                )}
-                <div className="flex-1">
-                  <p className="font-medium">{post.author_name || 'Unknown'}</p>
-                  <p className="text-sm text-muted-foreground line-clamp-2">{post.content}</p>
-                  <p className="text-xs text-muted-foreground mt-1">
-                    {new Date(post.created_at).toLocaleDateString()}
-                  </p>
+                  <p className="text-sm text-muted-foreground mt-2 line-clamp-3">{post.content}</p>
                 </div>
               </div>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => deletePost(post.id)}
-                className="text-red-500 hover:text-red-600"
-              >
-                <Trash2 className="w-4 h-4" />
-              </Button>
             </motion.div>
           ))
         )}
@@ -867,12 +873,12 @@ function ExperienceManager() {
                 key={exp.id}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="glass rounded-xl p-4 flex items-center justify-between"
+                className="glass rounded-xl p-4 flex items-center justify-between gap-2"
               >
-                <div>
-                  <p className="font-bold">{exp.role}</p>
-                  <p className="text-sm text-violet-500">{exp.company}</p>
-                  <p className="text-sm text-muted-foreground">
+                <div className="flex-1 min-w-0">
+                  <p className="font-bold truncate">{exp.role}</p>
+                  <p className="text-sm text-violet-500 truncate">{exp.company}</p>
+                  <p className="text-xs text-muted-foreground break-words">
                     {exp.start_date} - {exp.end_date || 'Present'} • {exp.location}
                   </p>
                 </div>
@@ -1113,31 +1119,33 @@ function AdminDashboard() {
           animate={{ opacity: 1, y: 0 }}
           className="mb-8"
         >
-          <h1 className="text-3xl font-bold">Admin Dashboard</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold">Admin Dashboard</h1>
           <p className="text-muted-foreground">Manage your portfolio content in Neon PostgreSQL</p>
         </motion.div>
 
         <Tabs defaultValue="posts" className="space-y-6">
-          <TabsList className="grid grid-cols-2 md:grid-cols-5 gap-2">
-            <TabsTrigger value="posts" className="flex items-center gap-2">
-              <Linkedin className="w-4 h-4" />
-              <span className="hidden sm:inline">Posts</span>
+          <TabsList className="flex w-full overflow-x-auto gap-1 h-auto p-1">
+            <TabsTrigger
+              value="posts"
+              className="flex items-center gap-2 text-xs py-2 px-3 whitespace-nowrap ml-9">
+              <Linkedin className="w-4 h-4 shrink-0" />
+              <span>Posts</span>
             </TabsTrigger>
-            <TabsTrigger value="images" className="flex items-center gap-2">
-              <ImageIcon className="w-4 h-4" />
-              <span className="hidden sm:inline">Images</span>
+            <TabsTrigger value="images" className="flex items-center gap-2 text-xs py-2 px-3 whitespace-nowrap">
+              <ImageIcon className="w-4 h-4 shrink-0" />
+              <span>Images</span>
             </TabsTrigger>
-            <TabsTrigger value="skills" className="flex items-center gap-2">
-              <Award className="w-4 h-4" />
-              <span className="hidden sm:inline">Skills</span>
+            <TabsTrigger value="skills" className="flex items-center gap-2 text-xs py-2 px-3 whitespace-nowrap">
+              <Award className="w-4 h-4 shrink-0" />
+              <span>Skills</span>
             </TabsTrigger>
-            <TabsTrigger value="experience" className="flex items-center gap-2">
-              <Briefcase className="w-4 h-4" />
-              <span className="hidden sm:inline">Experience</span>
+            <TabsTrigger value="experience" className="flex items-center gap-2 text-xs py-2 px-3 whitespace-nowrap">
+              <Briefcase className="w-4 h-4 shrink-0" />
+              <span>Exp</span>
             </TabsTrigger>
-            <TabsTrigger value="workflows" className="flex items-center gap-2">
-              <Workflow className="w-4 h-4" />
-              <span className="hidden sm:inline">Workflows</span>
+            <TabsTrigger value="workflows" className="flex items-center gap-2 text-xs py-2 px-3 whitespace-nowrap">
+              <Workflow className="w-4 h-4 shrink-0" />
+              <span>Flow</span>
             </TabsTrigger>
           </TabsList>
 

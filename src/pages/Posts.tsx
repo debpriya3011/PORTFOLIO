@@ -83,7 +83,7 @@ export default function Posts() {
             <Linkedin className="w-4 h-4 text-violet-500" />
             <span className="text-sm text-violet-500 font-medium">LinkedIn Posts</span>
           </div>
-          <h1 className="text-4xl font-bold mb-4">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4">
             My <span className="gradient-text">LinkedIn Activity</span>
           </h1>
           <p className="text-muted-foreground max-w-2xl mx-auto mb-6">

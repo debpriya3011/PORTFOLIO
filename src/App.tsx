@@ -13,15 +13,14 @@ function App() {
     <ThemeProvider>
       <AuthProvider>
         <Router>
-          <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
+          <div className="min-h-screen bg-background text-foreground transition-colors duration-300 overflow-x-hidden">
             <Navbar />
             <main className="pt-16">
               <Routes>
                 <Route path="/" element={<Home />} />
-                <Route path="/home" element={<Home />} /> {/* Add this */}
+                <Route path="/home" element={<Home />} />
                 <Route path="/posts" element={<Posts />} />
                 <Route path="/admin" element={<Admin />} />
-                {/* Redirect unknown routes to home */}
                 <Route path="*" element={<Navigate to="/" replace />} />
               </Routes>
             </main>

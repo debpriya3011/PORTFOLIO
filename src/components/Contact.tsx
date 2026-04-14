@@ -28,13 +28,13 @@ export default function Contact() {
       icon: Mail,
       label: 'Email',
       value: 'debpriya3011@gmail.com',
-      href: 'https://mail.google.com/mail/?view=cm&fs=1&to=debpriya3011@gmail.com'
+      href: 'mailto:debpriya3011@gmail.com'
     },
     {
       icon: Github,
       label: 'GitHub',
       value: 'github.com/debpriya3011',
-      href: 'https://mail.google.com/mail/?view=cm&fs=1&to=debpriya3011@gmail.com'
+      href: 'https://github.com/debpriya3011'
     },
     {
       icon: Linkedin,
@@ -70,7 +70,7 @@ export default function Contact() {
             <span className="text-sm text-violet-500 font-medium">Get in Touch</span>
           </motion.div>
           
-          <h2 className="text-4xl font-bold mb-4">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4">
             Let's <span className="gradient-text">Connect</span>
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
@@ -78,7 +78,7 @@ export default function Contact() {
           </p>
         </motion.div>
 
-        <div className="grid lg:grid-cols-2 gap-12 max-w-5xl mx-auto">
+        <div className="grid sm:grid-cols-1 md:grid-cols-2 gap-6 md:gap-12 max-w-5xl mx-auto">
           {/* Contact Info */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
@@ -103,9 +103,9 @@ export default function Contact() {
                     <div className="w-12 h-12 rounded-lg bg-violet-500/10 flex items-center justify-center">
                       <Icon className="w-5 h-5 text-violet-500" />
                     </div>
-                    <div>
+                    <div className="min-w-0">
                       <p className="text-sm text-muted-foreground">{item.label}</p>
-                      <p className="font-medium">{item.value}</p>
+                      <p className="font-medium truncate">{item.value}</p>
                     </div>
                   </motion.a>
                 );

@@ -69,7 +69,67 @@
   * {
     @apply border-border;
   }
+  html {
+    @apply scroll-smooth;
+  }
   body {
     @apply bg-background text-foreground;
+    overflow-x: hidden;
+  }
+}
+
+@layer utilities {
+  .overflow-x-hidden {
+    overflow-x: hidden;
+  }
+  
+  .glass {
+    @apply bg-background/80 backdrop-blur-md border border-border/50;
+  }
+  
+  .gradient-text {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-violet-500 to-fuchsia-500;
+  }
+  
+  .card-hover {
+    @apply transition-all duration-300 hover:shadow-lg hover:shadow-violet-500/10 hover:border-violet-500/30;
+  }
+  
+  .grid-bg {
+    background-image: 
+      linear-gradient(rgba(139, 92, 246, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(139, 92, 246, 0.03) 1px, transparent 1px);
+    background-size: 50px 50px;
+  }
+  
+  @media (max-width: 640px) {
+    .text-4xl {
+      font-size: 2rem;
+      line-height: 2.25rem;
+    }
+    
+    h1 {
+      font-size: 1.875rem;
+      line-height: 2.25rem;
+    }
+    
+    h2 {
+      font-size: 1.5rem;
+      line-height: 2rem;
+    }
+    
+    h3 {
+      font-size: 1.25rem;
+      line-height: 1.75rem;
+    }
+    
+    .overflow-x-scroll {
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    
+    .overflow-x-scroll::-webkit-scrollbar {
+      display: none;
+    }
   }
 }

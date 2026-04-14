@@ -28,7 +28,7 @@ export default function Hero() {
         transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut', delay: 4 }}
       />
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-20">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Left Content */}
           <motion.div
@@ -41,7 +41,7 @@ export default function Hero() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="inline-flex items-center px-4 py-2 rounded-full bg-violet-500/10 border border-violet-500/20 mb-6"
+              className="inline-flex items-center px-3 py-1.5 sm:px-4 sm:py-2 rounded-full bg-violet-500/10 border border-violet-500/20 mb-4 sm:mb-6"
             >
               <span className="w-2 h-2 rounded-full bg-violet-500 animate-pulse mr-2" />
               <span className="text-sm text-violet-500 font-medium">Available for opportunities</span>
@@ -51,7 +51,7 @@ export default function Hero() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
-              className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6"
+              className="text-2xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold mb-3 sm:mb-4 md:mb-6"
             >
               Hi, I'm{' '}
               <span className="gradient-text">Debpriya Santra</span>
@@ -61,7 +61,7 @@ export default function Hero() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
-              className="text-xl text-muted-foreground mb-4"
+              className="text-lg sm:text-xl text-muted-foreground mb-3 sm:mb-4"
             >
               Data Engineer & Software Developer
             </motion.p>
@@ -105,19 +105,19 @@ export default function Hero() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.7 }}
-              className="grid grid-cols-3 gap-8 mt-12 pt-8 border-t"
+              className="grid grid-cols-3 gap-2 sm:gap-8 mt-8 sm:mt-12 pt-6 sm:pt-8 border-t"
             >
               <div>
-                <div className="text-3xl font-bold gradient-text">1.5+</div>
-                <div className="text-sm text-muted-foreground">Years Experience</div>
+                <div className="text-2xl sm:text-3xl font-bold gradient-text">1.5+</div>
+                <div className="text-xs sm:text-sm text-muted-foreground">Years Exp.</div>
               </div>
               <div>
-                <div className="text-3xl font-bold gradient-text">20+</div>
-                <div className="text-sm text-muted-foreground">Projects</div>
+                <div className="text-2xl sm:text-3xl font-bold gradient-text">20+</div>
+                <div className="text-xs sm:text-sm text-muted-foreground">Projects</div>
               </div>
               <div>
-                <div className="text-3xl font-bold gradient-text">5+</div>
-                <div className="text-sm text-muted-foreground">Certifications</div>
+                <div className="text-2xl sm:text-3xl font-bold gradient-text">5+</div>
+                <div className="text-xs sm:text-sm text-muted-foreground">Certs</div>
               </div>
             </motion.div>
           </motion.div>
@@ -127,24 +127,25 @@ export default function Hero() {
             initial={{ opacity: 0, x: 50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.3, ease: 'easeOut' }}
-            className="hidden lg:block"
+            className="hidden md:block lg:block"
           >
             <WorkflowVisualization />
           </motion.div>
         </div>
       </div>
 
-      {/* Scroll indicator */}
+      {/* Scroll indicator - shown on all screens except large where workflow is displayed */}
       <motion.div
-        className="absolute bottom-8 left-1/2 -translate-x-1/2"
-        animate={{ y: [0, 10, 0] }}
-        transition={{ duration: 2, repeat: Infinity }}
+        className="absolute bottom-4 left-1/2 -translate-x-1/2 pointer-events-none"
+        style={{ willChange: "transform" }}
+        animate={{ translateY: [0, 10, 0] }}
+        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
       >
         <div className="w-6 h-10 rounded-full border-2 border-muted-foreground/30 flex items-start justify-center p-2">
           <motion.div
             className="w-1.5 h-1.5 rounded-full bg-violet-500"
-            animate={{ y: [0, 12, 0] }}
-            transition={{ duration: 2, repeat: Infinity }}
+            animate={{ translateY: [0, 12, 0] }}
+            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
           />
         </div>
       </motion.div>

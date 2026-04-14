@@ -83,12 +83,12 @@ function ExperienceCard({ experience, index }: { experience: ExperienceItem; ind
           
           <div className="flex flex-wrap gap-2 text-sm text-muted-foreground">
             <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-muted">
-              <Briefcase className="w-3 h-3" />
+              <Briefcase className="w-3 h-3 flex-shrink-0" />
               {experience.type}
             </span>
-            <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-muted">
-              <MapPin className="w-3 h-3" />
-              {experience.location}
+            <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-muted max-w-full">
+              <MapPin className="w-3 h-3 flex-shrink-0" />
+              <span className="truncate">{experience.location}</span>
             </span>
           </div>
         </div>
@@ -204,7 +204,7 @@ export default function Experience() {
             <span className="text-sm text-violet-500 font-medium">Career</span>
           </motion.div>
           
-          <h2 className="text-4xl font-bold mb-4">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4">
             Work <span className="gradient-text">Experience</span>
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">

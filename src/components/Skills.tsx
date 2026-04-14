@@ -270,7 +270,7 @@ export default function Skills() {
             <span className="text-sm text-violet-500 font-medium">Expertise</span>
           </motion.div>
           
-          <h2 className="text-4xl font-bold mb-4">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4">
             Skills & <span className="gradient-text">Technologies</span>
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
@@ -280,7 +280,7 @@ export default function Skills() {
         </motion.div>
 
         {/* Skills Grid */}
-        <div className="grid md:grid-cols-2 gap-6">
+        <div className="grid sm:grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
           {skillCategories.map((category, index) => (
             <SkillCard key={category.title} category={category} index={index} />
           ))}

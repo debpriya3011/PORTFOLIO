@@ -584,6 +584,20 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: err.message });
 });
 
+// Serve static files from Vite build (frontend)
+const distPath = path.join(__dirname, '../dist');
+if (fs.existsSync(distPath)) {
+  app.use(express.static(distPath));
+  
+  // SPA fallback - serve index.html for all non-API routes
+  app.get('*', (req, res) => {
+    // Only handle requests that don't start with /api or /uploads
+    if (!req.path.startsWith('/api') && !req.path.startsWith('/uploads')) {
+      res.sendFile(path.join(distPath, 'index.html'));
+    }
+  });
+}
+
 /* ================= SERVER ================= */
 
 app.listen(PORT, () => {
