@@ -598,9 +598,28 @@ if (fs.existsSync(distPath)) {
   });
 }
 
+/* ================= SERVE FRONTEND ================= */
+
+// Serve static files from Vite build
+const distPath = path.join(__dirname, '../dist');
+if (fs.existsSync(distPath)) {
+  app.use(express.static(distPath));
+  
+  // SPA fallback: serve index.html for all unmatched routes
+  // This allows React Router to handle client-side routing
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(distPath, 'index.html'));
+  });
+} else {
+  console.warn('⚠️ Build folder not found at:', distPath);
+}
+
 /* ================= SERVER ================= */
 
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
   console.log(`📁 Uploads directory: ${uploadsDir}`);
+  if (fs.existsSync(distPath)) {
+    console.log(`📁 Serving static files from: ${distPath}`);
+  }
 });
