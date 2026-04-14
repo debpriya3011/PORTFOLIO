@@ -583,20 +583,39 @@ app.delete('/api/workflows/:id', async (req, res) => {
 
 /* ================= SERVE FRONTEND (SPA) ================= */
 
-// Serve static files from Vite build
 const distPath = path.join(__dirname, '../dist');
+const indexPath = path.join(distPath, 'index.html');
+
+// Always serve static files if dist exists
 if (fs.existsSync(distPath)) {
   app.use(express.static(distPath));
-  
-  // SPA fallback: serve index.html for all unmatched routes
-  // This allows React Router to handle client-side routing
-  app.get('*', (req, res) => {
-    res.sendFile(path.join(distPath, 'index.html'));
-  });
-} else {
-  console.warn('⚠️ Build folder not found at:', distPath);
-  console.warn('⚠️ Make sure to run: npm run build');
+  console.log(`✅ Static files will be served from: ${distPath}`);
 }
+
+// ALWAYS define the fallback route for SPA (must be after all API routes)
+// This ensures any non-API route gets index.html for client-side routing
+app.get('*', (req, res) => {
+  if (fs.existsSync(indexPath)) {
+    res.sendFile(indexPath);
+  } else {
+    console.error('❌ index.html not found at:', indexPath);
+    res.status(404).send(`
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <title>Build Error</title>
+          <style>body { font-family: monospace; margin: 40px; }</style>
+        </head>
+        <body>
+          <h1>❌ Build Failed</h1>
+          <p>The app build is missing. Check Render logs.</p>
+          <p>Expected: <code>${indexPath}</code></p>
+          <p>Exists: ${fs.existsSync(distPath) ? 'dist/ folder found' : 'dist/ folder not found'}</p>
+        </body>
+      </html>
+    `);
+  }
+});
 
 /* ================= ERROR HANDLER (Must be last) ================= */
 
@@ -613,13 +632,18 @@ app.listen(PORT, () => {
   console.log(`📁 Server directory: ${__dirname}`);
   console.log(`📁 Uploads directory: ${uploadsDir}`);
   console.log(`📁 Looking for dist at: ${distPath}`);
+  
   if (fs.existsSync(distPath)) {
-    console.log(`✅ FOUND: Serving SPA from ${distPath}`);
-    const files = fs.readdirSync(distPath).slice(0, 5);
-    console.log(`📄 Sample files: ${files.join(', ')}`);
+    console.log(`✅ FOUND dist/ folder`);
+    const files = fs.readdirSync(distPath).slice(0, 10);
+    console.log(`📄 Contents: ${files.join(', ')}`);
+    if (fs.existsSync(indexPath)) {
+      console.log(`✅ FOUND index.html - SPA routing ready!`);
+    } else {
+      console.error(`❌ index.html NOT found in dist/`);
+    }
   } else {
-    console.error(`❌ NOT FOUND: ${distPath}`);
-    console.error(`⚠️ Make sure to run: npm run build`);
+    console.error(`❌ dist/ folder NOT found at ${distPath}`);
   }
   console.log('');
 });
