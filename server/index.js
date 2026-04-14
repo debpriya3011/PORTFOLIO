@@ -581,14 +581,7 @@ app.delete('/api/workflows/:id', async (req, res) => {
   res.json({ success: true });
 });
 
-/* ================= ERROR HANDLER ================= */
-
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ error: err.message });
-});
-
-/* ================= SERVE FRONTEND ================= */
+/* ================= SERVE FRONTEND (SPA) ================= */
 
 // Serve static files from Vite build
 const distPath = path.join(__dirname, '../dist');
@@ -604,6 +597,13 @@ if (fs.existsSync(distPath)) {
   console.warn('⚠️ Build folder not found at:', distPath);
   console.warn('⚠️ Make sure to run: npm run build');
 }
+
+/* ================= ERROR HANDLER (Must be last) ================= */
+
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ error: err.message });
+});
 
 /* ================= SERVER ================= */
 
