@@ -16,12 +16,16 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 
-// CORS - allow your Render frontend
+// CORS - In production, frontend and server are same origin, so CORS not strictly needed
+// But we'll allow localhost for dev and the Render domain for production
 app.use(cors({
   origin: [
     'http://localhost:5173',
-    process.env.FRONTEND_URL  // We'll set this in Render
-  ]
+    'http://localhost:3000',
+    'http://localhost:3001',
+    process.env.FRONTEND_URL || '*'
+  ],
+  credentials: true
 }));
 
 
@@ -584,20 +588,6 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: err.message });
 });
 
-// Serve static files from Vite build (frontend)
-const distPath = path.join(__dirname, '../dist');
-if (fs.existsSync(distPath)) {
-  app.use(express.static(distPath));
-  
-  // SPA fallback - serve index.html for all non-API routes
-  app.get('*', (req, res) => {
-    // Only handle requests that don't start with /api or /uploads
-    if (!req.path.startsWith('/api') && !req.path.startsWith('/uploads')) {
-      res.sendFile(path.join(distPath, 'index.html'));
-    }
-  });
-}
-
 /* ================= SERVE FRONTEND ================= */
 
 // Serve static files from Vite build
@@ -612,6 +602,7 @@ if (fs.existsSync(distPath)) {
   });
 } else {
   console.warn('⚠️ Build folder not found at:', distPath);
+  console.warn('⚠️ Make sure to run: npm run build');
 }
 
 /* ================= SERVER ================= */
