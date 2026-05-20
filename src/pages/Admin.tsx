@@ -1173,7 +1173,9 @@ function AdminDashboard() {
 
 // Main Admin Component
 export default function Admin() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isAuthChecked } = useAuth();
+
+  if (!isAuthChecked) return null;
 
   return (
     <AnimatePresence mode="wait">
