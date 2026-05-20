@@ -90,6 +90,38 @@ const defaultCertifications: Certification[] = [
     skills: ['Engineering']
   },
   {
+    name: 'Claude Code in Action',
+    issuer: 'Anthropic',
+    issueDate: 'May 2026',
+    credentialId: 'uidm2ezhmt58',
+    credentialUrl: 'https://verify.skilljar.com/c/uidm2ezhmt58',
+    skills: ['Claude API', 'Agent Development', 'Code Generation']
+  },
+  {
+    name: 'Introduction to Model Context Protocol',
+    issuer: 'Anthropic',
+    issueDate: 'May 2026',
+    credentialId: 'vheau2jbtkuh',
+    credentialUrl: 'https://verify.skilljar.com/c/vheau2jbtkuh',
+    skills: ['Model Context Protocol', 'Context-Aware Agents', 'Prompt Engineering']
+  },
+  {
+    name: 'Introduction to agent skills',
+    issuer: 'Anthropic',
+    issueDate: 'May 2026',
+    credentialId: 'a242vijhmqc3',
+    credentialUrl: 'https://verify.skilljar.com/c/a242vijhmqc3',
+    skills: ['Agent Skills', 'Skill Integration', 'Task Automation']
+  },
+  {
+    name: 'Building with the Claude API',
+    issuer: 'Anthropic',
+    issueDate: 'May 2026',
+    credentialId: 'czvqv8go8vtx',
+    credentialUrl: 'https://verify.skilljar.com/c/czvqv8go8vtx',
+    skills: ['Claude API', 'API Integration', 'Generative AI']
+  },
+  {
     name: 'Accenture North America - Data Analytics and Visualization Job Simulation',
     issuer: 'Forage',
     issueDate: 'Jul 2024',
@@ -256,7 +288,7 @@ export default function Education() {
   };
 
   return (
-    <section id="education" className="py-24 relative">
+    <section id="education" className="py-20 relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <motion.div
@@ -303,7 +335,7 @@ export default function Education() {
               <Award className="w-6 h-6 text-amber-500" />
               Certifications
             </h3>
-            <div className="space-y-4 max-h-[600px] overflow-y-auto pr-2">
+            <div className="space-y-4 max-h-[650px] overflow-y-auto pr-2">
               {certifications.map((cert, index) => (
                 <CertificationCard key={cert.name} cert={cert} index={index} />
               ))}

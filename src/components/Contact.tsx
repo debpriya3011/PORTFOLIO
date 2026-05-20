@@ -51,7 +51,7 @@ export default function Contact() {
   ];
 
   return (
-    <section id="contact" className="py-24 relative">
+    <section id="contact" className="py-20 relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <motion.div
@@ -73,12 +73,12 @@ export default function Contact() {
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4">
             Let's <span className="gradient-text">Connect</span>
           </h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-muted-foreground max-w-2xl mx-0">
             Have a project in mind or want to collaborate? Feel free to reach out!
           </p>
         </motion.div>
 
-        <div className="grid sm:grid-cols-1 md:grid-cols-2 gap-6 md:gap-12 items-start max-w-5xl mx-auto">
+        <div className="grid sm:grid-cols-1 md:grid-cols-2 gap-6 md:gap-12 max-w-5xl mx-auto">
           {/* Contact Info */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
@@ -86,7 +86,7 @@ export default function Contact() {
             className="order-1 md:order-1"
             transition={{ delay: 0.3 }}
           >
-            <h3 className="text-2xl font-bold mb-6 pl-4 sm:pl-6">Contact <span className = "gradient-text">Information</span></h3>
+            <h3 className="text-2xl font-bold mb-6 pl-1 sm:pl-0">Contact <span className = "gradient-text">Information</span></h3>
             <div className="space-y-4">
               {contactInfo.map((item, index) => {
                 const Icon = item.icon;
@@ -121,7 +121,7 @@ export default function Contact() {
             className="order-2 md:order-2"
             transition={{ delay: 0.3 }}
           >
-            <h3 className="text-2xl font-bold mb-6 pl-4 sm:pl-6"><span className='gradient-text'>Send</span> a Message</h3>
+            <h3 className="text-2xl font-bold mb-6 pl-1 sm:pl-0"><span className='gradient-text'>Send</span> a Message</h3>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label className="block text-sm font-medium mb-2">Name</label>

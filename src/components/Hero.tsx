@@ -5,7 +5,7 @@ import WorkflowVisualization from './WorkflowVisualization';
 
 export default function Hero() {
   return (
-    <section className="relative min-h-screen flex items-start md:items-center justify-center overflow-hidden pt-2 md:pt-16">
+    <section className="relative min-h-[75vh] md:min-h-screen flex items-start md:items-center justify-center overflow-hidden pt-0 md:pt-16">
       {/* Background Effects */}
       <div className="absolute inset-0 grid-bg" />
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/50 to-background" />
@@ -28,7 +28,7 @@ export default function Hero() {
         transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut', delay: 4 }}
       />
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-20">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-10">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Left Content */}
           <motion.div
