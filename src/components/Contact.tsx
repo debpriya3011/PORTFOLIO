@@ -78,15 +78,15 @@ export default function Contact() {
           </p>
         </motion.div>
 
-        <div className="grid sm:grid-cols-1 md:grid-cols-2 gap-6 md:gap-12 max-w-5xl mx-auto">
+        <div className="grid sm:grid-cols-1 md:grid-cols-2 gap-6 md:gap-12 items-start max-w-5xl mx-auto">
           {/* Contact Info */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -30 }}
-            className="order-2 md:order-1"
+            className="order-1 md:order-1"
             transition={{ delay: 0.3 }}
           >
-            <h3 className="text-2xl font-bold mb-6">Contact Information</h3>
+            <h3 className="text-2xl font-bold mb-6 pl-4 sm:pl-6">Contact <span className = "gradient-text">Information</span></h3>
             <div className="space-y-4">
               {contactInfo.map((item, index) => {
                 const Icon = item.icon;
@@ -118,10 +118,10 @@ export default function Contact() {
           <motion.div
             initial={{ opacity: 0, x: 30 }}
             animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 30 }}
-            className="order-1 md:order-2"
+            className="order-2 md:order-2"
             transition={{ delay: 0.3 }}
           >
-            <h3 className="text-2xl font-bold mb-6">Send a Message</h3>
+            <h3 className="text-2xl font-bold mb-6 pl-4 sm:pl-6"><span className='gradient-text'>Send</span> a Message</h3>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label className="block text-sm font-medium mb-2">Name</label>
