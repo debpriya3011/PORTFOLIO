@@ -82,7 +82,8 @@ interface Workflow {
 }
 
 // Login Component
-function LoginForm({ onLogin }: { onLogin: () => void }) {
+function LoginForm() {
+  const { login } = useAuth();
   const [email, setEmail] = useState('');
   const [otp, setOtp] = useState('');
   const [otpSent, setOtpSent] = useState(false);
@@ -128,9 +129,8 @@ function LoginForm({ onLogin }: { onLogin: () => void }) {
 
       const data = await response.json();
       if (response.ok) {
-        localStorage.setItem('auth_token', data.token);
+        login(data.token);
         toast.success('Login successful!');
-        onLogin();
       } else {
         toast.error(data.error || 'Invalid OTP');
       }
@@ -1174,12 +1174,11 @@ function AdminDashboard() {
 // Main Admin Component
 export default function Admin() {
   const { isAuthenticated } = useAuth();
-  const [loggedIn, setLoggedIn] = useState(isAuthenticated);
 
   return (
     <AnimatePresence mode="wait">
-      {!loggedIn ? (
-        <LoginForm key="login" onLogin={() => setLoggedIn(true)} />
+      {!isAuthenticated ? (
+        <LoginForm key="login" />
       ) : (
         <motion.div
           key="dashboard"

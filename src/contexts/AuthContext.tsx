@@ -9,14 +9,17 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return Boolean(localStorage.getItem('auth_token'));
+  });
 
   useEffect(() => {
     const token = localStorage.getItem('auth_token');
-    if (token) {
+    if (token && !isAuthenticated) {
       setIsAuthenticated(true);
     }
-  }, []);
+  }, [isAuthenticated]);
 
   const login = (token: string) => {
     localStorage.setItem('auth_token', token);
