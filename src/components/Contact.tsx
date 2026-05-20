@@ -83,6 +83,7 @@ export default function Contact() {
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -30 }}
+            className="order-2 md:order-1"
             transition={{ delay: 0.3 }}
           >
             <h3 className="text-2xl font-bold mb-6">Contact Information</h3>
@@ -117,6 +118,7 @@ export default function Contact() {
           <motion.div
             initial={{ opacity: 0, x: 30 }}
             animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 30 }}
+            className="order-1 md:order-2"
             transition={{ delay: 0.3 }}
           >
             <h3 className="text-2xl font-bold mb-6">Send a Message</h3>

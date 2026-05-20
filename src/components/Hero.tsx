@@ -5,7 +5,7 @@ import WorkflowVisualization from './WorkflowVisualization';
 
 export default function Hero() {
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16">
+    <section className="relative min-h-screen flex items-start md:items-center justify-center overflow-hidden pt-8 md:pt-16">
       {/* Background Effects */}
       <div className="absolute inset-0 grid-bg" />
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/50 to-background" />
