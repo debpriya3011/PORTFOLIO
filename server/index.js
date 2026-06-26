@@ -241,11 +241,26 @@ app.get('/api/scrape-linkedin', async (req, res) => {
     return res.status(400).json({ error: 'URL is required' });
   }
 
+  let cleanUrl = url.trim().replace(/[\.\,\s]+$/, '');
+  let parsedUrl;
+  try {
+    if (!cleanUrl.startsWith('http://') && !cleanUrl.startsWith('https://')) {
+      cleanUrl = 'https://' + cleanUrl;
+    }
+    parsedUrl = new URL(cleanUrl);
+  } catch (e) {
+    return res.status(400).json({ error: 'Invalid URL format' });
+  }
+
+  if (!parsedUrl.hostname.includes('linkedin.com')) {
+    return res.status(400).json({ error: 'Only LinkedIn URLs are supported' });
+  }
+
   try {
     const html = await new Promise((resolve, reject) => {
       const options = {
         hostname: 'www.linkedin.com',
-        path: url.replace('https://www.linkedin.com', ''),
+        path: parsedUrl.pathname + parsedUrl.search,
         method: 'GET',
         headers: {
           'User-Agent': 'Mozilla/5.0'
@@ -253,9 +268,9 @@ app.get('/api/scrape-linkedin', async (req, res) => {
       };
 
       const request = https.request(options, (response) => {
-        let data = '';
-        response.on('data', (chunk) => data += chunk);
-        response.on('end', () => resolve(data));
+        const chunks = [];
+        response.on('data', (chunk) => chunks.push(chunk));
+        response.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')));
       });
 
       request.on('error', reject);
@@ -326,11 +341,11 @@ app.get('/api/scrape-linkedin', async (req, res) => {
     let images = [];
 
     if (Array.isArray(jsonLdData.image)) {
-      images = jsonLdData.image.map(i => i.url || i);
+      images = jsonLdData.image.map(i => (i.url || i).replace(/&amp;/g, '&'));
     } else if (typeof jsonLdData.image === "object" && jsonLdData.image !== null) {
-      images = [jsonLdData.image.url];
+      images = [(jsonLdData.image.url || '').replace(/&amp;/g, '&')];
     } else if (typeof jsonLdData.image === "string") {
-      images = [jsonLdData.image];
+      images = [jsonLdData.image.replace(/&amp;/g, '&')];
     }
 
     res.json({
@@ -377,10 +392,10 @@ app.post('/api/posts', async (req, res) => {
         author_name,
         author_image,
         content,
-        images || [],
+        Array.isArray(images) ? JSON.stringify(images) : (images || '[]'),
         likes || 0,
         comments || 0,
-        comments_data || []
+        typeof comments_data === 'string' ? comments_data : JSON.stringify(comments_data || [])
       ]
     );
 
@@ -594,7 +609,7 @@ if (fs.existsSync(distPath)) {
 
 // ALWAYS define the fallback route for SPA (must be after all API routes)
 // This ensures any non-API route gets index.html for client-side routing
-app.get('*', (req, res) => {
+app.get(/(.*)/, (req, res) => {
   if (fs.existsSync(indexPath)) {
     res.sendFile(indexPath);
   } else {

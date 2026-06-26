@@ -24,7 +24,7 @@ import {
   User
 } from 'lucide-react';
 
-const API_BASE_URL = `${import.meta.env.VITE_API_URL}`;
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 
 // Types
 interface Post {
@@ -403,7 +403,7 @@ function LinkedInPostManager() {
               <div className="flex items-start gap-3">
                 <div className="flex-shrink-0">
                   {post.author_image ? (
-                    <img src={post.author_image} alt="" className="w-10 h-10 rounded-full object-cover" />
+                    <img src={post.author_image.replace(/&amp;/g, '&')} alt="" className="w-10 h-10 rounded-full object-cover" />
                   ) : (
                     <div className="w-10 h-10 rounded-full bg-gradient-to-r from-violet-500 to-fuchsia-500 flex items-center justify-center">
                       <span className="text-white font-bold">{post.author_name?.[0] || 'U'}</span>

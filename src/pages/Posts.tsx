@@ -16,16 +16,46 @@ interface LinkedInPost {
   created_at: number;
 }
 
-// Helper to safely parse images
+// Helper to safely parse images and clean up escaped ampersands
 const parseImages = (images: string | string[] | null | undefined): string[] => {
   if (!images) return [];
-  if (Array.isArray(images)) return images;
-  try {
-    const parsed = JSON.parse(images);
-    return Array.isArray(parsed) ? parsed : [];
-  } catch {
-    return [];
+  
+  const cleanUrl = (url: string) => url.replace(/&amp;/g, '&');
+
+  if (Array.isArray(images)) {
+    return images.map(cleanUrl);
   }
+
+  const cleanedImages = images.trim();
+
+  // Handle PostgreSQL native array format e.g. {"url1", "url2"}
+  if (cleanedImages.startsWith('{') && cleanedImages.endsWith('}')) {
+    const content = cleanedImages.slice(1, -1).trim();
+    if (!content) return [];
+    return content.split(',')
+      .map(item => {
+        let clean = item.trim();
+        if (clean.startsWith('"') && clean.endsWith('"')) {
+          clean = clean.slice(1, -1);
+        }
+        return clean.replace(/\\"/g, '"');
+      })
+      .map(cleanUrl)
+      .filter(Boolean);
+  }
+
+  try {
+    const parsed = JSON.parse(cleanedImages);
+    if (Array.isArray(parsed)) {
+      return parsed.map(cleanUrl);
+    }
+  } catch {
+    // If it's a single URL
+    if (cleanedImages.startsWith('http')) {
+      return [cleanUrl(cleanedImages)];
+    }
+  }
+  return [];
 };
 
 export default function Posts() {
@@ -39,7 +69,8 @@ export default function Posts() {
 
   const fetchPosts = async () => {
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/posts`);
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+      const response = await fetch(`${apiUrl}/api/posts`);
       if (response.ok) {
         const data = await response.json();
         console.log('Fetched posts:', data); // Debug: check the data format
@@ -131,7 +162,7 @@ export default function Posts() {
                     <div className="flex items-center gap-4">
                       {post.author_image ? (
                         <img
-                          src={post.author_image}
+                          src={post.author_image.replace(/&amp;/g, '&')}
                           alt={post.author_name}
                           className="w-12 h-12 rounded-full object-cover"
                           onError={(e) => {

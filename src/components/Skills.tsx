@@ -200,7 +200,8 @@ export default function Skills() {
 
   const fetchAndMergeSkills = async () => {
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/skills`);
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+      const response = await fetch(`${apiUrl}/api/skills`);
       if (response.ok) {
         const dbSkills = await response.json();
         

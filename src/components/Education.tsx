@@ -268,9 +268,10 @@ export default function Education() {
 
   const fetchAndMergeEducation = async () => {
     try {
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001';
       const [educationRes, certificationsRes] = await Promise.all([
-        fetch(`${import.meta.env.VITE_API_URL}/api/education`),
-        fetch(`${import.meta.env.VITE_API_URL}/api/certifications`)
+        fetch(`${apiUrl}/api/education`),
+        fetch(`${apiUrl}/api/certifications`)
       ]);
 
       if (educationRes.ok) {
