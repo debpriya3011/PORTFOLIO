@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { HashRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { AuthProvider } from './contexts/AuthContext';
@@ -9,6 +10,20 @@ import Posts from './pages/Posts';
 import './App.css';
 
 function App() {
+  useEffect(() => {
+    // Warm up the posts API on initial load to resolve database inactivity lag
+    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+    fetch(`${apiUrl}/api/posts`)
+      .then((res) => {
+        if (res.ok) {
+          console.log('Posts API warmed up successfully.');
+        }
+      })
+      .catch((err) => {
+        console.log('Posts API warmup skipped or failed:', err);
+      });
+  }, []);
+
   return (
     <ThemeProvider>
       <AuthProvider>
