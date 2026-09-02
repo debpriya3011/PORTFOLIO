@@ -415,6 +415,76 @@ app.delete('/api/posts/:id', async (req, res) => {
   res.json({ success: true });
 });
 
+// Update likes/comments for a single post
+app.patch('/api/posts/:id', async (req, res) => {
+  const { likes, comments } = req.body;
+  try {
+    await db.query(
+      `UPDATE posts SET likes=$1, comments=$2 WHERE id=$3`,
+      [likes ?? 0, comments ?? 0, req.params.id]
+    );
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Re-scrape all posts and update their likes/comments in the DB
+app.post('/api/posts/refresh-all', async (req, res) => {
+  try {
+    const result = await db.query(`SELECT id, linkedin_url FROM posts`);
+    const posts = result.rows;
+
+    const updates = await Promise.allSettled(
+      posts.map(async (post) => {
+        try {
+          let cleanUrl = post.linkedin_url.trim();
+          if (!cleanUrl.startsWith('http')) cleanUrl = 'https://' + cleanUrl;
+          const parsedUrl = new URL(cleanUrl);
+
+          const html = await new Promise((resolve, reject) => {
+            const options = {
+              hostname: 'www.linkedin.com',
+              path: parsedUrl.pathname + parsedUrl.search,
+              method: 'GET',
+              headers: { 'User-Agent': 'Mozilla/5.0' }
+            };
+            const request = https.request(options, (response) => {
+              const chunks = [];
+              response.on('data', (chunk) => chunks.push(chunk));
+              response.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')));
+            });
+            request.on('error', reject);
+            request.end();
+          });
+
+          const likesMatch = html.match(/data-test-id="social-actions__reaction-count">\s*(\d+)/);
+          const likes = likesMatch ? parseInt(likesMatch[1]) : 0;
+
+          const commentsMatch = html.match(/data-num-comments="(\d+)"/);
+          const comments = commentsMatch ? parseInt(commentsMatch[1]) : 0;
+
+          await db.query(
+            `UPDATE posts SET likes=$1, comments=$2 WHERE id=$3`,
+            [likes, comments, post.id]
+          );
+
+          return { id: post.id, likes, comments, ok: true };
+        } catch (err) {
+          console.error(`Failed to refresh post ${post.id}:`, err.message);
+          return { id: post.id, ok: false, error: err.message };
+        }
+      })
+    );
+
+    // Now return fresh posts
+    const fresh = await db.query(`SELECT * FROM posts ORDER BY created_at DESC`);
+    res.json({ success: true, posts: fresh.rows, updates: updates.map(u => u.value || u.reason) });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 /* ================= IMAGES ================= */
 
 app.post('/api/images', upload.single('image'), async (req, res) => {

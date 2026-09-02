@@ -89,8 +89,30 @@ export default function Posts() {
 
   const handleManualRefresh = async () => {
     setRefreshing(true);
-    await fetchPosts();
-    toast.success('Posts refreshed!');
+    try {
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+      const response = await fetch(`${apiUrl}/api/posts/refresh-all`, { method: 'POST' });
+      if (response.ok) {
+        const data = await response.json();
+        if (data.posts) {
+          setPosts(data.posts);
+          toast.success('Posts refreshed with latest likes & comments!');
+        } else {
+          await fetchPosts();
+          toast.success('Posts refreshed!');
+        }
+      } else {
+        // Fallback to regular fetch if refresh-all fails
+        await fetchPosts();
+        toast.success('Posts refreshed!');
+      }
+    } catch (error) {
+      console.error('Error refreshing posts:', error);
+      await fetchPosts();
+      toast.success('Posts refreshed!');
+    } finally {
+      setRefreshing(false);
+    }
   };
 
   if (loading) {
