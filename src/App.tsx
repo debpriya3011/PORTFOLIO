@@ -7,6 +7,7 @@ import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import Admin from './pages/Admin';
 import Posts from './pages/Posts';
+import Guides from './pages/Guides';
 import './App.css';
 
 function App() {
@@ -34,6 +35,8 @@ function App() {
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/home" element={<Home />} />
+                <Route path="/guides" element={<Guides />} />
+                <Route path="/blueprints" element={<Guides />} />
                 <Route path="/posts" element={<Posts />} />
                 <Route path="/admin" element={<Admin />} />
                 <Route path="*" element={<Navigate to="/" replace />} />

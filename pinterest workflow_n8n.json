@@ -1,0 +1,273 @@
+{
+  "name": "Pinterest Video Upload API Automation",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -576,
+        0
+      ],
+      "id": "0eb79d61-5716-4343-9d50-09100d1e5b69",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "url": "https://example.com/path/to/your-video.mp4",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -96,
+        176
+      ],
+      "id": "4f0eb9f1-dd88-4838-92c1-48cbe5415a17",
+      "name": "Fetch Source Video File"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://pinterest-media-upload.s3-accelerate.amazonaws.com/",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Accept",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "x-amz-date",
+              "value": "={{ $('Register Media Upload').item.json.upload_parameters['x-amz-date'] }}"
+            },
+            {
+              "name": "x-amz-signature",
+              "value": "={{ $('Register Media Upload').item.json.upload_parameters['x-amz-signature'] }}"
+            },
+            {
+              "name": "x-amz-security-token",
+              "value": "={{ $('Register Media Upload').item.json.upload_parameters['x-amz-security-token'] }}"
+            },
+            {
+              "name": "x-amz-algorithm",
+              "value": "={{ $('Register Media Upload').item.json.upload_parameters['x-amz-algorithm'] }}"
+            },
+            {
+              "name": "key",
+              "value": "={{ $('Register Media Upload').item.json.upload_parameters.key }}"
+            },
+            {
+              "name": "policy",
+              "value": "={{ $('Register Media Upload').item.json.upload_parameters.policy }}"
+            },
+            {
+              "name": "x-amz-credential",
+              "value": "={{ $('Register Media Upload').item.json.upload_parameters['x-amz-credential'] }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "multipart/form-data"
+            },
+            {
+              "parameterType": "formBinaryData",
+              "name": "file",
+              "inputDataFieldName": "=data"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        400,
+        0
+      ],
+      "id": "51cd3322-b42f-4091-a9cb-8a663bf91647",
+      "name": "Upload to AWS S3"
+    },
+    {
+      "parameters": {
+        "amount": 120
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        592,
+        0
+      ],
+      "id": "711bb236-987a-4895-a159-ffce3b5d0659",
+      "name": "Wait for Video Processing",
+      "webhookId": "your-n8n-webhook-id"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.pinterest.com/v5/pins",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "Bearer YOUR_PINTEREST_ACCESS_TOKEN"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"board_id\": \"YOUR_PINTEREST_BOARD_ID\",\n  \"media_source\": {\n\t\t\"cover_image_content_type\": \"image/jpeg\",\n    \"cover_image_url\": \"https://example.com/path/to/your-cover-image.jpg\",\n\t\t\n    \"media_id\": \"{{ $('Register Media Upload').item.json.media_id }}\",\n    \"source_type\": \"video_id\"\n  }\n}\n ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        768,
+        0
+      ],
+      "id": "a3d54dfc-f024-48c2-a8d5-00381413eaf2",
+      "name": "Create Video Pin"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.pinterest.com/v5/media",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "Bearer YOUR_PINTEREST_ACCESS_TOKEN"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\n  \"media_type\": \"video\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -80,
+        -176
+      ],
+      "id": "3784fe01-eaac-4315-96de-16348237a162",
+      "name": "Register Media Upload"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        208,
+        0
+      ],
+      "id": "1d472b15-4b57-41c4-acb7-2c50af08005f",
+      "name": "Merge S3 Params & Binary Data"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Register Media Upload",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Fetch Source Video File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Source Video File": {
+      "main": [
+        [
+          {
+            "node": "Merge S3 Params & Binary Data",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Upload to AWS S3": {
+      "main": [
+        [
+          {
+            "node": "Wait for Video Processing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait for Video Processing": {
+      "main": [
+        [
+          {
+            "node": "Create Video Pin",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Register Media Upload": {
+      "main": [
+        [
+          {
+            "node": "Merge S3 Params & Binary Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge S3 Params & Binary Data": {
+      "main": [
+        [
+          {
+            "node": "Upload to AWS S3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "sample-version-id",
+  "meta": {
+    "instanceId": "sample-instance-id"
+  },
+  "id": "pinterest-video-upload-n8n",
+  "tags": []
+}

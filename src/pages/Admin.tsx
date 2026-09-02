@@ -245,6 +245,10 @@ function LinkedInPostManager() {
       const response = await fetch(`${API_BASE_URL}/api/posts`);
       if (!response.ok) throw new Error('Failed to fetch');
       const data = await response.json();
+      // DEBUG: log raw created_at values to understand the format
+      if (data.length > 0) {
+        console.log('DEBUG created_at:', data[0].created_at, 'type:', typeof data[0].created_at);
+      }
       setPosts(data);
     } catch (error) {
       console.error('Error fetching posts:', error);

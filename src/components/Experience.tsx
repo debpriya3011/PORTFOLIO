@@ -22,11 +22,13 @@ const defaultExperiences: ExperienceItem[] = [
     role: 'Data Engineer',
     type: 'Full-time',
     location: 'Kolkata, West Bengal, India',
-    duration: 'Jul 2025 - Present (10 mos)',
+    duration: 'Jul 2025 - Present (1 yr 2 mos)',
     description: [
-      'Working on data pipeline development and optimization',
-      'Implementing automation solutions for ML workflows',
-      'Managing data extraction and ingestion processes'
+      'Built and optimized large-scale data pipelines for web scraping, extraction, transformation, and ingestion',
+      'Developed automated data collection and workflows using n8n, Make, and custom automation scripts',
+      'Designed and managed scalable scraping and data ingestion processes to efficiently collect and process large volumes of data',
+      'Automated repetitive data workflows and pipeline operations, improving efficiency and reducing manual effort',
+
     ],
     skills: ['Selenium', 'Python', 'PostgreSQL', 'n8n', 'Data Analysis']
   },
@@ -49,13 +51,13 @@ const defaultExperiences: ExperienceItem[] = [
 function ExperienceCard({ experience, index }: { experience: ExperienceItem; index: number }) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-50px' });
-  
-  const descriptionArray = Array.isArray(experience.description) 
-    ? experience.description 
+
+  const descriptionArray = Array.isArray(experience.description)
+    ? experience.description
     : experience.description?.split('\n').filter(Boolean) || [];
-  
-  const skillsArray = Array.isArray(experience.skills) 
-    ? experience.skills 
+
+  const skillsArray = Array.isArray(experience.skills)
+    ? experience.skills
     : JSON.parse(experience.skills || '[]');
 
   return (
@@ -80,7 +82,7 @@ function ExperienceCard({ experience, index }: { experience: ExperienceItem; ind
               </div>
             </div>
           </div>
-          
+
           <div className="flex flex-wrap gap-2 text-sm text-muted-foreground">
             <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-muted">
               <Briefcase className="w-3 h-3 flex-shrink-0" />
@@ -154,16 +156,16 @@ export default function Experience() {
 
   useEffect(() => {
     fetchAndMergeExperience();
-    
+
     const handleVisibilityChange = () => {
       if (document.visibilityState === 'visible') {
         fetchAndMergeExperience();
       }
     };
-    
+
     document.addEventListener('visibilitychange', handleVisibilityChange);
     const refreshInterval = setInterval(fetchAndMergeExperience, 30000);
-    
+
     return () => {
       document.removeEventListener('visibilitychange', handleVisibilityChange);
       clearInterval(refreshInterval);
@@ -204,12 +206,12 @@ export default function Experience() {
             <Briefcase className="w-4 h-4 text-violet-500" />
             <span className="text-sm text-violet-500 font-medium">Career</span>
           </motion.div>
-          
+
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4">
             Work <span className="gradient-text">Experience</span>
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Professional journey in data engineering and software development, 
+            Professional journey in data engineering and software development,
             building scalable solutions and automation systems.
           </p>
         </motion.div>
