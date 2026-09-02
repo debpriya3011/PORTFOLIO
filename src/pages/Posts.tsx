@@ -13,7 +13,7 @@ interface LinkedInPost {
   images: string | string[]; // Can be JSON string or array
   likes: number;
   comments: number;
-  created_at: number;
+  created_at: string | number;
 }
 
 // Helper to safely parse images and clean up escaped ampersands
@@ -202,9 +202,9 @@ export default function Posts() {
                         <h3 className="font-bold">{post.author_name || 'Unknown'}</h3>
                         <p className="text-sm text-muted-foreground">
                           {(() => {
-                            const d = typeof post.created_at === 'number'
-                              ? new Date(post.created_at * 1000)   // Unix epoch in seconds
-                              : new Date(post.created_at);          // Postgres timestamp string
+                            // Postgres BIGINT comes back as a numeric string e.g. "1725280423"
+                            const epoch = parseInt(String(post.created_at), 10);
+                            const d = new Date(epoch * 1000);
                             return isNaN(d.getTime()) ? 'Date unavailable' : d.toLocaleDateString();
                           })()}
                         </p>

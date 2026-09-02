@@ -36,7 +36,7 @@ interface Post {
   images: string[];
   likes: number;
   comments: number;
-  created_at: string;
+  created_at: string | number;
 }
 
 interface Skill {
@@ -415,7 +415,12 @@ function LinkedInPostManager() {
                     <div className="flex-1 min-w-0">
                       <p className="font-medium truncate">{post.author_name || 'Unknown'}</p>
                       <p className="text-xs text-muted-foreground">
-                        {new Date(post.created_at).toLocaleDateString()}
+                        {(() => {
+                          // Postgres BIGINT comes back as a numeric string e.g. "1725280423"
+                          const epoch = parseInt(String(post.created_at), 10);
+                          const d = new Date(epoch * 1000);
+                          return isNaN(d.getTime()) ? 'Date unavailable' : d.toLocaleDateString();
+                        })()}
                       </p>
                     </div>
                     <Button
