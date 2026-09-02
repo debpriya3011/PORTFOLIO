@@ -187,7 +187,7 @@ export default function Guides() {
               }`}
             >
               <Workflow className="w-4 h-4" />
-              4-Step Pipeline Flow
+              {selectedGuide.pipelineSteps.length}-Stage Architecture Flow
             </button>
             <button
               onClick={() => setActiveTab('downloads')}
@@ -220,7 +220,7 @@ export default function Guides() {
               }`}
             >
               <Code2 className="w-4 h-4" />
-              Raw Payloads & cURL
+              Architecture & Code Snippets
             </button>
           </div>
 
@@ -235,7 +235,7 @@ export default function Guides() {
                 exit={{ opacity: 0, y: -10 }}
                 className="space-y-6"
               >
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                   {selectedGuide.pipelineSteps.map((step) => (
                     <div
                       key={step.stepNumber}
@@ -250,8 +250,14 @@ export default function Guides() {
                             className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${
                               step.method === 'POST'
                                 ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30'
+                                : step.method === 'GET'
+                                ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
                                 : step.method === 'WAIT'
                                 ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30'
+                                : step.method === 'ENGINE'
+                                ? 'bg-indigo-500/20 text-indigo-400 border border-indigo-500/30'
+                                : step.method === 'CALC'
+                                ? 'bg-rose-500/20 text-rose-400 border border-rose-500/30'
                                 : 'bg-purple-500/20 text-purple-400 border border-purple-500/30'
                             }`}
                           >
