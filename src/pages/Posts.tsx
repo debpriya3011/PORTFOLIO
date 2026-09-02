@@ -201,7 +201,12 @@ export default function Posts() {
                       <div>
                         <h3 className="font-bold">{post.author_name || 'Unknown'}</h3>
                         <p className="text-sm text-muted-foreground">
-                          {new Date(post.created_at * 1000).toLocaleDateString()}
+                          {(() => {
+                            const d = typeof post.created_at === 'number'
+                              ? new Date(post.created_at * 1000)   // Unix epoch in seconds
+                              : new Date(post.created_at);          // Postgres timestamp string
+                            return isNaN(d.getTime()) ? 'Date unavailable' : d.toLocaleDateString();
+                          })()}
                         </p>
                       </div>
                     </div>
