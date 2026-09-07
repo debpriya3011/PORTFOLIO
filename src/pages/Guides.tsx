@@ -4,7 +4,6 @@ import {
   Download,
   Workflow,
   Layers,
-  ExternalLink,
   Copy,
   Check,
   Key,
@@ -15,9 +14,7 @@ import {
   Zap,
   Code2,
   Clock,
-  CheckCircle2,
-  Info,
-  ChevronDown
+  CheckCircle2
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { automationGuides } from '@/data/guidesData';
