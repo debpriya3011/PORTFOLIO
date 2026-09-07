@@ -45,7 +45,7 @@ export interface AutomationGuide {
   lastUpdated: string;
   featured: boolean;
   problemStatement: string;
-  whyRare: string;
+  whyRare?: string;
   keyFeatures: string[];
   pipelineSteps: PipelineStep[];
   downloads: GuideDownload[];
@@ -449,6 +449,167 @@ export const automationGuides: AutomationGuide[] = [
       "cover_image_content_type": "image/jpeg"
     }
   }'`
+      }
+    ]
+  },
+  {
+    id: 'photo-sequencer-pro',
+    slug: 'photo-sequencer-pro',
+    title: 'PhotoSequencer Pro — Visual Sequence Arranger & Batch Exporter',
+    subtitle: 'Lightweight desktop application engineered with high-performance Pillow Lanczos thumbnail caching, interactive Tkinter canvas coordinate mapping, native TkinterDnD drag-and-drop bindings, EXIF rotation recovery, and threaded multi-format batch exporting.',
+    badge: 'Desktop Utility Suite',
+    category: 'Desktop Engineering & Media Automation',
+    readTime: '8 min read',
+    difficulty: 'Intermediate',
+    platforms: ['Python 3', 'Tkinter & Canvas Engine', 'TkinterDnD2 (C/Tcl Bindings)', 'Pillow (PIL)', 'Threading', 'PyInstaller Standalone Binary'],
+    tags: ['Python Desktop App', 'Image Processing', 'Drag & Drop', 'Batch Renamer', 'TkinterDnD', 'Pillow', 'Standalone Executable', 'EXIF Orientation'],
+    lastUpdated: '2026',
+    featured: true,
+    problemStatement:
+      'Photographers, stop-motion animators, digital artists, and content publishers frequently need to visually organize, reorder, rotate, and batch-rename large sets of image sequences before importing into video editors or uploading to web CMS platforms. Standard file managers lack visual drag-and-drop sequencing, while commercial graphic suites are bloated and lack customizable zero-padded batch exporting with format transcoding.',
+    keyFeatures: [
+      'Responsive Canvas Grid Engine (Dynamically calculates column count and card flow based on window resize events with zero visual clipping)',
+      'High-Performance In-Memory Thumbnail Caching (Lanczos resampling with aspect-ratio preserving square framing to render 100+ 4K photos instantly)',
+      'Native OS Drag & Drop Integration (Low-level TkinterDnD integration for direct file and folder drops from Windows Explorer)',
+      'Visual Drag-to-Reorder & Insertion Indicator (Real-time cyan drop indicator bar, floating ghost preview, and live sequence renumbering)',
+      'EXIF Camera Orientation & In-App Lossless Rotation (Automatic orientation correction and per-card 90° clockwise rotation tools)',
+      'Threaded Non-Blocking Batch Exporter (Background worker with progress bar, custom prefixing, digit zero-padding, format conversion to JPG/PNG/WebP, and auto-opening destination folder)',
+      'Zero-Dependency Standalone Compilation (Packaged via PyInstaller with native tkdnd binaries into a single portable Windows .exe)'
+    ],
+    pipelineSteps: [
+      {
+        stepNumber: 1,
+        title: 'Native File Payload Ingestion & EXIF Extraction',
+        method: 'ENGINE',
+        endpoint: 'TkinterDnD.drop_target_register(DND_FILES)',
+        description: 'Intercepts native drag-and-drop payloads from the operating system shell or file picker dialogs. Automatically parses image headers to extract raw dimensions, file size, and EXIF orientation tags.',
+        highlights: [
+          'Handles path sanitization and multi-file token split across Windows/macOS formats',
+          'Utilizes ImageOps.exif_transpose to ensure camera rotations are respected without quality degradation'
+        ]
+      },
+      {
+        stepNumber: 2,
+        title: 'Responsive Grid Coordinate Mapping & Card Rendering',
+        method: 'CALC',
+        endpoint: 'Canvas.create_polygon() & tag_bind()',
+        description: 'Computes responsive column counts dynamically on <Configure> window events. Draws rounded rectangular card containers, sequence badges (#01, #02), quick-action buttons (✕ Delete, ↻ Rotate), and truncated filename metadata.',
+        highlights: [
+          'Maintains dual-mapping dictionary between Canvas item IDs and memory array indices',
+          'Generates cached Lanczos square thumbnails on demand with zoom slider scaling (100px - 220px)'
+        ]
+      },
+      {
+        stepNumber: 3,
+        title: 'Interactive Reordering Engine & Insertion Visualizer',
+        method: 'ENGINE',
+        endpoint: 'Canvas.bind(<B1-Motion>) & Canvas.create_line()',
+        description: 'Tracks cursor motion to create a semi-transparent floating thumbnail ghost while calculating target insertion points. Renders an interactive cyan insertion guide indicating drop placement before splicing the sequence array.',
+        highlights: [
+          'Instant non-destructive array splicing and dynamic badge renumbering upon mouse release',
+          'Keyboard navigation support: Move Left/Right with arrow keys and Delete key removal'
+        ]
+      },
+      {
+        stepNumber: 4,
+        title: 'Threaded Batch Renaming & Transcoding Pipeline',
+        method: 'ENGINE',
+        endpoint: 'threading.Thread(target=export_worker)',
+        description: 'Executes non-blocking batch exports in a dedicated background thread. Formats filenames with customizable prefixes (e.g., Photo_), starting index, and digit padding (e.g., 001). Applies lossless copy for unchanged files or quality-controlled transcoding to JPEG/PNG/WebP.',
+        highlights: [
+          'Maintains 60fps UI responsiveness with synchronized modal progress bar updates',
+          'Auto-opens the output directory in Windows Explorer (os.startfile) upon completion'
+        ]
+      }
+    ],
+    downloads: [
+      {
+        title: 'PhotoSequencer Pro (Windows 64-bit Executable)',
+        type: 'exe',
+        fileName: 'PhotoSequencerPro.exe',
+        url: '/downloads/PhotoSequencerPro.exe',
+        size: '31.3 MB',
+        description: 'Standalone compiled Windows application. No Python or external dependencies required — download and double-click to run.',
+        platform: 'Windows App'
+      }
+    ],
+    placeholderGuide: [
+      {
+        key: 'Filename Prefix',
+        description: 'Base naming string prepended to all output files (e.g., "Photo_", "Frame_", "Step_").',
+        whereToFind: 'Export Sequence Modal -> Filename Prefix input box',
+        format: 'Text string (e.g., "Photo_")'
+      },
+      {
+        key: 'Start Index & Digits Padding',
+        description: 'The starting sequence number (e.g., 1) and zero-padding digit width (e.g., 3 creates "001", "002").',
+        whereToFind: 'Export Sequence Modal -> Start Index / Digits Padding spinboxes',
+        format: 'Integer (e.g., Start: 1, Padding: 3)'
+      },
+      {
+        key: 'Format Conversion',
+        description: 'Output image format: Keep Original extension, or transcode to JPEG (.jpg), PNG (.png), or WEBP (.webp).',
+        whereToFind: 'Export Sequence Modal -> Convert Format dropdown',
+        format: 'Keep Original | JPEG (.jpg) | PNG (.png) | WEBP (.webp)'
+      },
+      {
+        key: 'Destination Folder',
+        description: 'Target directory on your disk where the renamed sequence will be generated.',
+        whereToFind: 'Export Sequence Modal -> Destination Folder -> Browse...',
+        format: 'Absolute folder path (e.g., "C:\\Exports\\Sequence_01")'
+      }
+    ],
+    codeSnippets: [
+      {
+        title: '1. Auto-Dependency Detection & Ingestion',
+        language: 'python',
+        code: `def ensure_dependencies():
+    required_packages = {"PIL": "Pillow", "tkinterdnd2": "tkinterdnd2"}
+    missing = [pkg for mod, pkg in required_packages.items() if not __import_check__(mod)]
+    if missing:
+        import subprocess, sys
+        subprocess.check_call([sys.executable, "-m", "pip", "install", *missing])
+
+# Native TkinterDnD Drag & Drop Integration
+try:
+    from tkinterdnd2 import DND_FILES, TkinterDnD
+    BaseTk = TkinterDnD.Tk
+except ImportError:
+    BaseTk = tk.Tk`
+      },
+      {
+        title: '2. Responsive Canvas Grid & Interactive Drag Engine',
+        language: 'python',
+        code: `def redraw_grid(self):
+    canvas_w = self.canvas.winfo_width()
+    cols = max(1, (canvas_w - self.card_padding) // (self.card_size + 20 + self.card_padding))
+    
+    for idx, item in enumerate(self.items):
+        row, col = idx // cols, idx % cols
+        x1 = self.card_padding + col * (self.card_size + 20 + self.card_padding)
+        y1 = self.card_padding + row * (self.card_size + 48 + self.card_padding)
+        
+        # Draw card container, cached Lanczos thumbnail & sequence badge
+        self._create_rounded_rect(x1, y1, x1 + self.card_size + 20, y1 + self.card_size + 48)
+        self.canvas.create_image(x1 + 10, y1 + 10, anchor="nw", image=item.get_thumbnail(self.card_size))`
+      },
+      {
+        title: '3. Threaded Batch Renamer with EXIF Normalization',
+        language: 'python',
+        code: `def worker():
+    for idx, item in enumerate(self.items):
+        seq_num = str(start_idx + idx).zfill(pad_digits)
+        target_name = f"{prefix}{seq_num}{target_ext}"
+        target_path = os.path.join(dest_dir, target_name)
+        
+        if item.rotation == 0 and ("Keep Original" in fmt or target_ext == orig_ext):
+            shutil.copy2(item.filepath, target_path)
+        else:
+            with Image.open(item.filepath) as raw:
+                img = ImageOps.exif_transpose(raw)
+                if item.rotation != 0:
+                    img = img.rotate(-item.rotation, expand=True)
+                img.save(target_path, quality=95)`
       }
     ]
   }
