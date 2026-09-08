@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Download,
@@ -14,7 +14,8 @@ import {
   Zap,
   Code2,
   Clock,
-  CheckCircle2
+  CheckCircle2,
+  Loader2
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { automationGuides } from '@/data/guidesData';
@@ -26,7 +27,15 @@ export default function Guides() {
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTag, setSelectedTag] = useState<string>('All');
+  const [loading, setLoading] = useState(true);
   const detailRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 350);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Collect all unique tags
   const allTags = ['All', ...Array.from(new Set(automationGuides.flatMap(g => g.tags)))];
@@ -58,37 +67,35 @@ export default function Guides() {
     }
   };
 
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center pt-16">
+        <Loader2 className="w-8 h-8 animate-spin text-violet-500" />
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+    <div className="min-h-screen pt-24 pb-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
       {/* Header */}
-      <div className="text-center max-w-3xl mx-auto mb-12">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-violet-500/10 border border-violet-500/20 text-violet-400 text-xs font-semibold uppercase tracking-wider mb-4"
-        >
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="text-center max-w-3xl mx-auto mb-12"
+      >
+        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-violet-500/10 border border-violet-500/20 text-violet-400 text-xs font-semibold uppercase tracking-wider mb-4">
           <Sparkles className="w-3.5 h-3.5" />
           Production Blueprints & Technical Guides
-        </motion.div>
+        </div>
 
-        <motion.h1
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="text-3xl sm:text-5xl font-extrabold tracking-tight mb-4"
-        >
+        <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight mb-4">
           API Architecture & <span className="gradient-text">Automation Blueprints</span>
-        </motion.h1>
+        </h1>
 
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="text-muted-foreground text-base sm:text-lg leading-relaxed"
-        >
+        <p className="text-muted-foreground text-base sm:text-lg leading-relaxed">
           Production-tested automation workflows, desktop architectures, and low-level API guides engineered for high performance, custom pipelines, and distributed integrations.
-        </motion.p>
-      </div>
+        </p>
+      </motion.div>
 
       {/* Search & Tag Filter */}
       <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-8">

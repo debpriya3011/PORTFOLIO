@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
@@ -16,10 +16,6 @@ import {
   RefreshCw,
   Briefcase,
   Award,
-  Workflow,
-  Image as ImageIcon,
-  Upload,
-  X,
   Save,
   User
 } from 'lucide-react';
@@ -58,25 +54,6 @@ interface Experience {
   end_date: string | null;
   description: string;
   skills: string[];
-  display_order: number;
-  created_at: string;
-}
-
-interface Image {
-  id: number;
-  filename: string;
-  url: string;
-  alt: string;
-  category: string;
-  created_at: string;
-}
-
-interface Workflow {
-  id: number;
-  name: string;
-  description: string;
-  nodes: any[];
-  edges: any[];
   display_order: number;
   created_at: string;
 }
@@ -447,142 +424,6 @@ function LinkedInPostManager() {
   );
 }
 
-// Image Upload Manager
-function ImageManager() {
-  const [images, setImages] = useState<Image[]>([]);
-  const [uploading, setUploading] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    fetchImages();
-  }, []);
-
-  const fetchImages = async () => {
-    setLoading(true);
-    try {
-      const response = await fetch(`${API_BASE_URL}/images`);
-      if (!response.ok) throw new Error('Failed to fetch');
-      const data = await response.json();
-      setImages(data);
-    } catch (error) {
-      console.error('Error fetching images:', error);
-      toast.error('Failed to load images');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    setUploading(true);
-    const formData = new FormData();
-    formData.append('image', file);
-    formData.append('alt', file.name);
-    formData.append('category', 'general');
-
-    try {
-      const response = await fetch(`${API_BASE_URL}/images`, {
-        method: 'POST',
-        body: formData
-      });
-
-      if (!response.ok) throw new Error('Upload failed');
-      
-      toast.success('Image uploaded to Neon!');
-      fetchImages();
-    } catch (error) {
-      console.error('Upload error:', error);
-      toast.error('Failed to upload image');
-    } finally {
-      setUploading(false);
-      if (fileInputRef.current) {
-        fileInputRef.current.value = '';
-      }
-    }
-  };
-
-  const deleteImage = async (id: number) => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/images/${id}`, {
-        method: 'DELETE'
-      });
-      if (!response.ok) throw new Error('Failed to delete');
-      toast.success('Image deleted!');
-      fetchImages();
-    } catch (error) {
-      console.error('Delete error:', error);
-      toast.error('Failed to delete image');
-    }
-  };
-
-  return (
-    <div className="space-y-6">
-      {/* Upload */}
-      <div className="glass rounded-xl p-6">
-        <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
-          <Upload className="w-5 h-5 text-violet-500" />
-          Upload Image to Neon
-        </h3>
-        <input
-          type="file"
-          ref={fileInputRef}
-          onChange={handleUpload}
-          accept="image/*"
-          className="hidden"
-        />
-        <Button
-          onClick={() => fileInputRef.current?.click()}
-          disabled={uploading}
-          className="w-full bg-gradient-to-r from-violet-500 to-fuchsia-500"
-        >
-          {uploading ? (
-            <Loader2 className="w-4 h-4 animate-spin mr-2" />
-          ) : (
-            <Plus className="w-4 h-4 mr-2" />
-          )}
-          Select Image
-        </Button>
-      </div>
-
-      {/* Gallery */}
-      {loading ? (
-        <div className="flex justify-center py-12">
-          <Loader2 className="w-8 h-8 animate-spin text-violet-500" />
-        </div>
-      ) : (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {images.map((image) => (
-            <motion.div
-              key={image.id}
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="relative group aspect-square"
-            >
-              <img
-                src={image.url}
-                alt={image.alt}
-                className="w-full h-full object-cover rounded-xl"
-              />
-              <button
-                onClick={() => deleteImage(image.id)}
-                className="absolute top-2 right-2 p-1.5 rounded-full bg-red-500 text-white opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600"
-              >
-                <X className="w-4 h-4" />
-              </button>
-              <div className="absolute bottom-2 left-2 right-2 bg-black/50 text-white text-xs p-1 rounded opacity-0 group-hover:opacity-100 transition-opacity truncate">
-                {image.alt}
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-}
-
 // Skills Manager
 function SkillsManager() {
   const [skills, setSkills] = useState<Skill[]>([]);
@@ -905,216 +746,6 @@ function ExperienceManager() {
   );
 }
 
-// Workflow Manager
-function WorkflowManager() {
-  const [workflows, setWorkflows] = useState<Workflow[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [newWorkflow, setNewWorkflow] = useState({
-    name: '',
-    description: '',
-    nodes: [{ label: '', icon: 'Database', color: '#8b5cf6' }]
-  });
-
-  useEffect(() => {
-    fetchWorkflows();
-  }, []);
-
-  const fetchWorkflows = async () => {
-    setLoading(true);
-    try {
-      const response = await fetch(`${API_BASE_URL}/workflows`);
-      if (!response.ok) throw new Error('Failed to fetch');
-      const data = await response.json();
-      setWorkflows(data);
-    } catch (error) {
-      console.error('Error fetching workflows:', error);
-      toast.error('Failed to load workflows');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const addNode = () => {
-    setNewWorkflow({
-      ...newWorkflow,
-      nodes: [...newWorkflow.nodes, { label: '', icon: 'Database', color: '#8b5cf6' }]
-    });
-  };
-
-  const removeNode = (index: number) => {
-    if (newWorkflow.nodes.length <= 1) return;
-    const updatedNodes = newWorkflow.nodes.filter((_, i) => i !== index);
-    setNewWorkflow({ ...newWorkflow, nodes: updatedNodes });
-  };
-
-  const updateNode = (index: number, field: string, value: string) => {
-    const updatedNodes = [...newWorkflow.nodes];
-    updatedNodes[index] = { ...updatedNodes[index], [field]: value };
-    setNewWorkflow({ ...newWorkflow, nodes: updatedNodes });
-  };
-
-  const saveWorkflow = async () => {
-    if (!newWorkflow.name.trim()) {
-      toast.error('Please enter a workflow name');
-      return;
-    }
-
-    try {
-      const response = await fetch(`${API_BASE_URL}/workflows`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: newWorkflow.name,
-          description: newWorkflow.description,
-          nodes: JSON.stringify(newWorkflow.nodes.filter(n => n.label.trim())),
-          edges: JSON.stringify([]),
-          display_order: workflows.length
-        })
-      });
-
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || 'Failed to save');
-      }
-
-      toast.success('Workflow saved to Neon!');
-      setNewWorkflow({ name: '', description: '', nodes: [{ label: '', icon: 'Database', color: '#8b5cf6' }] });
-      fetchWorkflows();
-    } catch (error) {
-      console.error('Save workflow error:', error);
-      toast.error(error instanceof Error ? error.message : 'Failed to save workflow');
-    }
-  };
-
-  return (
-    <div className="space-y-6">
-      {/* Create Workflow */}
-      <div className="glass rounded-xl p-6">
-        <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
-          <Workflow className="w-5 h-5 text-violet-500" />
-          Create Workflow in Neon
-        </h3>
-        <Input
-          placeholder="Workflow name (e.g., Data Pipeline)"
-          value={newWorkflow.name}
-          onChange={(e) => setNewWorkflow({ ...newWorkflow, name: e.target.value })}
-          className="mb-4"
-        />
-        <Textarea
-          placeholder="Description"
-          value={newWorkflow.description}
-          onChange={(e) => setNewWorkflow({ ...newWorkflow, description: e.target.value })}
-          className="mb-4"
-        />
-        
-        <div className="space-y-3 mb-4">
-          {newWorkflow.nodes.map((node, idx) => (
-            <div key={idx} className="flex gap-2 items-center">
-              <Input
-                placeholder={`Node ${idx + 1} label (e.g., Extract)`}
-                value={node.label}
-                onChange={(e) => updateNode(idx, 'label', e.target.value)}
-                className="flex-1"
-              />
-              <input
-                type="color"
-                value={node.color}
-                onChange={(e) => updateNode(idx, 'color', e.target.value)}
-                className="w-12 h-10 rounded cursor-pointer"
-              />
-              {newWorkflow.nodes.length > 1 && (
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => removeNode(idx)}
-                  className="text-red-500"
-                >
-                  <X className="w-4 h-4" />
-                </Button>
-              )}
-            </div>
-          ))}
-        </div>
-        
-        <div className="flex gap-2">
-          <Button variant="outline" onClick={addNode}>
-            <Plus className="w-4 h-4 mr-2" />
-            Add Node
-          </Button>
-          <Button onClick={saveWorkflow} className="bg-gradient-to-r from-violet-500 to-fuchsia-500">
-            <Save className="w-4 h-4 mr-2" />
-            Save to Neon
-          </Button>
-        </div>
-      </div>
-
-      {/* Preview */}
-      {newWorkflow.nodes.some(n => n.label) && (
-        <div className="glass rounded-xl p-6">
-          <h4 className="font-bold mb-4">Preview</h4>
-          <div className="flex flex-wrap gap-4">
-            {newWorkflow.nodes.map((node, idx) => (
-              node.label && (
-                <motion.div
-                  key={idx}
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  className="w-24 h-24 rounded-xl flex flex-col items-center justify-center p-2"
-                  style={{
-                    background: `${node.color}20`,
-                    border: `2px solid ${node.color}`
-                  }}
-                >
-                  <span className="text-xs font-medium text-center break-words" style={{ color: node.color }}>
-                    {node.label}
-                  </span>
-                </motion.div>
-              )
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Existing Workflows */}
-      {loading ? (
-        <div className="flex justify-center py-8">
-          <Loader2 className="w-6 h-6 animate-spin text-violet-500" />
-        </div>
-      ) : (
-        <div className="space-y-4">
-          <h3 className="text-lg font-bold">Saved Workflows ({workflows.length})</h3>
-          {workflows.length === 0 ? (
-            <p className="text-center text-muted-foreground py-8">No workflows yet. Create your first workflow!</p>
-          ) : (
-            workflows.map((wf) => (
-              <motion.div
-                key={wf.id}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="glass rounded-xl p-4"
-              >
-                <p className="font-bold">{wf.name}</p>
-                <p className="text-sm text-muted-foreground mb-2">{wf.description}</p>
-                <div className="flex gap-2 flex-wrap">
-                  {wf.nodes?.map((node: any, idx: number) => (
-                    <span
-                      key={idx}
-                      className="px-2 py-1 rounded text-xs"
-                      style={{ background: `${node.color}30`, color: node.color }}
-                    >
-                      {node.label}
-                    </span>
-                  ))}
-                </div>
-              </motion.div>
-            ))
-          )}
-        </div>
-      )}
-    </div>
-  );
-}
-
 // Main Admin Dashboard
 function AdminDashboard() {
   return (
@@ -1130,37 +761,26 @@ function AdminDashboard() {
         </motion.div>
 
         <Tabs defaultValue="posts" className="space-y-6">
-          <TabsList className="flex w-full overflow-x-auto gap-1 h-auto p-1">
+          <TabsList className="flex w-full justify-center overflow-x-auto gap-1 h-auto p-1 max-w-md mx-auto">
             <TabsTrigger
               value="posts"
-              className="flex items-center gap-2 text-xs py-2 px-3 whitespace-nowrap ml-9">
+              className="flex items-center gap-2 text-xs py-2 px-4 whitespace-nowrap"
+            >
               <Linkedin className="w-4 h-4 shrink-0" />
               <span>Posts</span>
             </TabsTrigger>
-            <TabsTrigger value="images" className="flex items-center gap-2 text-xs py-2 px-3 whitespace-nowrap">
-              <ImageIcon className="w-4 h-4 shrink-0" />
-              <span>Images</span>
-            </TabsTrigger>
-            <TabsTrigger value="skills" className="flex items-center gap-2 text-xs py-2 px-3 whitespace-nowrap">
+            <TabsTrigger value="skills" className="flex items-center gap-2 text-xs py-2 px-4 whitespace-nowrap">
               <Award className="w-4 h-4 shrink-0" />
               <span>Skills</span>
             </TabsTrigger>
-            <TabsTrigger value="experience" className="flex items-center gap-2 text-xs py-2 px-3 whitespace-nowrap">
+            <TabsTrigger value="experience" className="flex items-center gap-2 text-xs py-2 px-4 whitespace-nowrap">
               <Briefcase className="w-4 h-4 shrink-0" />
               <span>Exp</span>
-            </TabsTrigger>
-            <TabsTrigger value="workflows" className="flex items-center gap-2 text-xs py-2 px-3 whitespace-nowrap">
-              <Workflow className="w-4 h-4 shrink-0" />
-              <span>Flow</span>
             </TabsTrigger>
           </TabsList>
 
           <TabsContent value="posts">
             <LinkedInPostManager />
-          </TabsContent>
-
-          <TabsContent value="images">
-            <ImageManager />
           </TabsContent>
 
           <TabsContent value="skills">
@@ -1169,10 +789,6 @@ function AdminDashboard() {
 
           <TabsContent value="experience">
             <ExperienceManager />
-          </TabsContent>
-
-          <TabsContent value="workflows">
-            <WorkflowManager />
           </TabsContent>
         </Tabs>
       </div>
