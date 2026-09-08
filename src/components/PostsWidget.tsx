@@ -25,7 +25,7 @@ export default function PostsWidget() {
   useEffect(() => {
     const chatDismissed = localStorage.getItem('posts_widget_dismissed');
     const chatOpened = localStorage.getItem('posts_widget_opened');
-    
+
     if (chatDismissed === 'true' || chatOpened === 'true') {
       setHasNewNotification(false);
     } else {
@@ -59,11 +59,11 @@ export default function PostsWidget() {
       },
       {
         delay: 2400,
-        text: "I load his latest professional projects, data engineering insights, and milestones shared directly from LinkedIn! 📈",
+        text: "I can show you his architecture blueprints, engineering guides, and latest LinkedIn posts!",
       },
       {
         delay: 3800,
-        text: "Would you like to browse his posts? There's a lot of cool engineering stuff in there! ✨",
+        text: "What would you like to explore?",
       }
     ];
 
@@ -114,36 +114,53 @@ export default function PostsWidget() {
     localStorage.setItem('posts_widget_dismissed', 'true');
   };
 
-  const handleReply = (accept: boolean) => {
+  const handleReply = (option: 'posts' | 'blueprints' | 'dismiss') => {
+    let userText = '';
+    let botText = '';
+    let targetPath: string | null = null;
+
+    if (option === 'blueprints') {
+      userText = "Show me the blueprints! 📐";
+      botText = "Awesome! Redirecting you to the blueprints page now... Enjoy! 📐";
+      targetPath = '/guides';
+    } else if (option === 'posts') {
+      userText = "Yes, show me the posts! 🚀";
+      botText = "Awesome! Redirecting you to the posts page now... Enjoy! 📚";
+      targetPath = '/posts';
+    } else {
+      userText = "No thanks, maybe later.";
+      botText = "No problem! You can always click the 'Blueprints' or 'Posts' tabs in the navbar or tap me anytime to see them. Have a great day! 👋";
+    }
+
     // Record user response in chat
     setMessages((prev) => [
       ...prev,
       {
         id: `reply-${Date.now()}`,
-        text: accept ? "Yes, take me there! 🚀" : "No thanks, maybe later.",
+        text: userText,
         sender: 'user',
         timestamp: new Date(),
       },
     ]);
     setShowReplies(false);
 
-    if (accept) {
+    if (targetPath) {
       setIsTyping(true);
       setTimeout(() => {
         setMessages((prev) => [
           ...prev,
           {
             id: `bot-nav-${Date.now()}`,
-            text: "Awesome! Redirecting you to the posts page now... Enjoy! 📚",
+            text: botText,
             sender: 'bot',
             timestamp: new Date(),
           },
         ]);
         setIsTyping(false);
-        
+
         setTimeout(() => {
           setIsOpen(false);
-          navigate('/posts');
+          navigate(targetPath);
         }, 1200);
       }, 800);
     } else {
@@ -153,7 +170,7 @@ export default function PostsWidget() {
           ...prev,
           {
             id: `bot-bye-${Date.now()}`,
-            text: "No problem! You can always click the 'Posts' tab in the navbar or tap me anytime to see them. Have a great day! 👋",
+            text: botText,
             sender: 'bot',
             timestamp: new Date(),
           },
@@ -189,7 +206,7 @@ export default function PostsWidget() {
               <div>
                 <p className="text-xs font-semibold text-foreground">New updates available!</p>
                 <p className="text-[11px] text-muted-foreground mt-0.5 leading-snug group-hover:text-violet-500 transition-colors">
-                  Check out my latest insights & LinkedIn posts.
+                  Check out blueprints & LinkedIn posts.
                 </p>
               </div>
             </div>
@@ -203,14 +220,14 @@ export default function PostsWidget() {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, y: 30, scale: 0.95 }}
+            initial={{ opacity: 0, y: 25, scale: 0.9, transformOrigin: 'bottom right' }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            transition={{ duration: 0.25, ease: 'easeOut' }}
-            className="mb-4 w-[320px] sm:w-[360px] h-[420px] glass border border-white/10 rounded-2xl shadow-2xl flex flex-col overflow-hidden"
+            exit={{ opacity: 0, y: 15, scale: 0.92, transformOrigin: 'bottom right' }}
+            transition={{ type: 'spring', damping: 26, stiffness: 320 }}
+            className="mb-4 w-[320px] sm:w-[360px] h-[460px] glass border border-white/15 rounded-3xl shadow-2xl flex flex-col overflow-hidden backdrop-blur-xl"
           >
             {/* Header */}
-            <div className="px-4 py-3 bg-gradient-to-r from-violet-500/10 to-fuchsia-500/10 border-b border-white/5 flex items-center justify-between">
+            <div className="px-4 py-3 bg-gradient-to-r from-violet-500/10 via-fuchsia-500/10 to-violet-500/10 border-b border-white/10 flex items-center justify-between">
               <div className="flex items-center gap-2.5">
                 <div className="relative">
                   <div className="w-8 h-8 rounded-full bg-gradient-to-br from-violet-500 to-fuchsia-500 flex items-center justify-center text-white font-bold text-sm shadow-md">
@@ -220,7 +237,7 @@ export default function PostsWidget() {
                 </div>
                 <div>
                   <h4 className="text-xs font-bold text-foreground">Debpriya's Assistant</h4>
-                  <p className="text-[10px] text-muted-foreground flex items-center gap-1">
+                  <p className="text-[10px] text-muted-foreground flex items-center gap-1 font-medium">
                     Online
                   </p>
                 </div>
@@ -229,27 +246,27 @@ export default function PostsWidget() {
                 variant="ghost"
                 size="icon"
                 onClick={handleOpenToggle}
-                className="w-7 h-7 rounded-lg hover:bg-white/10 text-muted-foreground hover:text-foreground"
+                className="w-7 h-7 rounded-lg hover:bg-white/10 text-muted-foreground hover:text-foreground transition-transform active:scale-90"
               >
                 <X className="w-4 h-4" />
               </Button>
             </div>
 
             {/* Chat Messages */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-thin">
+            <div className="flex-1 overflow-y-auto p-4 space-y-3.5 scrollbar-thin">
               {messages.map((msg) => (
                 <motion.div
                   key={msg.id}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
+                  initial={{ opacity: 0, y: 14, scale: 0.96 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  transition={{ type: 'spring', damping: 24, stiffness: 350 }}
                   className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
                 >
                   <div
-                    className={`max-w-[85%] rounded-2xl px-3.5 py-2.5 text-xs leading-relaxed ${
-                      msg.sender === 'user'
-                        ? 'bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white shadow-md rounded-tr-none'
-                        : 'bg-muted/75 text-foreground rounded-tl-none border border-border/20'
-                    }`}
+                    className={`max-w-[85%] rounded-2xl px-3.5 py-2.5 text-xs leading-relaxed shadow-sm ${msg.sender === 'user'
+                      ? 'bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white shadow-md rounded-tr-none'
+                      : 'bg-muted/80 text-foreground rounded-tl-none border border-border/20 backdrop-blur-sm'
+                      }`}
                   >
                     {msg.text}
                   </div>
@@ -263,7 +280,7 @@ export default function PostsWidget() {
                   animate={{ opacity: 1, y: 0 }}
                   className="flex justify-start"
                 >
-                  <div className="bg-muted/75 rounded-2xl rounded-tl-none border border-border/20 px-3.5 py-2.5 flex items-center gap-1">
+                  <div className="bg-muted/80 rounded-2xl rounded-tl-none border border-border/20 px-3.5 py-2.5 flex items-center gap-1">
                     <span className="w-1.5 h-1.5 bg-muted-foreground/60 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
                     <span className="w-1.5 h-1.5 bg-muted-foreground/60 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
                     <span className="w-1.5 h-1.5 bg-muted-foreground/60 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
@@ -278,21 +295,35 @@ export default function PostsWidget() {
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="p-4 pt-0 flex flex-col gap-2 bg-background/20 backdrop-blur-sm border-t border-white/5"
+                transition={{ duration: 0.2 }}
+                className="p-3.5 pt-0 flex flex-col gap-2 bg-background/25 backdrop-blur-sm border-t border-white/5"
               >
-                <button
-                  onClick={() => handleReply(true)}
-                  className="w-full py-2.5 px-4 bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white font-semibold rounded-xl text-xs hover:shadow-lg hover:shadow-violet-500/20 active:scale-[0.98] transition-all flex items-center justify-center gap-1.5"
+                <motion.button
+                  whileHover={{ scale: 1.02, y: -1 }}
+                  whileTap={{ scale: 0.97 }}
+                  onClick={() => handleReply('blueprints')}
+                  className="w-full py-2.5 px-4 bg-gradient-to-r from-violet-600 via-indigo-600 to-purple-600 hover:from-violet-500 hover:to-indigo-500 text-white font-semibold rounded-xl text-xs shadow-md shadow-violet-500/20 hover:shadow-violet-500/35 transition-all flex items-center justify-center gap-2 cursor-pointer border border-white/10"
+                >
+                  <Sparkles className="w-3.5 h-3.5 animate-pulse" />
+                  Explore Blueprints & Guides! 📐
+                </motion.button>
+                <motion.button
+                  whileHover={{ scale: 1.02, y: -1 }}
+                  whileTap={{ scale: 0.97 }}
+                  onClick={() => handleReply('posts')}
+                  className="w-full py-2.5 px-4 bg-gradient-to-r from-fuchsia-600 via-pink-600 to-rose-600 hover:from-fuchsia-500 hover:to-pink-500 text-white font-semibold rounded-xl text-xs shadow-md shadow-fuchsia-500/20 hover:shadow-fuchsia-500/35 transition-all flex items-center justify-center gap-2 cursor-pointer border border-white/10"
                 >
                   <Linkedin className="w-3.5 h-3.5" />
                   Yes, show me the posts! 🚀
-                </button>
-                <button
-                  onClick={() => handleReply(false)}
-                  className="w-full py-2.5 px-4 bg-secondary/80 hover:bg-secondary text-foreground font-semibold rounded-xl text-xs active:scale-[0.98] transition-all"
+                </motion.button>
+                <motion.button
+                  whileHover={{ scale: 1.01 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => handleReply('dismiss')}
+                  className="w-full py-2 px-4 bg-secondary/80 hover:bg-secondary text-foreground font-semibold rounded-xl text-xs transition-colors cursor-pointer"
                 >
                   Not now, just browsing
-                </button>
+                </motion.button>
               </motion.div>
             )}
           </motion.div>
@@ -302,11 +333,12 @@ export default function PostsWidget() {
       {/* Floating Action Button */}
       <motion.button
         onClick={handleOpenToggle}
-        whileHover={{ scale: 1.08 }}
-        whileTap={{ scale: 0.95 }}
-        className="w-14 h-14 bg-gradient-to-br from-violet-500 to-fuchsia-500 rounded-full flex items-center justify-center text-white shadow-xl shadow-violet-500/25 relative border border-white/10 select-none cursor-pointer"
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.92 }}
+        className="w-14 h-14 bg-gradient-to-br from-violet-500 to-fuchsia-500 rounded-full flex items-center justify-center text-white shadow-2xl shadow-violet-500/40 relative border border-white/20 select-none cursor-pointer group"
         aria-label="Toggle chatbot"
       >
+        <div className="absolute inset-0 rounded-full bg-gradient-to-r from-violet-500 to-fuchsia-500 animate-ping opacity-20 pointer-events-none group-hover:opacity-40 transition-opacity" />
         <AnimatePresence mode="wait">
           {isOpen ? (
             <motion.div
