@@ -229,6 +229,44 @@ app.post('/api/auth/verify-otp', async (req, res) => {
   }
 });
 
+app.post('/api/auth/google', async (req, res) => {
+  const { credential } = req.body;
+
+  if (!credential) {
+    return res.status(400).json({ error: 'Google credential is required' });
+  }
+
+  try {
+    // Verify ID token with Google TokenInfo endpoint
+    const response = await fetch(`https://oauth2.googleapis.com/tokeninfo?id_token=${encodeURIComponent(credential)}`);
+    
+    if (!response.ok) {
+      const errInfo = await response.json().catch(() => ({}));
+      return res.status(401).json({ error: errInfo.error_description || 'Invalid Google token' });
+    }
+
+    const payload = await response.json();
+    const email = payload.email;
+    const emailVerified = payload.email_verified === 'true' || payload.email_verified === true;
+
+    if (!emailVerified) {
+      return res.status(401).json({ error: 'Google email is not verified' });
+    }
+
+    if (email !== 'debpriya3011@gmail.com') {
+      console.log('❌ Google Auth Access Denied for:', email);
+      return res.status(403).json({ error: 'Unauthorized email address: Only debpriya3011@gmail.com is allowed' });
+    }
+
+    console.log('✅ Google Auth Success for:', email);
+    res.json({ success: true, token: 'demo-token-' + Date.now(), user: { email, name: payload.name } });
+  } catch (err) {
+    console.error('❌ Google Auth Error:', err);
+    res.status(500).json({ error: 'Google auth failed: ' + err.message });
+  }
+});
+
+
 /* ================= LINKEDIN SCRAPER ================= */
 
 

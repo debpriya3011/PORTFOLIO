@@ -6,13 +6,13 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { toast } from 'sonner';
-import { 
-  Loader2, 
-  Lock, 
-  Mail, 
-  Linkedin, 
-  Plus, 
-  Trash2, 
+import {
+  Loader2,
+  Lock,
+  Mail,
+  Linkedin,
+  Plus,
+  Trash2,
   RefreshCw,
   Briefcase,
   Award,
@@ -58,6 +58,12 @@ interface Experience {
   created_at: string;
 }
 
+declare global {
+  interface Window {
+    google?: any;
+  }
+}
+
 // Login Component
 function LoginForm() {
   const { login } = useAuth();
@@ -65,6 +71,65 @@ function LoginForm() {
   const [otp, setOtp] = useState('');
   const [otpSent, setOtpSent] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID || '164348458496-tur37rbf28ncac1r0nn9efj6o9vamad4.apps.googleusercontent.com';
+
+    const handleGoogleResponse = async (response: any) => {
+      if (!response.credential) return;
+      setLoading(true);
+      try {
+        const res = await fetch(`${API_BASE_URL}/api/auth/google`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ credential: response.credential })
+        });
+        const data = await res.json();
+        if (res.ok && data.success) {
+          login(data.token);
+          toast.success('Google Login successful!');
+        } else {
+          toast.error(data.error || 'Google login failed');
+        }
+      } catch (err) {
+        console.error('Google login error:', err);
+        toast.error('Network error during Google login');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    const initGoogle = () => {
+      if (!window.google?.accounts?.id) return;
+      window.google.accounts.id.initialize({
+        client_id: googleClientId,
+        callback: handleGoogleResponse
+      });
+
+      const btnParent = document.getElementById('googleSignInBtn');
+      if (btnParent) {
+        btnParent.innerHTML = '';
+        window.google.accounts.id.renderButton(btnParent, {
+          theme: 'filled_blue',
+          size: 'large',
+          width: 240,
+          text: 'signin_with',
+          shape: 'pill'
+        });
+      }
+    };
+
+    if (window.google?.accounts?.id) {
+      initGoogle();
+    } else {
+      const script = document.createElement('script');
+      script.src = 'https://accounts.google.com/gsi/client';
+      script.async = true;
+      script.defer = true;
+      script.onload = () => initGoogle();
+      document.body.appendChild(script);
+    }
+  }, [login]);
 
   const sendOTP = async () => {
     if (email !== 'debpriya3011@gmail.com') {
@@ -126,16 +191,34 @@ function LoginForm() {
         animate={{ opacity: 1, y: 0 }}
         className="w-full max-w-md p-8 glass rounded-2xl"
       >
-        <div className="text-center mb-8">
-          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-violet-500 to-fuchsia-500 flex items-center justify-center mx-auto mb-4">
-            <Lock className="w-8 h-8 text-white" />
+        <div className="text-center mb-5">
+          <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-violet-500 to-fuchsia-500 flex items-center justify-center mx-auto mb-3">
+            <Lock className="w-7 h-7 text-white" />
           </div>
           <h1 className="text-2xl font-bold">Admin Login</h1>
-          <p className="text-muted-foreground mt-2">
-            OTP will be sent to your Email
+          <p className="text-muted-foreground mt-1 text-sm">
+            Sign in with Google OAuth or Email OTP
           </p>
         </div>
 
+        {/* Google OAuth Section */}
+        <div className="mb-4 flex flex-col items-center">
+          <div id="googleSignInBtn" className="w-full flex justify-center min-h-[40px]"></div>
+        </div>
+
+        <div className="relative mb-4">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-muted-foreground/20" />
+          </div>
+          <div className="relative flex justify-center text-xs uppercase">
+            <span className="bg-background/80 backdrop-blur-md px-2 text-muted-foreground">
+              Or continue with OTP
+            </span>
+          </div>
+        </div>
+
+
+        {/* OTP Section */}
         <div className="space-y-4">
           <div>
             <label className="block text-sm font-medium mb-2">Email</label>
@@ -203,6 +286,7 @@ function LoginForm() {
     </div>
   );
 }
+
 
 // LinkedIn Post Manager
 function LinkedInPostManager() {
@@ -281,7 +365,7 @@ function LinkedInPostManager() {
           author_name: scrapedData.author_name,
           author_image: scrapedData.author_image || '',
           content: scrapedData.content,
-          images: scrapedData.images || [] ,
+          images: scrapedData.images || [],
           likes: scrapedData.likes || 0,
           comments: scrapedData.comments || 0,
           comments_data: JSON.stringify(scrapedData.comments_data || [])
@@ -368,7 +452,7 @@ function LinkedInPostManager() {
           <span>Posts in Neon ({posts.length})</span>
           {fetching && <Loader2 className="w-4 h-4 animate-spin" />}
         </h3>
-        
+
         {posts.length === 0 && !fetching ? (
           <div className="glass rounded-xl p-8 text-center">
             <p className="text-muted-foreground">No posts yet. Add your first LinkedIn post above!</p>
@@ -428,10 +512,10 @@ function LinkedInPostManager() {
 function SkillsManager() {
   const [skills, setSkills] = useState<Skill[]>([]);
   const [loading, setLoading] = useState(false);
-  const [newSkill, setNewSkill] = useState({ 
-    name: '', 
-    category: 'Industry Knowledge', 
-    sources: '' 
+  const [newSkill, setNewSkill] = useState({
+    name: '',
+    category: 'Industry Knowledge',
+    sources: ''
   });
 
   useEffect(() => {
@@ -656,24 +740,24 @@ function ExperienceManager() {
           Add Experience to Neon
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-          <Input 
-            placeholder="Company *" 
-            value={newExp.company} 
-            onChange={(e) => setNewExp({ ...newExp, company: e.target.value })} 
+          <Input
+            placeholder="Company *"
+            value={newExp.company}
+            onChange={(e) => setNewExp({ ...newExp, company: e.target.value })}
           />
-          <Input 
-            placeholder="Role *" 
-            value={newExp.role} 
-            onChange={(e) => setNewExp({ ...newExp, role: e.target.value })} 
+          <Input
+            placeholder="Role *"
+            value={newExp.role}
+            onChange={(e) => setNewExp({ ...newExp, role: e.target.value })}
           />
-          <Input 
-            placeholder="Location" 
-            value={newExp.location} 
-            onChange={(e) => setNewExp({ ...newExp, location: e.target.value })} 
+          <Input
+            placeholder="Location"
+            value={newExp.location}
+            onChange={(e) => setNewExp({ ...newExp, location: e.target.value })}
           />
-          <select 
-            className="px-3 py-2 rounded-md bg-background border" 
-            value={newExp.type} 
+          <select
+            className="px-3 py-2 rounded-md bg-background border"
+            value={newExp.type}
             onChange={(e) => setNewExp({ ...newExp, type: e.target.value })}
           >
             <option>Full-time</option>
@@ -681,15 +765,15 @@ function ExperienceManager() {
             <option>Internship</option>
             <option>Contract</option>
           </select>
-          <Input 
-            placeholder="Start Date (e.g., Jan 2020)" 
-            value={newExp.start_date} 
-            onChange={(e) => setNewExp({ ...newExp, start_date: e.target.value })} 
+          <Input
+            placeholder="Start Date (e.g., Jan 2020)"
+            value={newExp.start_date}
+            onChange={(e) => setNewExp({ ...newExp, start_date: e.target.value })}
           />
-          <Input 
-            placeholder="End Date (or 'Present')" 
-            value={newExp.end_date} 
-            onChange={(e) => setNewExp({ ...newExp, end_date: e.target.value })} 
+          <Input
+            placeholder="End Date (or 'Present')"
+            value={newExp.end_date}
+            onChange={(e) => setNewExp({ ...newExp, end_date: e.target.value })}
           />
         </div>
         <Textarea
