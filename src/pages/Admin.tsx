@@ -133,7 +133,7 @@ function LoginForm() {
 
   const sendOTP = async () => {
     if (email !== 'debpriya3011@gmail.com') {
-      toast.error('Unauthorized email address');
+      toast.error('Access denied: You do not have permission to access the admin portal');
       return;
     }
 

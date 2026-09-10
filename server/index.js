@@ -255,7 +255,7 @@ app.post('/api/auth/google', async (req, res) => {
 
     if (email !== 'debpriya3011@gmail.com') {
       console.log('❌ Google Auth Access Denied for:', email);
-      return res.status(403).json({ error: 'Unauthorized email address: Only debpriya3011@gmail.com is allowed' });
+      return res.status(403).json({ error: 'Access denied: You do not have permission to access the admin portal' });
     }
 
     console.log('✅ Google Auth Success for:', email);
