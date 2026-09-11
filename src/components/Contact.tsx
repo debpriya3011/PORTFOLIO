@@ -7,6 +7,10 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
 
+import { Loader2 } from 'lucide-react';
+
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+
 export default function Contact() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-100px' });
@@ -15,12 +19,35 @@ export default function Contact() {
     email: '',
     message: ''
   });
+  const [submitting, setSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // In a real app, send to backend
-    toast.success('Message sent successfully! I will get back to you soon.');
-    setFormData({ name: '', email: '', message: '' });
+    if (!formData.name || !formData.email || !formData.message) {
+      toast.error('Please fill in all fields');
+      return;
+    }
+
+    setSubmitting(true);
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/contact`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      });
+      const data = await response.json();
+      if (response.ok && data.success) {
+        toast.success('Message sent successfully! I will get back to you soon.');
+        setFormData({ name: '', email: '', message: '' });
+      } else {
+        toast.error(data.error || 'Failed to send message');
+      }
+    } catch (error) {
+      console.error('Send message error:', error);
+      toast.error('Network error - please try again later');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const contactInfo = [
@@ -161,10 +188,15 @@ export default function Contact() {
               </div>
               <Button
                 type="submit"
+                disabled={submitting}
                 className="w-full bg-gradient-to-r from-violet-500 to-fuchsia-500 hover:from-violet-600 hover:to-fuchsia-600"
               >
-                <Send className="w-4 h-4 mr-2" />
-                Send Message
+                {submitting ? (
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                ) : (
+                  <Send className="w-4 h-4 mr-2" />
+                )}
+                {submitting ? 'Sending Message...' : 'Send Message'}
               </Button>
             </form>
           </motion.div>

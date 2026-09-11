@@ -17,7 +17,18 @@ import {
   Briefcase,
   Award,
   Save,
-  User
+  User,
+  ShieldCheck,
+  Smartphone,
+  KeyRound,
+  Copy,
+  Check,
+  QrCode,
+  ShieldAlert,
+  MessageSquare,
+  Inbox,
+  CheckCheck,
+  Clock
 } from 'lucide-react';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
@@ -67,8 +78,10 @@ declare global {
 // Login Component
 function LoginForm() {
   const { login } = useAuth();
-  const [email, setEmail] = useState('');
+  const [loginMode, setLoginMode] = useState<'otp' | 'totp'>('totp');
+  const [email, setEmail] = useState('debpriya3011@gmail.com');
   const [otp, setOtp] = useState('');
+  const [totpCode, setTotpCode] = useState('');
   const [otpSent, setOtpSent] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -100,35 +113,48 @@ function LoginForm() {
     };
 
     const initGoogle = () => {
-      if (!window.google?.accounts?.id) return;
-      window.google.accounts.id.initialize({
-        client_id: googleClientId,
-        callback: handleGoogleResponse
-      });
-
-      const btnParent = document.getElementById('googleSignInBtn');
-      if (btnParent) {
-        btnParent.innerHTML = '';
-        window.google.accounts.id.renderButton(btnParent, {
-          theme: 'filled_blue',
-          size: 'large',
-          width: 240,
-          text: 'signin_with',
-          shape: 'pill'
+      try {
+        if (!window.google?.accounts?.id) return;
+        window.google.accounts.id.initialize({
+          client_id: googleClientId,
+          callback: handleGoogleResponse
         });
+
+        const btnParent = document.getElementById('googleSignInBtn');
+        if (btnParent) {
+          btnParent.innerHTML = '';
+          window.google.accounts.id.renderButton(btnParent, {
+            theme: 'filled_blue',
+            size: 'large',
+            width: 240,
+            text: 'signin_with',
+            shape: 'pill'
+          });
+        }
+      } catch (err) {
+        console.error('Google GSI init error:', err);
       }
     };
 
-    if (window.google?.accounts?.id) {
-      initGoogle();
-    } else {
-      const script = document.createElement('script');
-      script.src = 'https://accounts.google.com/gsi/client';
-      script.async = true;
-      script.defer = true;
-      script.onload = () => initGoogle();
-      document.body.appendChild(script);
-    }
+    const timer = setTimeout(() => {
+      if (window.google?.accounts?.id) {
+        initGoogle();
+      } else {
+        const existingScript = document.querySelector('script[src="https://accounts.google.com/gsi/client"]');
+        if (existingScript) {
+          initGoogle();
+        } else {
+          const script = document.createElement('script');
+          script.src = 'https://accounts.google.com/gsi/client';
+          script.async = true;
+          script.defer = true;
+          script.onload = () => initGoogle();
+          document.body.appendChild(script);
+        }
+      }
+    }, 100);
+
+    return () => clearTimeout(timer);
   }, [login]);
 
   const sendOTP = async () => {
@@ -184,8 +210,42 @@ function LoginForm() {
     }
   };
 
+  const verifyTotp = async () => {
+    if (email !== 'debpriya3011@gmail.com') {
+      toast.error('Access denied: Google Authenticator is reserved for Admin only');
+      return;
+    }
+
+    if (!totpCode || totpCode.length !== 6) {
+      toast.error('Please enter a valid 6-digit Google Authenticator code');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/auth/totp/verify`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, code: totpCode })
+      });
+
+      const data = await response.json();
+      if (response.ok && data.success) {
+        login(data.token);
+        toast.success('Google Authenticator login successful!');
+      } else {
+        toast.error(data.error || 'Invalid Google Authenticator code');
+      }
+    } catch (error) {
+      console.error('TOTP verify error:', error);
+      toast.error('Network error during Google Authenticator verification');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <div className="min-h-screen flex items-center justify-center pt-16">
+    <div className="min-h-screen flex items-center justify-center pt-16 pb-12">
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
@@ -197,7 +257,7 @@ function LoginForm() {
           </div>
           <h1 className="text-2xl font-bold">Admin Login</h1>
           <p className="text-muted-foreground mt-1 text-sm">
-            Sign in with Google OAuth or Email OTP
+            Exclusive Portal for Admin Authentication
           </p>
         </div>
 
@@ -206,82 +266,148 @@ function LoginForm() {
           <div id="googleSignInBtn" className="w-full flex justify-center min-h-[40px]"></div>
         </div>
 
-        <div className="relative mb-4">
+        <div className="relative mb-5">
           <div className="absolute inset-0 flex items-center">
             <div className="w-full border-t border-muted-foreground/20" />
           </div>
           <div className="relative flex justify-center text-xs uppercase">
             <span className="bg-background/80 backdrop-blur-md px-2 text-muted-foreground">
-              Or continue with OTP
+              Or Choose Admin Auth Method
             </span>
           </div>
         </div>
 
+        {/* Login Mode Selector */}
+        <div className="grid grid-cols-2 gap-2 mb-5 p-1 bg-muted/40 rounded-xl">
+          <button
+            type="button"
+            onClick={() => setLoginMode('totp')}
+            className={`flex items-center justify-center gap-2 py-2 px-3 text-xs font-semibold rounded-lg transition-all ${loginMode === 'totp'
+              ? 'bg-violet-600 text-white shadow-md'
+              : 'text-muted-foreground hover:text-foreground'
+              }`}
+          >
+            <Smartphone className="w-3.5 h-3.5" />
+            Google Authenticator
+          </button>
+          <button
+            type="button"
+            onClick={() => setLoginMode('otp')}
+            className={`flex items-center justify-center gap-2 py-2 px-3 text-xs font-semibold rounded-lg transition-all ${loginMode === 'otp'
+              ? 'bg-violet-600 text-white shadow-md'
+              : 'text-muted-foreground hover:text-foreground'
+              }`}
+          >
+            <Mail className="w-3.5 h-3.5" />
+            Email OTP
+          </button>
+        </div>
 
-        {/* OTP Section */}
-        <div className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium mb-2">Email</label>
-            <div className="relative">
-              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-              <Input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="abcd@gmail.com"
-                className="pl-10"
-                disabled={otpSent}
-              />
+        {loginMode === 'totp' ? (
+          <div className="space-y-5">
+            <div className="text-center space-y-3">
+              <label className="block text-sm font-semibold text-foreground/90">
+                Google Authenticator Code
+              </label>
+              <div className="relative max-w-[200px] mx-auto">
+                <KeyRound className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-violet-400" />
+                <Input
+                  type="text"
+                  value={totpCode}
+                  onChange={(e) => setTotpCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                  placeholder="000000"
+                  className="pl-9 pr-4 font-mono tracking-[0.2em] text-center text-xl h-12 rounded-full border-violet-500/30 focus-visible:ring-violet-500/50 shadow-inner bg-background/50"
+                  maxLength={6}
+                  autoFocus
+                />
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Enter the 6-digit code from Google Authenticator app
+              </p>
+            </div>
+
+            <Button
+              onClick={verifyTotp}
+              disabled={loading || totpCode.length !== 6}
+              className="w-full bg-gradient-to-r from-violet-500 to-fuchsia-500 gap-2 h-11 text-sm font-semibold rounded-xl shadow-lg shadow-violet-500/20"
+            >
+              {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <ShieldCheck className="w-4 h-4" />}
+              Verify &amp; Log In
+            </Button>
+
+            {/* Security Note */}
+            <div className="pt-3 border-t border-border/40 text-center space-y-1">
+              <p className="text-[11px] text-muted-foreground">
+                <strong>First time setup?</strong> Log in using Google Sign-In or Email OTP above first, then open <strong>Admin Dashboard &gt; Security 2FA</strong> to scan your QR code.
+              </p>
             </div>
           </div>
+        ) : (
+          /* OTP Section */
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium mb-2">Email</label>
+              <div className="relative">
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                <Input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="abcd@gmail.com"
+                  className="pl-10"
+                  disabled={otpSent}
+                />
+              </div>
+            </div>
 
-          {otpSent && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-            >
-              <label className="block text-sm font-medium mb-2">OTP</label>
-              <Input
-                type="text"
-                value={otp}
-                onChange={(e) => setOtp(e.target.value)}
-                placeholder="Enter 6-digit OTP"
-                maxLength={6}
-              />
-              <p className="text-xs text-muted-foreground mt-2">
-                Check your Gmail inbox/spam for the OTP
-              </p>
-            </motion.div>
-          )}
-
-          <Button
-            onClick={otpSent ? verifyOTP : sendOTP}
-            disabled={loading || !email}
-            className="w-full bg-gradient-to-r from-violet-500 to-fuchsia-500"
-          >
-            {loading ? (
-              <Loader2 className="w-4 h-4 animate-spin" />
-            ) : otpSent ? (
-              'Verify OTP'
-            ) : (
-              'Send OTP'
+            {otpSent && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+              >
+                <label className="block text-sm font-medium mb-2">OTP</label>
+                <Input
+                  type="text"
+                  value={otp}
+                  onChange={(e) => setOtp(e.target.value)}
+                  placeholder="Enter 6-digit OTP"
+                  maxLength={6}
+                />
+                <p className="text-xs text-muted-foreground mt-2">
+                  Check your Gmail inbox/spam for the OTP
+                </p>
+              </motion.div>
             )}
-          </Button>
 
-          {otpSent && (
             <Button
-              variant="ghost"
-              onClick={() => {
-                setOtpSent(false);
-                setOtp('');
-                sendOTP();
-              }}
-              className="w-full"
+              onClick={otpSent ? verifyOTP : sendOTP}
+              disabled={loading || !email}
+              className="w-full bg-gradient-to-r from-violet-500 to-fuchsia-500"
             >
-              Resend OTP
+              {loading ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : otpSent ? (
+                'Verify OTP'
+              ) : (
+                'Send OTP'
+              )}
             </Button>
-          )}
-        </div>
+
+            {otpSent && (
+              <Button
+                variant="ghost"
+                onClick={() => {
+                  setOtpSent(false);
+                  setOtp('');
+                  sendOTP();
+                }}
+                className="w-full"
+              >
+                Resend OTP
+              </Button>
+            )}
+          </div>
+        )}
       </motion.div>
     </div>
   );
@@ -830,6 +956,428 @@ function ExperienceManager() {
   );
 }
 
+// Google Authenticator Security Manager Component
+function SecurityManager() {
+  const [totpEnabled, setTotpEnabled] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [setupData, setSetupData] = useState<{ secret: string; qrCodeUrl: string } | null>(null);
+  const [verifyCode, setVerifyCode] = useState('');
+  const [verifying, setVerifying] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const [disableCode, setDisableCode] = useState('');
+  const [disabling, setDisabling] = useState(false);
+  const [showDisableForm, setShowDisableForm] = useState(false);
+
+  const checkStatus = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/auth/totp/status`);
+      const data = await res.json();
+      setTotpEnabled(Boolean(data.enabled));
+    } catch (err) {
+      console.error('TOTP status error:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    checkStatus();
+  }, []);
+
+  const handleStartSetup = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/auth/totp/setup`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: 'debpriya3011@gmail.com' })
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setSetupData({ secret: data.secret, qrCodeUrl: data.qrCodeUrl });
+      } else {
+        toast.error(data.error || 'Failed to initialize Google Authenticator setup');
+      }
+    } catch (err) {
+      toast.error('Failed to communicate with server');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleVerifySetup = async () => {
+    if (!verifyCode || verifyCode.length !== 6) {
+      toast.error('Please enter a valid 6-digit code');
+      return;
+    }
+
+    setVerifying(true);
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/auth/totp/verify-setup`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: 'debpriya3011@gmail.com', code: verifyCode })
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        toast.success(data.message || 'Google Authenticator 2FA enabled successfully!');
+        setTotpEnabled(true);
+        setSetupData(null);
+        setVerifyCode('');
+      } else {
+        toast.error(data.error || 'Verification failed');
+      }
+    } catch (err) {
+      toast.error('Network error during verification');
+    } finally {
+      setVerifying(false);
+    }
+  };
+
+  const handleDisableTotp = async () => {
+    setDisabling(true);
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/auth/totp/disable`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: 'debpriya3011@gmail.com', code: disableCode })
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        toast.success('Google Authenticator 2FA disabled');
+        setTotpEnabled(false);
+        setShowDisableForm(false);
+        setDisableCode('');
+      } else {
+        toast.error(data.error || 'Failed to disable 2FA');
+      }
+    } catch (err) {
+      toast.error('Network error');
+    } finally {
+      setDisabling(false);
+    }
+  };
+
+  const copySecret = () => {
+    if (setupData?.secret) {
+      navigator.clipboard.writeText(setupData.secret);
+      setCopied(true);
+      toast.success('Secret key copied to clipboard');
+      setTimeout(() => setCopied(false), 2000);
+    }
+  };
+
+  return (
+    <div className="glass rounded-2xl p-6 space-y-6 max-w-2xl mx-auto">
+      <div className="flex items-center justify-between border-b border-border/40 pb-4">
+        <div className="flex items-center gap-3">
+          <div className={`p-3 rounded-xl ${totpEnabled ? 'bg-emerald-500/10 text-emerald-500' : 'bg-amber-500/10 text-amber-500'}`}>
+            <ShieldCheck className="w-6 h-6" />
+          </div>
+          <div>
+            <h2 className="text-xl font-bold">Google Authenticator (2FA)</h2>
+            <p className="text-xs text-muted-foreground">Admin Multi-Factor Authentication</p>
+          </div>
+        </div>
+        <div className={`px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1.5 ${totpEnabled ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-amber-500/10 text-amber-400 border border-amber-500/20'}`}>
+          <span className={`w-2 h-2 rounded-full ${totpEnabled ? 'bg-emerald-500 animate-pulse' : 'bg-amber-500'}`} />
+          {totpEnabled ? '2FA Enabled' : '2FA Disabled'}
+        </div>
+      </div>
+
+      {loading ? (
+        <div className="flex justify-center py-8">
+          <Loader2 className="w-6 h-6 animate-spin text-violet-500" />
+        </div>
+      ) : !totpEnabled && !setupData ? (
+        <div className="text-center py-6 space-y-4">
+          <div className="w-16 h-16 rounded-full bg-violet-500/10 text-violet-500 flex items-center justify-center mx-auto">
+            <Smartphone className="w-8 h-8" />
+          </div>
+          <div>
+            <h3 className="text-lg font-semibold">Secure Admin Account with Google Authenticator</h3>
+            <p className="text-sm text-muted-foreground max-w-md mx-auto mt-1">
+              Use any TOTP authenticator app (Google Authenticator, Authy, 1Password) to generate 2FA security codes for instant admin login.
+            </p>
+          </div>
+          <Button
+            onClick={handleStartSetup}
+            className="bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white gap-2 font-medium px-6"
+          >
+            <QrCode className="w-4 h-4" />
+            Set Up Google Authenticator
+          </Button>
+        </div>
+      ) : setupData ? (
+        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
+          <div className="p-4 bg-violet-500/5 rounded-xl border border-violet-500/20 text-sm text-violet-300">
+            <p className="font-semibold mb-1">Step 1: Scan QR Code with Google Authenticator App</p>
+            <p className="text-xs text-muted-foreground">Open Google Authenticator on your mobile phone, tap the <strong>+</strong> button, and choose <strong>Scan a QR code</strong>.</p>
+          </div>
+
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-6 p-4 bg-background/50 rounded-2xl border border-border/40">
+            <div className="p-3 bg-white rounded-xl shadow-lg">
+              <img src={setupData.qrCodeUrl} alt="Google Authenticator QR Code" className="w-44 h-44 rounded" />
+            </div>
+            <div className="space-y-3 max-w-xs text-center sm:text-left">
+              <div>
+                <p className="text-xs text-muted-foreground uppercase font-semibold">Manual Setup Key</p>
+                <div className="flex items-center gap-2 mt-1 bg-muted/50 p-2 rounded-lg font-mono text-xs break-all">
+                  <span>{setupData.secret}</span>
+                  <Button variant="ghost" size="icon" onClick={copySecret} className="h-6 w-6 shrink-0">
+                    {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                  </Button>
+                </div>
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Can't scan QR code? Tap <strong>Enter a setup key</strong> in your app and paste the code above.
+              </p>
+            </div>
+          </div>
+
+          <div className="space-y-3 pt-2">
+            <label className="block text-sm font-semibold">Step 2: Enter 6-Digit Code from App to Verify</label>
+            <div className="flex gap-2">
+              <Input
+                type="text"
+                value={verifyCode}
+                onChange={(e) => setVerifyCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                placeholder="123456"
+                className="font-mono text-center tracking-widest text-lg h-11"
+                maxLength={6}
+              />
+              <Button
+                onClick={handleVerifySetup}
+                disabled={verifying || verifyCode.length !== 6}
+                className="bg-emerald-600 hover:bg-emerald-700 text-white font-medium px-6 h-11 shrink-0"
+              >
+                {verifying ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Verify & Enable 2FA'}
+              </Button>
+            </div>
+          </div>
+
+          <div className="flex justify-end">
+            <Button variant="ghost" size="sm" onClick={() => setSetupData(null)} className="text-xs text-muted-foreground">
+              Cancel Setup
+            </Button>
+          </div>
+        </motion.div>
+      ) : (
+        <div className="space-y-4">
+          <div className="p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-xl flex items-start gap-3">
+            <ShieldCheck className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
+            <div className="text-sm">
+              <p className="font-semibold text-emerald-300">Google Authenticator is Active</p>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                Your admin account is protected by 2FA. You can log into the Admin portal anytime using your 6-digit Google Authenticator verification codes.
+              </p>
+            </div>
+          </div>
+
+          {!showDisableForm ? (
+            <Button
+              variant="outline"
+              onClick={() => setShowDisableForm(true)}
+              className="text-red-400 border-red-500/20 hover:bg-red-500/10 text-xs"
+            >
+              Disable Google Authenticator
+            </Button>
+          ) : (
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="p-4 glass rounded-xl space-y-3 border border-red-500/30">
+              <p className="text-sm font-semibold text-red-400">Confirm Disabling 2FA</p>
+              <p className="text-xs text-muted-foreground">Enter your 6-digit code from Google Authenticator to confirm disabling 2FA.</p>
+              <div className="flex gap-2">
+                <Input
+                  type="text"
+                  value={disableCode}
+                  onChange={(e) => setDisableCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                  placeholder="123456"
+                  className="font-mono text-center tracking-widest text-sm"
+                  maxLength={6}
+                />
+                <Button
+                  onClick={handleDisableTotp}
+                  disabled={disabling}
+                  className="bg-red-600 hover:bg-red-700 text-white text-xs px-4 shrink-0"
+                >
+                  {disabling ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : 'Confirm Disable'}
+                </Button>
+                <Button variant="ghost" size="sm" onClick={() => setShowDisableForm(false)} className="text-xs">
+                  Cancel
+                </Button>
+              </div>
+            </motion.div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// Messages Inbox Manager Component
+interface MessageItem {
+  id: number;
+  name: string;
+  email: string;
+  message: string;
+  is_read: boolean;
+  created_at: string | number;
+}
+
+function MessagesManager() {
+  const [messages, setMessages] = useState<MessageItem[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const fetchMessages = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/messages`);
+      if (!res.ok) throw new Error('Failed to fetch messages');
+      const data = await res.json();
+      setMessages(data);
+    } catch (err) {
+      console.error('Fetch messages error:', err);
+      toast.error('Failed to load messages');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchMessages();
+  }, []);
+
+  const markAsRead = async (id: number) => {
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/messages/${id}/read`, { method: 'PUT' });
+      if (res.ok) {
+        setMessages(prev => prev.map(m => m.id === id ? { ...m, is_read: true } : m));
+        toast.success('Marked as read');
+      }
+    } catch (err) {
+      toast.error('Failed to update message');
+    }
+  };
+
+  const deleteMessage = async (id: number) => {
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/messages/${id}`, { method: 'DELETE' });
+      if (res.ok) {
+        setMessages(prev => prev.filter(m => m.id !== id));
+        toast.success('Message deleted!');
+      }
+    } catch (err) {
+      toast.error('Failed to delete message');
+    }
+  };
+
+  const unreadCount = messages.filter(m => !m.is_read).length;
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between glass rounded-xl p-4">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-violet-500/10 text-violet-500 flex items-center justify-center">
+            <MessageSquare className="w-5 h-5" />
+          </div>
+          <div>
+            <h2 className="text-lg font-bold">Contact Messages Inbox</h2>
+            <p className="text-xs text-muted-foreground">Visitor submissions from portfolio contact form</p>
+          </div>
+        </div>
+        <div className="flex items-center gap-3">
+          {unreadCount > 0 && (
+            <span className="px-3 py-1 rounded-full text-xs font-semibold bg-violet-500 text-white animate-pulse">
+              {unreadCount} Unread
+            </span>
+          )}
+          <Button variant="ghost" size="icon" onClick={fetchMessages}>
+            <RefreshCw className="w-4 h-4" />
+          </Button>
+        </div>
+      </div>
+
+      {loading ? (
+        <div className="flex justify-center py-12">
+          <Loader2 className="w-6 h-6 animate-spin text-violet-500" />
+        </div>
+      ) : messages.length === 0 ? (
+        <div className="text-center py-12 glass rounded-2xl space-y-3">
+          <Inbox className="w-10 h-10 text-muted-foreground mx-auto" />
+          <h3 className="text-base font-semibold">No messages yet</h3>
+          <p className="text-xs text-muted-foreground max-w-sm mx-auto">
+            Messages submitted by visitors through your contact form will appear here.
+          </p>
+        </div>
+      ) : (
+        <div className="space-y-4">
+          {messages.map((msg) => (
+            <motion.div
+              key={msg.id}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className={`glass rounded-xl p-5 border transition-all ${
+                !msg.is_read ? 'border-violet-500/40 bg-violet-500/5' : 'border-border/40'
+              }`}
+            >
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3 pb-3 border-b border-border/40">
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-violet-500 to-fuchsia-500 flex items-center justify-center text-white text-xs font-bold">
+                    {msg.name ? msg.name.charAt(0).toUpperCase() : 'U'}
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-sm flex items-center gap-2">
+                      {msg.name}
+                      {!msg.is_read && (
+                        <span className="w-2 h-2 rounded-full bg-violet-500" />
+                      )}
+                    </h4>
+                    <a href={`mailto:${msg.email}`} className="text-xs text-violet-400 hover:underline flex items-center gap-1">
+                      <Mail className="w-3 h-3" />
+                      {msg.email}
+                    </a>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2 self-end sm:self-center text-xs text-muted-foreground">
+                  <span className="flex items-center gap-1">
+                    <Clock className="w-3.5 h-3.5" />
+                    {new Date(Number(msg.created_at) * 1000).toLocaleString()}
+                  </span>
+                  {!msg.is_read && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => markAsRead(msg.id)}
+                      className="text-xs text-emerald-400 hover:bg-emerald-500/10 h-8 px-2"
+                    >
+                      <CheckCheck className="w-3.5 h-3.5 mr-1" />
+                      Mark Read
+                    </Button>
+                  )}
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => deleteMessage(msg.id)}
+                    className="text-red-400 hover:bg-red-500/10 h-8 w-8"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
+
+              <p className="text-sm text-foreground/90 whitespace-pre-wrap leading-relaxed">
+                {msg.message}
+              </p>
+            </motion.div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 // Main Admin Dashboard
 function AdminDashboard() {
   return (
@@ -845,13 +1393,17 @@ function AdminDashboard() {
         </motion.div>
 
         <Tabs defaultValue="posts" className="space-y-6">
-          <TabsList className="flex w-full justify-center overflow-x-auto gap-1 h-auto p-1 max-w-md mx-auto">
+          <TabsList className="flex w-full justify-center overflow-x-auto gap-1 h-auto p-1 max-w-xl mx-auto">
             <TabsTrigger
               value="posts"
               className="flex items-center gap-2 text-xs py-2 px-4 whitespace-nowrap"
             >
               <Linkedin className="w-4 h-4 shrink-0" />
               <span>Posts</span>
+            </TabsTrigger>
+            <TabsTrigger value="messages" className="flex items-center gap-2 text-xs py-2 px-4 whitespace-nowrap">
+              <MessageSquare className="w-4 h-4 shrink-0 text-violet-400" />
+              <span>Messages</span>
             </TabsTrigger>
             <TabsTrigger value="skills" className="flex items-center gap-2 text-xs py-2 px-4 whitespace-nowrap">
               <Award className="w-4 h-4 shrink-0" />
@@ -861,10 +1413,18 @@ function AdminDashboard() {
               <Briefcase className="w-4 h-4 shrink-0" />
               <span>Exp</span>
             </TabsTrigger>
+            <TabsTrigger value="security" className="flex items-center gap-2 text-xs py-2 px-4 whitespace-nowrap">
+              <ShieldCheck className="w-4 h-4 shrink-0 text-emerald-400" />
+              <span>Security 2FA</span>
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="posts">
             <LinkedInPostManager />
+          </TabsContent>
+
+          <TabsContent value="messages">
+            <MessagesManager />
           </TabsContent>
 
           <TabsContent value="skills">
@@ -873,6 +1433,10 @@ function AdminDashboard() {
 
           <TabsContent value="experience">
             <ExperienceManager />
+          </TabsContent>
+
+          <TabsContent value="security">
+            <SecurityManager />
           </TabsContent>
         </Tabs>
       </div>
@@ -886,20 +1450,16 @@ export default function Admin() {
 
   if (!isAuthChecked) return null;
 
+  if (!isAuthenticated) {
+    return <LoginForm />;
+  }
+
   return (
-    <AnimatePresence mode="wait">
-      {!isAuthenticated ? (
-        <LoginForm key="login" />
-      ) : (
-        <motion.div
-          key="dashboard"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-        >
-          <AdminDashboard />
-        </motion.div>
-      )}
-    </AnimatePresence>
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+    >
+      <AdminDashboard />
+    </motion.div>
   );
 }

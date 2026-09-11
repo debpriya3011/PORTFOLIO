@@ -7,6 +7,8 @@ import https from 'https';
 import multer from 'multer';
 import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
+import { generateSecret, generateURI, verify } from 'otplib';
+import QRCode from 'qrcode';
 import db from './database.js';
 
 dotenv.config();
@@ -100,7 +102,7 @@ function generateOTP() {
 
 app.post('/api/auth/send-otp', async (req, res) => {
   const { email } = req.body;
-  
+
   console.log('📧 OTP request for:', email);
 
   if (email !== 'debpriya3011@gmail.com') {
@@ -113,7 +115,7 @@ app.post('/api/auth/send-otp', async (req, res) => {
 
   try {
     console.log('🔐 Generated OTP:', otp, 'for:', email);
-    
+
     // First, check if user exists
     const userCheck = await db.query(`SELECT * FROM users WHERE email=$1`, [email]);
     console.log('👤 User check result:', userCheck.rows);
@@ -146,7 +148,7 @@ app.post('/api/auth/send-otp', async (req, res) => {
         </div>
       `
     });
-    
+
     console.log('✅ Email sent successfully via Brevo:', mailResult.messageId);
     console.log('📧 Email details:', {
       to: mailResult.envelope.to,
@@ -162,7 +164,7 @@ app.post('/api/auth/send-otp', async (req, res) => {
       code: err.code,
       command: err.command
     });
-    
+
     // Provide more specific error messages
     let errorMessage = 'Failed to send OTP';
     if (err.code === 'ETIMEDOUT') {
@@ -172,7 +174,7 @@ app.post('/api/auth/send-otp', async (req, res) => {
     } else if (err.code === 'ESOCKET') {
       errorMessage = 'Socket error - network issue';
     }
-    
+
     res.status(500).json({ error: errorMessage + ': ' + err.message });
   }
 });
@@ -239,7 +241,7 @@ app.post('/api/auth/google', async (req, res) => {
   try {
     // Verify ID token with Google TokenInfo endpoint
     const response = await fetch(`https://oauth2.googleapis.com/tokeninfo?id_token=${encodeURIComponent(credential)}`);
-    
+
     if (!response.ok) {
       const errInfo = await response.json().catch(() => ({}));
       return res.status(401).json({ error: errInfo.error_description || 'Invalid Google token' });
@@ -263,6 +265,239 @@ app.post('/api/auth/google', async (req, res) => {
   } catch (err) {
     console.error('❌ Google Auth Error:', err);
     res.status(500).json({ error: 'Google auth failed: ' + err.message });
+  }
+});
+
+/* ================= GOOGLE AUTHENTICATOR (TOTP 2FA) ================= */
+
+const ADMIN_EMAIL = 'debpriya3011@gmail.com';
+
+// Check TOTP status for admin
+app.get('/api/auth/totp/status', async (req, res) => {
+  try {
+    const result = await db.query(`SELECT totp_enabled FROM users WHERE email=$1`, [ADMIN_EMAIL]);
+    const enabled = result.rows.length > 0 ? Boolean(result.rows[0].totp_enabled) : false;
+    res.json({ enabled });
+  } catch (err) {
+    console.error('❌ TOTP status check error:', err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Setup TOTP for admin
+app.post('/api/auth/totp/setup', async (req, res) => {
+  const { email } = req.body;
+  const targetEmail = email || ADMIN_EMAIL;
+
+  if (targetEmail !== ADMIN_EMAIL) {
+    return res.status(403).json({ error: 'Unauthorized: Google Authenticator is reserved for admin only' });
+  }
+
+  try {
+    const secret = generateSecret();
+    const otpauth = generateURI({ secret, label: ADMIN_EMAIL, issuer: 'Debpriya Portfolio Admin' });
+    const qrCodeUrl = await QRCode.toDataURL(otpauth);
+
+    // Save secret temporarily in database
+    await db.query(
+      `UPDATE users SET totp_secret=$1 WHERE email=$2`,
+      [secret, ADMIN_EMAIL]
+    );
+
+    res.json({
+      success: true,
+      secret,
+      qrCodeUrl,
+      otpauth
+    });
+  } catch (err) {
+    console.error('❌ TOTP setup error:', err);
+    res.status(500).json({ error: 'Failed to generate TOTP secret: ' + err.message });
+  }
+});
+
+// Verify code during setup and enable 2FA
+app.post('/api/auth/totp/verify-setup', async (req, res) => {
+  const { email, code } = req.body;
+  const targetEmail = email || ADMIN_EMAIL;
+
+  if (targetEmail !== ADMIN_EMAIL) {
+    return res.status(403).json({ error: 'Unauthorized' });
+  }
+
+  if (!code || code.length !== 6) {
+    return res.status(400).json({ error: 'Please enter a valid 6-digit code' });
+  }
+
+  try {
+    const result = await db.query(`SELECT totp_secret FROM users WHERE email=$1`, [ADMIN_EMAIL]);
+    if (!result.rows.length || !result.rows[0].totp_secret) {
+      return res.status(400).json({ error: 'TOTP setup not initiated' });
+    }
+
+    const secret = result.rows[0].totp_secret;
+    const verifyRes = await verify({ token: code.trim(), secret });
+    const isValid = Boolean(verifyRes?.valid);
+
+    if (!isValid) {
+      return res.status(400).json({ error: 'Invalid code. Please check your Google Authenticator app and try again.' });
+    }
+
+    // Mark TOTP as enabled
+    await db.query(`UPDATE users SET totp_enabled=TRUE WHERE email=$1`, [ADMIN_EMAIL]);
+
+    res.json({ success: true, message: 'Google Authenticator 2FA has been successfully enabled for Admin!' });
+  } catch (err) {
+    console.error('❌ TOTP verify-setup error:', err);
+    res.status(500).json({ error: 'Verification failed: ' + err.message });
+  }
+});
+
+// Verify TOTP code for admin login
+app.post('/api/auth/totp/verify', async (req, res) => {
+  const { email, code } = req.body;
+  const targetEmail = email || ADMIN_EMAIL;
+
+  if (targetEmail !== ADMIN_EMAIL) {
+    return res.status(403).json({ error: 'Access denied: Google Authenticator is reserved for admin only' });
+  }
+
+  if (!code || code.length !== 6) {
+    return res.status(400).json({ error: 'Please enter a valid 6-digit code from your app' });
+  }
+
+  try {
+    const result = await db.query(`SELECT totp_secret, totp_enabled FROM users WHERE email=$1`, [ADMIN_EMAIL]);
+    if (!result.rows.length || !result.rows[0].totp_enabled || !result.rows[0].totp_secret) {
+      return res.status(400).json({ error: 'Google Authenticator is not enabled for this account' });
+    }
+
+    const secret = result.rows[0].totp_secret;
+    const verifyRes = await verify({ token: code.trim(), secret });
+    const isValid = Boolean(verifyRes?.valid);
+
+    if (!isValid) {
+      return res.status(401).json({ error: 'Invalid or expired Google Authenticator code' });
+    }
+
+    res.json({ success: true, token: 'demo-token-' + Date.now(), user: { email: ADMIN_EMAIL, role: 'admin' } });
+  } catch (err) {
+    console.error('❌ TOTP login error:', err);
+    res.status(500).json({ error: 'Authentication failed: ' + err.message });
+  }
+});
+
+// Disable TOTP 2FA for admin
+app.post('/api/auth/totp/disable', async (req, res) => {
+  const { email, code } = req.body;
+  const targetEmail = email || ADMIN_EMAIL;
+
+  if (targetEmail !== ADMIN_EMAIL) {
+    return res.status(403).json({ error: 'Unauthorized' });
+  }
+
+  try {
+    const result = await db.query(`SELECT totp_secret, totp_enabled FROM users WHERE email=$1`, [ADMIN_EMAIL]);
+    if (result.rows.length && result.rows[0].totp_secret && code) {
+      const verifyRes = await verify({ token: code.trim(), secret: result.rows[0].totp_secret });
+      const isValid = Boolean(verifyRes?.valid);
+      if (!isValid) {
+        return res.status(400).json({ error: 'Invalid authenticator code' });
+      }
+    }
+
+    await db.query(
+      `UPDATE users SET totp_enabled=FALSE, totp_secret=NULL WHERE email=$1`,
+      [ADMIN_EMAIL]
+    );
+
+    res.json({ success: true, message: 'Google Authenticator 2FA disabled successfully' });
+  } catch (err) {
+    console.error('❌ TOTP disable error:', err);
+    res.status(500).json({ error: 'Failed to disable 2FA: ' + err.message });
+  }
+});
+
+/* ================= CONTACT MESSAGES ================= */
+
+// Submit a new contact message
+app.post('/api/contact', async (req, res) => {
+  const { name, email, message } = req.body;
+
+  if (!name || !email || !message) {
+    return res.status(400).json({ error: 'Name, email, and message are required' });
+  }
+
+  try {
+    // 1. Insert into messages table
+    const result = await db.query(
+      `INSERT INTO messages (name, email, message) VALUES ($1, $2, $3) RETURNING *`,
+      [name.trim(), email.trim(), message.trim()]
+    );
+    const savedMessage = result.rows[0];
+
+    // 2. Send Email alert via Brevo SMTP to admin
+    try {
+      await transporter.sendMail({
+        from: 'debpriya3011@gmail.com',
+        to: 'debpriya3011@gmail.com',
+        subject: `📩 New Portfolio Message from ${name}`,
+        html: `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e2e8f0; border-radius: 12px; background-color: #f8fafc;">
+            <h2 style="color: #6366f1; border-bottom: 2px solid #6366f1; padding-bottom: 10px; margin-top: 0;">New Contact Form Submission</h2>
+            <p style="font-size: 14px; color: #475569;"><strong>From:</strong> ${name} (&lt;<a href="mailto:${email}">${email}</a>&gt;)</p>
+            <p style="font-size: 14px; color: #475569;"><strong>Date:</strong> ${new Date().toLocaleString()}</p>
+            <div style="background-color: #ffffff; padding: 15px; border-radius: 8px; border: 1px solid #cbd5e1; margin-top: 15px;">
+              <p style="font-size: 15px; color: #1e293b; white-space: pre-wrap; margin: 0;">${message}</p>
+            </div>
+            <p style="font-size: 12px; color: #94a3b8; margin-top: 20px; text-align: center;">This message was received from your portfolio contact form.</p>
+          </div>
+        `
+      });
+      console.log('✅ Email notification sent to admin for message ID:', savedMessage.id);
+    } catch (mailErr) {
+      console.error('⚠️ Could not send email notification:', mailErr.message);
+    }
+
+    res.json({ success: true, message: 'Message sent successfully!', data: savedMessage });
+  } catch (err) {
+    console.error('❌ Error saving contact message:', err);
+    res.status(500).json({ error: 'Failed to send message: ' + err.message });
+  }
+});
+
+// Get all messages for admin
+app.get('/api/messages', async (req, res) => {
+  try {
+    const result = await db.query(`SELECT * FROM messages ORDER BY created_at DESC`);
+    res.json(result.rows);
+  } catch (err) {
+    console.error('❌ Error fetching messages:', err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Mark message as read
+app.put('/api/messages/:id/read', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const result = await db.query(`UPDATE messages SET is_read=TRUE WHERE id=$1 RETURNING *`, [id]);
+    res.json({ success: true, message: result.rows[0] });
+  } catch (err) {
+    console.error('❌ Error marking message as read:', err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Delete message
+app.delete('/api/messages/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    await db.query(`DELETE FROM messages WHERE id=$1`, [id]);
+    res.json({ success: true, message: 'Message deleted successfully' });
+  } catch (err) {
+    console.error('❌ Error deleting message:', err);
+    res.status(500).json({ error: err.message });
   }
 });
 
@@ -389,7 +624,7 @@ app.get('/api/scrape-linkedin', async (req, res) => {
     res.json({
       success: true,
       author_name: author,
-      author_image:author_image,
+      author_image: author_image,
       content: jsonLdData.articleBody,
       likes: likes || 0,
       comments: commentsCount || 0,
@@ -755,7 +990,7 @@ app.listen(PORT, () => {
   console.log(`📁 Server directory: ${__dirname}`);
   console.log(`📁 Uploads directory: ${uploadsDir}`);
   console.log(`📁 Looking for dist at: ${distPath}`);
-  
+
   if (fs.existsSync(distPath)) {
     console.log(`✅ FOUND dist/ folder`);
     const files = fs.readdirSync(distPath).slice(0, 10);

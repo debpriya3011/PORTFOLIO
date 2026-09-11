@@ -50,6 +50,11 @@ const initDB = async () => {
     `);
 
     await pool.query(`
+      ALTER TABLE users ADD COLUMN IF NOT EXISTS totp_secret TEXT;
+      ALTER TABLE users ADD COLUMN IF NOT EXISTS totp_enabled BOOLEAN DEFAULT FALSE;
+    `);
+
+    await pool.query(`
       CREATE TABLE IF NOT EXISTS posts (
         id SERIAL PRIMARY KEY,
         linkedin_url TEXT NOT NULL,
@@ -140,6 +145,17 @@ const initDB = async () => {
         nodes TEXT,
         edges TEXT,
         display_order INTEGER DEFAULT 0,
+        created_at BIGINT DEFAULT EXTRACT(EPOCH FROM NOW())
+      );
+    `);
+
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS messages (
+        id SERIAL PRIMARY KEY,
+        name TEXT NOT NULL,
+        email TEXT NOT NULL,
+        message TEXT NOT NULL,
+        is_read BOOLEAN DEFAULT FALSE,
         created_at BIGINT DEFAULT EXTRACT(EPOCH FROM NOW())
       );
     `);
