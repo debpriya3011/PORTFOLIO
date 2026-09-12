@@ -57,39 +57,6 @@ const defaultEducation: EducationItem[] = [
 
 const defaultCertifications: Certification[] = [
   {
-    name: 'Cutshort Certified Machine Learning (ML) - Advanced',
-    issuer: 'Cutshort',
-    issueDate: 'Oct 2024',
-    expiryDate: 'Oct 2025',
-    credentialId: '105961',
-    credentialUrl: 'https://cutshort.io/certificate/105961',
-    skills: ['Machine Learning']
-  },
-  {
-    name: 'British Airways - Data Science Job Simulation',
-    issuer: 'Forage',
-    issueDate: 'Jul 2024',
-    credentialId: 'yb37CE6EroSHwueag',
-    credentialUrl: 'https://forage-uploads-prod.s3.amazonaws.com/completion-certificates/British%20Airways/NjynCWzGSaWXQCxSX_British%20Airways_wY4sDTJWALbn2YAst_1722347934217_completion_certificate.pdf',
-    skills: ['Machine Learning']
-  },
-  {
-    name: 'PwC Switzerland - Power BI Job Simulation',
-    issuer: 'Forage',
-    issueDate: 'Jul 2024',
-    credentialId: 'yPAZzttR8RSta2jR4',
-    credentialUrl: 'https://forage-uploads-prod.s3.amazonaws.com/completion-certificates/PwC%20Switzerland/a87GpgE6tiku7q3gu_PwC%20Switzerland_wY4sDTJWALbn2YAst_1722321454169_completion_certificate.pdf',
-    skills: ['Microsoft Power BI', 'Engineering', 'Microsoft Excel', 'Design', 'Tableau']
-  },
-  {
-    name: 'J.P. Morgan - Software Engineering Job Simulation',
-    issuer: 'Forage',
-    issueDate: 'Jul 2024',
-    credentialId: 'L9EcFifTHs8bNMinb',
-    credentialUrl: 'https://forage-uploads-prod.s3.amazonaws.com/completion-certificates/J.P.%20Morgan/R5iK7HMxJGBgaSbvk_J.P.%20Morgan_wY4sDTJWALbn2YAst_1722230718479_completion_certificate.pdf',
-    skills: ['Engineering']
-  },
-  {
     name: 'Claude Code in Action',
     issuer: 'Anthropic',
     issueDate: 'May 2026',
@@ -128,13 +95,94 @@ const defaultCertifications: Certification[] = [
     credentialId: 'bvLA7jhuGRcA8saCc',
     credentialUrl: 'https://forage-uploads-prod.s3.amazonaws.com/completion-certificates/Accenture%20North%20America/hzmoNKtzvAzXsEqx8_Accenture%20North%20America_wY4sDTJWALbn2YAst_1722162488539_completion_certificate.pdf',
     skills: ['Engineering', 'Problem Solving', 'Microsoft Excel', 'Analytical Skills', 'Data Analysis', 'Microsoft PowerPoint', 'Project Management']
-  }
+  },
+  {
+    name: 'British Airways - Data Science Job Simulation',
+    issuer: 'Forage',
+    issueDate: 'Jul 2024',
+    credentialId: 'yb37CE6EroSHwueag',
+    credentialUrl: 'https://forage-uploads-prod.s3.amazonaws.com/completion-certificates/British%20Airways/NjynCWzGSaWXQCxSX_British%20Airways_wY4sDTJWALbn2YAst_1722347934217_completion_certificate.pdf',
+    skills: ['Machine Learning']
+  },
+  {
+    name: 'PwC Switzerland - Power BI Job Simulation',
+    issuer: 'Forage',
+    issueDate: 'Jul 2024',
+    credentialId: 'yPAZzttR8RSta2jR4',
+    credentialUrl: 'https://forage-uploads-prod.s3.amazonaws.com/completion-certificates/PwC%20Switzerland/a87GpgE6tiku7q3gu_PwC%20Switzerland_wY4sDTJWALbn2YAst_1722321454169_completion_certificate.pdf',
+    skills: ['Microsoft Power BI', 'Engineering', 'Microsoft Excel', 'Design', 'Tableau']
+  },
+  {
+    name: 'J.P. Morgan - Software Engineering Job Simulation',
+    issuer: 'Forage',
+    issueDate: 'Jul 2024',
+    credentialId: 'L9EcFifTHs8bNMinb',
+    credentialUrl: 'https://forage-uploads-prod.s3.amazonaws.com/completion-certificates/J.P.%20Morgan/R5iK7HMxJGBgaSbvk_J.P.%20Morgan_wY4sDTJWALbn2YAst_1722230718479_completion_certificate.pdf',
+    skills: ['Engineering']
+  },
+  {
+    name: 'Python (Basic)',
+    issuer: 'HackerRank',
+    issueDate: 'Sep 2026',
+    credentialId: 'czvqv8go89ddbaaa12dfcvtx',
+    credentialUrl: 'https://www.hackerrank.com/certificates/iframe/9ddbaaa12dfc',
+    skills: ['Python']
+  },
+  {
+    name: 'Problem Solving (Intermediate)',
+    issuer: 'HackerRank',
+    issueDate: 'Sep 2026',
+    credentialId: '67fe0cb63728',
+    credentialUrl: 'https://www.hackerrank.com/certificates/iframe/67fe0cb63728',
+    skills: ['Problem Solving']
+  },
+  {
+    name: 'Problem Solving (Basic)',
+    issuer: 'HackerRank',
+    issueDate: 'Sep 2026',
+    credentialId: '9bb0721b53ea',
+    credentialUrl: 'https://www.hackerrank.com/certificates/iframe/9bb0721b53ea',
+    skills: ['Problem Solving']
+  },
+  {
+    name: 'SQL (Basic)',
+    issuer: 'HackerRank',
+    issueDate: 'Sep 2026',
+    credentialId: '617b6e319397',
+    credentialUrl: 'https://www.hackerrank.com/certificates/iframe/617b6e319397',
+    skills: ['SQL']
+  },
+  {
+    name: 'SQL (Intermediate)',
+    issuer: 'HackerRank',
+    issueDate: 'Sep 2026',
+    credentialId: '76086319d10f',
+    credentialUrl: 'https://www.hackerrank.com/certificates/iframe/76086319d10f',
+    skills: ['SQL']
+  },
+  {
+    name: 'SQL (Advanced)',
+    issuer: 'HackerRank',
+    issueDate: 'Sep 2026',
+    credentialId: '3888d46d5bab',
+    credentialUrl: 'https://www.hackerrank.com/certificates/iframe/3888d46d5bab',
+    skills: ['SQL']
+  },
+  {
+    name: 'Cutshort Certified Machine Learning (ML) - Advanced',
+    issuer: 'Cutshort',
+    issueDate: 'Oct 2024',
+    expiryDate: 'Oct 2025',
+    credentialId: '105961',
+    credentialUrl: 'https://cutshort.io/certificate/105961',
+    skills: ['Machine Learning']
+  },
 ];
 
 function EducationCard({ item, index }: { item: EducationItem; index: number }) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-50px' });
-  
+
   const duration = item.duration || (item.start_date ? `${item.start_date} - ${item.end_date || 'Present'}` : '');
 
   return (
@@ -178,7 +226,7 @@ function EducationCard({ item, index }: { item: EducationItem; index: number }) 
 function CertificationCard({ cert, index }: { cert: Certification; index: number }) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-50px' });
-  
+
   const skillsArray = Array.isArray(cert.skills) ? cert.skills : JSON.parse(cert.skills || '[]');
   const issueDate = cert.issueDate || cert.issue_date;
   const expiryDate = cert.expiryDate || cert.expiry_date;
@@ -250,16 +298,16 @@ export default function Education() {
 
   useEffect(() => {
     fetchAndMergeEducation();
-    
+
     const handleVisibilityChange = () => {
       if (document.visibilityState === 'visible') {
         fetchAndMergeEducation();
       }
     };
-    
+
     document.addEventListener('visibilitychange', handleVisibilityChange);
     const refreshInterval = setInterval(fetchAndMergeEducation, 30000);
-    
+
     return () => {
       document.removeEventListener('visibilitychange', handleVisibilityChange);
       clearInterval(refreshInterval);
@@ -307,7 +355,7 @@ export default function Education() {
             <GraduationCap className="w-4 h-4 text-violet-500" />
             <span className="text-sm text-violet-500 font-medium">Background</span>
           </motion.div>
-          
+
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4">
             Education & <span className="gradient-text">Certifications</span>
           </h2>
