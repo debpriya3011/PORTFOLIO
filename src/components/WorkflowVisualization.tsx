@@ -1,381 +1,333 @@
 import { motion } from 'framer-motion';
-import { useState, useEffect, useRef } from 'react';
-import { 
-  Database, 
-  FileCode, 
-  BarChart3, 
-  Brain, 
-  Globe, 
+import { useState } from 'react';
+import {
+  Database,
+  FileCode,
+  BarChart3,
+  Brain,
+  Globe,
   Server,
   Workflow,
-  Layers
+  ChevronRight,
+  CheckCircle2,
+  RefreshCw
 } from 'lucide-react';
 
 interface WorkflowNode {
   id: string;
+  step: string;
   icon: React.ElementType;
   label: string;
+  category: string;
   description: string;
   color: string;
-  x: number;
-  y: number;
+  glowColor: string;
+  isTerminal?: boolean;
 }
 
-const nodes: WorkflowNode[] = [
-  { id: '1', icon: Globe, label: 'Web Scraping', description: 'Selenium, BeautifulSoup', color: '#8b5cf6', x: 10, y: 250 },
-  { id: '2', icon: Database, label: 'Data Storage', description: 'PostgreSQL, Pandas', color: '#3b82f6', x: 100, y: 200 },
-  { id: '3', icon: FileCode, label: 'Processing', description: 'Python, n8n', color: '#10b981', x: 190, y: 250 },
-  { id: '4', icon: Brain, label: 'ML Models', description: 'Scikit-learn, TensorFlow', color: '#f59e0b', x: 280, y: 200 },
-  { id: '5', icon: BarChart3, label: 'Visualization', description: 'Power BI, Tableau', color: '#ec4899', x: 370, y: 250 },
-  { id: '6', icon: Server, label: 'Deployment', description: 'Cloud, Automation', color: '#06b6d4', x: 460, y: 200 },
+const pipelineSequence: WorkflowNode[] = [
+  {
+    id: '1',
+    step: '01',
+    icon: Globe,
+    label: 'Web Scraping',
+    category: 'Ingestion',
+    description: 'Selenium, BeautifulSoup',
+    color: '#8b5cf6',
+    glowColor: 'rgba(139, 92, 246, 0.4)'
+  },
+  {
+    id: '2',
+    step: '02',
+    icon: Database,
+    label: 'Data Storage',
+    category: 'Persistence',
+    description: 'PostgreSQL, Pandas',
+    color: '#3b82f6',
+    glowColor: 'rgba(59, 130, 246, 0.4)'
+  },
+  {
+    id: '3',
+    step: '03',
+    icon: FileCode,
+    label: 'Processing',
+    category: 'Automation',
+    description: 'Python, n8n, Make',
+    color: '#10b981',
+    glowColor: 'rgba(16, 185, 129, 0.4)'
+  },
+  {
+    id: '4',
+    step: '04',
+    icon: Brain,
+    label: 'ML Models',
+    category: 'Intelligence',
+    description: 'Scikit-Learn, PyTorch',
+    color: '#f59e0b',
+    glowColor: 'rgba(245, 158, 11, 0.4)'
+  },
+  {
+    id: '5',
+    step: '05',
+    icon: BarChart3,
+    label: 'Visualization',
+    category: 'Analytics',
+    description: 'Power BI, Tableau',
+    color: '#ec4899',
+    glowColor: 'rgba(236, 72, 153, 0.4)'
+  },
+  {
+    id: '6',
+    step: '06',
+    icon: Server,
+    label: 'Deployment',
+    category: 'DevOps',
+    description: 'Docker, Cloud Pipelines',
+    color: '#06b6d4',
+    glowColor: 'rgba(6, 182, 212, 0.4)'
+  },
+  {
+    id: '7',
+    step: '07',
+    icon: CheckCircle2,
+    label: 'Production Live',
+    category: 'Output',
+    description: 'Real-time API & Monitoring',
+    color: '#22c55e',
+    glowColor: 'rgba(34, 197, 94, 0.45)',
+    isTerminal: true
+  },
 ];
 
-const connections = [
-  { from: '1', to: '2' },
-  { from: '2', to: '3' },
-  { from: '3', to: '4' },
-  { from: '4', to: '5' },
-  { from: '5', to: '6' },
+// Replicate sequence across batches
+const infiniteNodes = [
+  ...pipelineSequence,
+  ...pipelineSequence,
+  ...pipelineSequence,
+  ...pipelineSequence
 ];
 
 export default function WorkflowVisualization() {
-  const [activeNode, setActiveNode] = useState<string | null>(null);
-  const [animatedNodes, setAnimatedNodes] = useState<string[]>([]);
-  const [jumpingNode, setJumpingNode] = useState<string | null>(null);
-  const mobileScrollRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    // Show all nodes immediately instead of animating sequentially
-    setAnimatedNodes(nodes.map(n => n.id));
-  }, []);
-
-  // Jumping animation for tablet/laptop view
-  useEffect(() => {
-    const jumpInterval = setInterval(() => {
-      setJumpingNode(prev => {
-        const currentIndex = prev ? nodes.findIndex(n => n.id === prev) : -1;
-        const nextIndex = (currentIndex + 1) % nodes.length;
-        return nodes[nextIndex].id;
-      });
-    }, 800); // Jump every 800ms
-
-    return () => clearInterval(jumpInterval);
-  }, []);
-
-  // Auto-scroll for mobile
-  useEffect(() => {
-    const scrollInterval = setInterval(() => {
-      if (mobileScrollRef.current) {
-        const maxScroll = mobileScrollRef.current.scrollWidth - mobileScrollRef.current.clientWidth;
-        const currentScroll = mobileScrollRef.current.scrollLeft;
-        
-        if (currentScroll >= maxScroll) {
-          mobileScrollRef.current.scrollLeft = 0;
-        } else {
-          mobileScrollRef.current.scrollLeft += 2; // Slightly faster scroll
-        }
-      }
-    }, 30); // Faster interval for smoother scroll
-
-    return () => clearInterval(scrollInterval);
-  }, []);
+  const [hoveredNode, setHoveredNode] = useState<string | null>(null);
 
   return (
-    <div className="relative w-full h-[400px] sm:h-[500px]">
-      {/* Background grid */}
-      <div className="absolute inset-0 opacity-20">
-        <svg width="100%" height="100%">
-          <defs>
-            <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-              <path d="M 40 0 L 0 0 0 40" fill="none" stroke="currentColor" strokeWidth="0.5" />
-            </pattern>
-          </defs>
-          <rect width="100%" height="100%" fill="url(#grid)" />
-        </svg>
-      </div>
+    <div className="relative w-full max-w-full sm:max-w-xl mx-auto overflow-hidden">
+      {/* Decorative Outer Glow & Frame */}
+      <div className="relative rounded-2xl sm:rounded-3xl p-[1px] bg-gradient-to-r from-violet-500/30 via-fuchsia-500/20 to-cyan-500/30 shadow-2xl backdrop-blur-xl">
+        <div className="relative bg-background/85 dark:bg-zinc-950/85 rounded-2xl sm:rounded-3xl p-3 sm:p-5 overflow-hidden border border-white/10 dark:border-zinc-800/60 shadow-inner">
 
-      {/* Desktop View: Workflow diagram with connections */}
-      <div className="hidden lg:block">
-        {/* Connection lines */}
-        <svg className="absolute inset-0 w-full h-full pointer-events-none">
-          <defs>
-            <linearGradient id="lineGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="#8b5cf6" />
-              <stop offset="100%" stopColor="#ec4899" />
-            </linearGradient>
-            <filter id="glow">
-              <feGaussianBlur stdDeviation="3" result="coloredBlur" />
-              <feMerge>
-                <feMergeNode in="coloredBlur" />
-                <feMergeNode in="SourceGraphic" />
-              </feMerge>
-            </filter>
-          </defs>
+          {/* Subtle Ambient Background Gradients */}
+          <div className="absolute top-0 right-0 w-48 sm:w-64 h-48 sm:h-64 bg-violet-500/10 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute bottom-0 left-0 w-48 sm:w-64 h-48 sm:h-64 bg-fuchsia-500/10 rounded-full blur-3xl pointer-events-none" />
 
-          {connections.map((conn, idx) => {
-            const fromNode = nodes.find(n => n.id === conn.from);
-            const toNode = nodes.find(n => n.id === conn.to);
-            if (!fromNode || !toNode) return null;
+          {/* Header Panel */}
+          <div className="flex items-center justify-between mb-3 sm:mb-5 pb-2.5 sm:pb-3 border-b border-border/40">
+            <div className="flex items-center gap-2 sm:gap-2.5">
+              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-violet-500/15 border border-violet-500/30 flex items-center justify-center text-violet-400">
+                <Workflow className="w-3.5 h-3.5 sm:w-4 sm:h-4 animate-spin-slow" />
+              </div>
+              <div>
+                <h3 className="text-xs sm:text-sm font-semibold tracking-wide flex items-center gap-1 sm:gap-1.5 text-foreground">
+                  Data Pipeline Architecture
+                  {/* <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-amber-400 animate-pulse" /> */}
+                </h3>
+                <p className="text-[9px] sm:text-xs text-muted-foreground truncate max-w-[130px] sm:max-w-none">
+                  Sequential ETL to Production
+                </p>
+              </div>
+            </div>
 
-            return (
-              <motion.path
-                key={`${conn.from}-${conn.to}`}
-                d={`M ${fromNode.x + 40} ${fromNode.y + 40} Q ${(fromNode.x + toNode.x) / 2} ${fromNode.y} ${toNode.x + 40} ${toNode.y + 40}`}
-                stroke="url(#lineGradient)"
-                strokeWidth="2"
-                fill="none"
-                filter="url(#glow)"
-                initial={{ pathLength: 0, opacity: 0 }}
-                animate={{
-                  pathLength: animatedNodes.includes(toNode.id) ? 1 : 0,
-                  opacity: animatedNodes.includes(toNode.id) ? 1 : 0.3
-                }}
-                transition={{ duration: 0.8, delay: idx * 0.2 }}
-              />
-            );
-          })}
-        </svg>
+            {/* Live indicator badge */}
+            <div className="flex items-center gap-1 sm:gap-1.5 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-400 text-[9px] sm:text-[10px] font-medium tracking-wide">
+              <span className="relative flex h-1.5 w-1.5 sm:h-2 sm:w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-1.5 w-1.5 sm:h-2 sm:w-2 bg-emerald-500"></span>
+              </span>
+              {/* <Activity className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-emerald-400" /> */}
+              <span>Pipeline Active</span>
+            </div>
+          </div>
 
-        {/* Nodes */}
-        {nodes.map((node, idx) => {
-          const Icon = node.icon;
-          const isActive = activeNode === node.id;
-          const isAnimated = animatedNodes.includes(node.id);
+          {/* Continuous Flow Stage showing 2 items at a time */}
+          <div className="relative w-full overflow-hidden py-1 select-none">
+            {/* Left & Right Smooth Fade Gradients */}
+            <div className="absolute left-0 top-0 bottom-0 w-6 sm:w-10 bg-gradient-to-r from-background/90 dark:from-zinc-950/90 to-transparent z-10 pointer-events-none" />
+            <div className="absolute right-0 top-0 bottom-0 w-6 sm:w-10 bg-gradient-to-l from-background/90 dark:from-zinc-950/90 to-transparent z-10 pointer-events-none" />
 
-          return (
+            {/* Infinite Continuous Sliding Track - NEVER STOPS */}
             <motion.div
-              key={node.id}
-              className="absolute"
-              style={{ left: node.x, top: node.y }}
-              initial={{ opacity: 0, scale: 0, rotateY: -90 }}
+              className="flex items-center"
               animate={{
-                opacity: isAnimated ? 1 : 0.3,
-                scale: isActive ? 1.1 : 1,
-                rotateY: isAnimated ? 0 : -90
+                x: ['0%', '-50%'],
               }}
               transition={{
-                duration: 0.6,
-                delay: idx * 0.1,
-                type: 'spring',
-                stiffness: 100
+                x: {
+                  repeat: Infinity,
+                  repeatType: 'loop',
+                  duration: 22,
+                  ease: 'linear',
+                },
               }}
-              onMouseEnter={() => setActiveNode(node.id)}
-              onMouseLeave={() => setActiveNode(null)}
+              style={{
+                willChange: 'transform',
+                width: 'max-content',
+              }}
             >
-              <div
-                className={`
-                  relative w-20 h-20 rounded-2xl cursor-pointer
-                  flex flex-col items-center justify-center
-                  transition-all duration-300 transform-3d
-                  ${isActive ? 'z-20' : 'z-10'}
-                `}
-                style={{
-                  background: `linear-gradient(135deg, ${node.color}20, ${node.color}10)`,
-                  border: `2px solid ${isActive ? node.color : `${node.color}40`}`,
-                  boxShadow: isActive
-                    ? `0 0 30px ${node.color}60, 0 10px 40px rgba(0,0,0,0.3)`
-                    : `0 4px 20px rgba(0,0,0,0.2)`,
-                }}
-              >
-                <Icon
-                  className="w-8 h-8 mb-1"
-                  style={{ color: node.color }}
-                />
-                <span className="text-[10px] font-medium text-center px-1" style={{ color: node.color }}>
-                  {node.label}
-                </span>
+              {infiniteNodes.map((node, index) => {
+                const Icon = node.icon;
+                const isHovered = hoveredNode === `${node.id}-${index}`;
+                const isFinalNode = node.isTerminal;
 
-                {/* Glow effect */}
-                {isActive && (
-                  <motion.div
-                    className="absolute inset-0 rounded-2xl"
-                    style={{
-                      background: `radial-gradient(circle, ${node.color}30, transparent 70%)`,
-                    }}
-                    animate={{ scale: [1, 1.2, 1], opacity: [0.5, 0.8, 0.5] }}
-                    transition={{ duration: 1.5, repeat: Infinity }}
-                  />
-                )}
-              </div>
+                return (
+                  <div key={`${node.id}-${index}`} className="flex items-center flex-shrink-0">
 
-              {/* Tooltip */}
-              {isActive && (
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="absolute -bottom-16 left-1/2 -translate-x-1/2 whitespace-nowrap"
-                >
-                  <div className="glass px-3 py-2 rounded-lg text-xs">
-                    <div className="font-medium" style={{ color: node.color }}>{node.label}</div>
-                    <div className="text-muted-foreground">{node.description}</div>
+                    {/* Node Card (Responsive sizing so exactly 2 cards + arrows are framed cleanly on mobile & desktop) */}
+                    <motion.div
+                      onMouseEnter={() => setHoveredNode(`${node.id}-${index}`)}
+                      onMouseLeave={() => setHoveredNode(null)}
+                      whileHover={{ scale: 1.03, y: -2 }}
+                      transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+                      className={`relative w-[118px] sm:w-[155px] md:w-[185px] h-[142px] sm:h-[165px] md:h-[175px] rounded-xl sm:rounded-2xl p-2.5 sm:p-3.5 flex flex-col justify-between cursor-pointer transition-all duration-300 ${isFinalNode ? 'ring-1 ring-emerald-500/40' : ''
+                        }`}
+                      style={{
+                        background: `linear-gradient(135deg, ${node.color}15, rgba(15, 15, 20, 0.6))`,
+                        border: `1.5px solid ${isHovered ? node.color : `${node.color}35`}`,
+                        boxShadow: isHovered
+                          ? `0 0 25px ${node.glowColor}, inset 0 0 15px ${node.color}15`
+                          : `0 4px 15px rgba(0, 0, 0, 0.25)`,
+                      }}
+                    >
+                      {/* Top Bar inside Card: Step & Category */}
+                      <div className="flex items-center justify-between">
+                        <span
+                          className="text-[9px] sm:text-[10px] font-mono font-bold px-1 sm:px-1.5 py-0.2 sm:py-0.5 rounded bg-white/5 border"
+                          style={{ borderColor: `${node.color}40`, color: node.color }}
+                        >
+                          {node.step}
+                        </span>
+                        <span className={`text-[8px] sm:text-[9px] uppercase tracking-wider font-semibold truncate max-w-[65px] sm:max-w-none ${isFinalNode ? 'text-emerald-400' : 'text-muted-foreground/80'
+                          }`}>
+                          {node.category}
+                        </span>
+                      </div>
+
+                      {/* Icon with glowing aura */}
+                      <div className="my-auto flex flex-col items-center justify-center text-center">
+                        <div
+                          className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl flex items-center justify-center mb-1.5 relative transition-transform duration-300"
+                          style={{
+                            background: `linear-gradient(135deg, ${node.color}30, ${node.color}10)`,
+                            border: `1px solid ${node.color}60`,
+                          }}
+                        >
+                          <Icon className="w-4 h-4 sm:w-5 sm:h-5" style={{ color: node.color }} />
+                          {/* Inner pulse */}
+                          <div
+                            className="absolute inset-0 rounded-lg sm:rounded-xl opacity-30 animate-pulse"
+                            style={{ background: node.color }}
+                          />
+                        </div>
+
+                        {/* Node Label */}
+                        <div
+                          className="font-bold text-[11px] sm:text-xs md:text-sm tracking-tight line-clamp-1"
+                          style={{ color: isHovered ? node.color : 'inherit' }}
+                        >
+                          {node.label}
+                        </div>
+                      </div>
+
+                      {/* Description / Tech Badges */}
+                      <div
+                        className={`text-[8.5px] sm:text-[10px] text-center font-medium truncate px-1 py-0.5 rounded border border-white/5 ${isFinalNode
+                          ? 'text-emerald-300 bg-emerald-950/40 border-emerald-500/30 font-semibold'
+                          : 'text-muted-foreground/90 bg-black/25'
+                          }`}
+                        title={node.description}
+                      >
+                        {node.description}
+                      </div>
+
+                      {/* Card Bottom Glow Accent */}
+                      <div
+                        className="absolute bottom-0 left-3 right-3 h-[1.5px] rounded-full opacity-60"
+                        style={{ background: `linear-gradient(90deg, transparent, ${node.color}, transparent)` }}
+                      />
+                    </motion.div>
+
+                    {/* Between Steps: Moving Forward Arrow vs. Next Batch Trigger Separator */}
+                    {!isFinalNode ? (
+                      /* Standard Forward Moving-Type Arrow */
+                      <div className="relative w-[24px] sm:w-[36px] md:w-[46px] flex flex-col items-center justify-center px-0.5">
+                        {/* Flowing Laser Beam Line */}
+                        <div className="relative w-full h-[2px] bg-gradient-to-r from-violet-500/30 via-fuchsia-500/40 to-cyan-500/30 overflow-hidden rounded-full">
+                          {/* High-speed moving light pulse */}
+                          <motion.div
+                            className="absolute top-0 bottom-0 w-3 sm:w-4 rounded-full bg-gradient-to-r from-transparent via-cyan-400 to-white"
+                            animate={{ left: ['-100%', '100%'] }}
+                            transition={{
+                              duration: 1.1,
+                              repeat: Infinity,
+                              ease: 'linear',
+                              delay: (index % 3) * 0.25,
+                            }}
+                          />
+                        </div>
+
+                        {/* Dynamic Cascading Chevron Arrows */}
+                        <div className="flex items-center justify-center -space-x-1 mt-0.5 text-violet-400/80">
+                          <motion.div
+                            animate={{ opacity: [0.3, 1, 0.3], x: [0, 1.5, 0] }}
+                            transition={{ duration: 0.9, repeat: Infinity, ease: 'easeInOut', delay: 0 }}
+                          >
+                            <ChevronRight className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-violet-400" />
+                          </motion.div>
+                          <motion.div
+                            animate={{ opacity: [0.3, 1, 0.3], x: [0, 1.5, 0] }}
+                            transition={{ duration: 0.9, repeat: Infinity, ease: 'easeInOut', delay: 0.2 }}
+                          >
+                            <ChevronRight className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-fuchsia-400" />
+                          </motion.div>
+                          <motion.div
+                            className="hidden sm:block"
+                            animate={{ opacity: [0.3, 1, 0.3], x: [0, 1.5, 0] }}
+                            transition={{ duration: 0.9, repeat: Infinity, ease: 'easeInOut', delay: 0.4 }}
+                          >
+                            <ChevronRight className="w-3.5 h-3.5 text-cyan-400" />
+                          </motion.div>
+                        </div>
+                      </div>
+                    ) : (
+                      /* Distinct Pipeline Batch Delimiter (NO ARROW connecting 07 to 01) */
+                      <div className="relative w-[48px] sm:w-[64px] md:w-[76px] flex flex-col items-center justify-center px-1">
+                        <div className="w-full flex flex-col items-center justify-center py-2 px-1 rounded-xl bg-violet-500/10 border border-dashed border-violet-500/30 text-center">
+                          <RefreshCw className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-violet-400 animate-spin-slow mb-0.5" />
+                          <span className="text-[7px] sm:text-[8px] font-mono text-violet-300 font-semibold uppercase tracking-wider leading-tight">
+                            Next Job
+                          </span>
+                        </div>
+                      </div>
+                    )}
+
                   </div>
-                </motion.div>
-              )}
+                );
+              })}
             </motion.div>
-          );
-        })}
-      </div>
+          </div>
 
-      {/* Tablet View: Vertical stack with arrows */}
-      <div className="hidden sm:block lg:hidden">
-        <div className="flex flex-col items-center justify-center h-full space-y-4">
-          {nodes.map((node, idx) => {
-            const Icon = node.icon;
-            const isActive = activeNode === node.id;
+          {/* Footer Pipeline Info */}
+          <div className="mt-3 sm:mt-4 pt-2.5 sm:pt-3 border-t border-border/30 flex items-center justify-between text-[10px] sm:text-[11px] text-muted-foreground">
+            <div className="flex items-center gap-1 sm:gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="truncate max-w-[160px] sm:max-w-none">Linear ETL Pipeline Execution</span>
+            </div>
+            {/* <span className="font-mono text-[9px] sm:text-[10px] text-emerald-400 font-semibold">Stage 01 → 07 (Live)</span> */}
+          </div>
 
-            return (
-              <div key={node.id} className="flex items-center">
-                <motion.div
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ 
-                    opacity: 1, 
-                    x: 0,
-                    y: jumpingNode === node.id ? [-10, 0, -10] : 0,
-                    scale: jumpingNode === node.id ? [1, 1.1, 1] : 1
-                  }}
-                  transition={{ 
-                    delay: idx * 0.2,
-                    y: { duration: 0.6, repeat: jumpingNode === node.id ? Infinity : 0 },
-                    scale: { duration: 0.6, repeat: jumpingNode === node.id ? Infinity : 0 }
-                  }}
-                  onClick={() => setActiveNode(activeNode === node.id ? null : node.id)}
-                  className="cursor-pointer"
-                >
-                  <div
-                    className={`
-                      w-20 h-20 rounded-2xl cursor-pointer
-                      flex flex-col items-center justify-center
-                      transition-all duration-300
-                      ${isActive ? 'scale-110' : ''}
-                    `}
-                    style={{
-                      background: `linear-gradient(135deg, ${node.color}20, ${node.color}10)`,
-                      border: `2px solid ${isActive ? node.color : `${node.color}40`}`,
-                      boxShadow: isActive
-                        ? `0 0 20px ${node.color}60`
-                        : `0 4px 20px rgba(0,0,0,0.2)`,
-                    }}
-                  >
-                    <Icon
-                      className="w-6 h-6 mb-1"
-                      style={{ color: node.color }}
-                    />
-                    <span className="text-[10px] font-medium text-center px-1" style={{ color: node.color }}>
-                      {node.label}
-                    </span>
-                  </div>
-                </motion.div>
-
-                {/* Arrow */}
-                {idx < nodes.length - 1 && (
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: idx * 0.2 + 0.3 }}
-                    className="mx-4"
-                  >
-                    <div className="text-violet-500">
-                      <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-                        <path d="M10 0L0 10h7v10h6V10h7z" />
-                      </svg>
-                    </div>
-                  </motion.div>
-                )}
-              </div>
-            );
-          })}
         </div>
       </div>
-
-      {/* Mobile: Horizontal scrollable cards */}
-      <div 
-        ref={mobileScrollRef}
-        className="sm:hidden flex overflow-x-auto gap-3 px-4 py-8 items-center h-full"
-        style={{ 
-          scrollBehavior: 'smooth',
-          scrollbarWidth: 'none', // Firefox
-          msOverflowStyle: 'none' // IE/Edge
-        }}
-      >
-        <style>{`
-          div::-webkit-scrollbar {
-            display: none; /* Chrome/Safari */
-          }
-        `}</style>
-        {nodes.map((node, idx) => {
-          const Icon = node.icon;
-          const isActive = activeNode === node.id;
-
-          return (
-            <motion.div
-              key={node.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: idx * 0.1 }}
-              onClick={() => setActiveNode(activeNode === node.id ? null : node.id)}
-              className="flex-shrink-0"
-            >
-              <div
-                className={`
-                  w-24 h-28 rounded-xl cursor-pointer
-                  flex flex-col items-center justify-center
-                  transition-all duration-300
-                  ${isActive ? 'scale-105' : ''}
-                `}
-                style={{
-                  background: `linear-gradient(135deg, ${node.color}20, ${node.color}10)`,
-                  border: `2px solid ${isActive ? node.color : `${node.color}40`}`,
-                }}
-              >
-                <Icon 
-                  className="w-6 h-6 mb-1" 
-                  style={{ color: node.color }}
-                />
-                <span className="text-[10px] font-medium text-center px-1" style={{ color: node.color }}>
-                  {node.label}
-                </span>
-              </div>
-            </motion.div>
-          );
-        })}
-      </div>
-
-      {/* Floating particles */}
-      <div className="hidden lg:block">
-        {[...Array(6)].map((_, i) => (
-          <motion.div
-            key={`particle-${i}`}
-            className="absolute w-2 h-2 rounded-full bg-violet-500/30"
-            style={{
-              left: `${20 + i * 15}%`,
-              top: `${30 + (i % 2) * 40}%`,
-            }}
-            animate={{
-              y: [0, -20, 0],
-              opacity: [0.3, 0.6, 0.3],
-            }}
-            transition={{
-              duration: 3 + i * 0.5,
-              repeat: Infinity,
-              delay: i * 0.3,
-            }}
-          />
-        ))}
-      </div>
-
-      {/* Title - Hidden on mobile, shown on larger screens */}
-      <motion.div
-        className="hidden sm:flex absolute bottom-4 left-1/2 -translate-x-1/2"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 2 }}
-      >
-        <div className="flex items-center gap-2 text-muted-foreground">
-          <Workflow className="w-4 h-4" />
-          <span className="text-sm">Data Engineering Workflow</span>
-          <Layers className="w-4 h-4" />
-        </div>
-      </motion.div>
     </div>
   );
 }
+
+

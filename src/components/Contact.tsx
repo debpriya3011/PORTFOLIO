@@ -11,6 +11,16 @@ import { Loader2 } from 'lucide-react';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 
+const HackerRankIcon = ({ className = "w-5 h-5 text-violet-500" }: { className?: string }) => (
+  <svg 
+    viewBox="0 0 24 24" 
+    fill="currentColor" 
+    className={className}
+  >
+    <path d="M12 0a12 12 0 1 0 12 12A12.013 12.013 0 0 0 12 0Zm3.75 16.5h-2.25v-3.5h-3v3.5H8.25v-9h2.25v3.25h3V7.5h2.25v9Z" />
+  </svg>
+);
+
 export default function Contact() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-100px' });
@@ -68,6 +78,12 @@ export default function Contact() {
       label: 'LinkedIn',
       value: 'linkedin.com/in/debpriya-santra',
       href: 'https://www.linkedin.com/in/debpriya-santra-459519251/'
+    },
+    {
+      icon: HackerRankIcon,
+      label: 'HackerRank',
+      value: 'hackerrank.com/debpriya3011',
+      href: 'https://www.hackerrank.com/profile/debpriya3011'
     },
     {
       icon: MapPin,

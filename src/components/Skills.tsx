@@ -1,9 +1,9 @@
 import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef, useState, useEffect } from 'react';
-import { 
-  Code2, 
-  Brain, 
+import {
+  Code2,
+  Brain,
   Workflow,
   Users,
   Wrench
@@ -46,21 +46,21 @@ const defaultSkillCategories: SkillCategory[] = [
     icon: Wrench,
     color: '#3b82f6',
     skills: [
-      { name: 'WordPress', sources: 'Data Engineer, Software Engineer at Capsule Labs' },
       { name: 'PostgreSQL', sources: 'Data Engineer, Software Engineer, B.P. Poddar' },
-      { name: 'Microsoft Power BI', sources: 'Data Engineer, Software Engineer, PwC' },
-      { name: 'Tableau', sources: 'Data Engineer, Software Engineer, PwC' },
       { name: 'Selenium', sources: 'Data Engineer at Capsule Labs' },
+      { name: 'REST APIs', sources: 'Data Engineer, Software Engineer at Capsule Labs' },
       { name: 'Beautiful Soup', sources: 'Data Engineer at Capsule Labs' },
       { name: 'Python', sources: 'Data Engineer at Capsule Labs' },
       { name: 'Pandas', sources: 'Data Engineer at Capsule Labs' },
-      { name: 'Tkinter', sources: 'Data Engineer at Capsule Labs' },
-      { name: 'Microsoft PowerPoint', sources: 'B.P. Poddar, M.D.B.D.A.V, Accenture' },
-      { name: 'Microsoft Excel', sources: 'Data Engineer, Software Engineer, Accenture, PwC' },
       { name: 'n8n', sources: 'Data Engineer, Software Engineer at Capsule Labs' },
       { name: 'AWS', sources: 'Data Engineer at Capsule Labs' },
       { name: 'Git', sources: 'Data Engineer at Capsule Labs' },
-      { name: 'Wordpress', sources: 'Data Engineer at Capsule Labs' },
+      { name: 'Microsoft Power BI', sources: 'Data Engineer, Software Engineer, PwC' },
+      { name: 'Tableau', sources: 'Data Engineer, Software Engineer, PwC' },
+      { name: 'Tkinter', sources: 'Data Engineer at Capsule Labs' },
+      { name: 'WordPress', sources: 'Data Engineer, Software Engineer at Capsule Labs' },
+      { name: 'Microsoft PowerPoint', sources: 'B.P. Poddar, M.D.B.D.A.V, Accenture' },
+      { name: 'Microsoft Excel', sources: 'Data Engineer, Software Engineer, Accenture, PwC' },
     ]
   },
   {
@@ -97,17 +97,17 @@ function SkillCard({ category, index }: { category: SkillCategory; index: number
   const { theme } = useTheme();
 
   // Theme-aware tooltip colors
-  const tooltipStyles = theme === 'dark' 
+  const tooltipStyles = theme === 'dark'
     ? {
-        bg: 'bg-slate-800/95 backdrop-blur-md border border-slate-600',
-        text: 'text-white',
-        arrow: 'border-t-slate-800'
-      }
+      bg: 'bg-slate-800/95 backdrop-blur-md border border-slate-600',
+      text: 'text-white',
+      arrow: 'border-t-slate-800'
+    }
     : {
-        bg: 'bg-gray-900/95 backdrop-blur-md border border-gray-700',
-        text: 'text-gray-100',
-        arrow: 'border-t-gray-900'
-      };
+      bg: 'bg-gray-900/95 backdrop-blur-md border border-gray-700',
+      text: 'text-gray-100',
+      arrow: 'border-t-gray-900'
+    };
 
   return (
     <motion.div
@@ -120,7 +120,7 @@ function SkillCard({ category, index }: { category: SkillCategory; index: number
       <div className="glass rounded-2xl p-6 h-full card-hover">
         {/* Header */}
         <div className="flex items-center gap-3 mb-6">
-          <div 
+          <div
             className="w-12 h-12 rounded-xl flex items-center justify-center"
             style={{ background: `${category.color}20` }}
           >
@@ -156,11 +156,11 @@ function SkillCard({ category, index }: { category: SkillCategory; index: number
                   <div className={`${tooltipStyles.bg} px-4 py-2 rounded-lg text-xs whitespace-nowrap`}>
                     <div className={tooltipStyles.text}>{skill.sources}</div>
                   </div>
-                  <div 
-                    className="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-4 border-transparent" 
-                    style={{ 
+                  <div
+                    className="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-4 border-transparent"
+                    style={{
                       borderTopColor: theme === 'dark' ? 'rgb(30,41,59)' : 'rgb(17,24,39)'
-                    }} 
+                    }}
                   />
                 </div>
               )}
@@ -179,19 +179,19 @@ export default function Skills() {
 
   useEffect(() => {
     fetchAndMergeSkills();
-    
+
     // Set up visibility listener to refresh when user returns to the page
     const handleVisibilityChange = () => {
       if (document.visibilityState === 'visible') {
         fetchAndMergeSkills();
       }
     };
-    
+
     document.addEventListener('visibilitychange', handleVisibilityChange);
-    
+
     // Also set up a refresh interval (every 30 seconds)
     const refreshInterval = setInterval(fetchAndMergeSkills, 30000);
-    
+
     return () => {
       document.removeEventListener('visibilitychange', handleVisibilityChange);
       clearInterval(refreshInterval);
@@ -204,7 +204,7 @@ export default function Skills() {
       const response = await fetch(`${apiUrl}/api/skills`);
       if (response.ok) {
         const dbSkills = await response.json();
-        
+
         // Create a copy of default categories
         const merged = defaultSkillCategories.map(category => ({
           ...category,
@@ -276,12 +276,12 @@ export default function Skills() {
             <Workflow className="w-4 h-4 text-violet-500" />
             <span className="text-sm text-violet-500 font-medium">Expertise</span>
           </motion.div>
-          
+
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4">
             Skills & <span className="gradient-text">Technologies</span>
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            A comprehensive set of skills developed through education, professional experience, 
+            A comprehensive set of skills developed through education, professional experience,
             and continuous learning in data engineering and software development.
           </p>
         </motion.div>

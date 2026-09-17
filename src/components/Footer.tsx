@@ -34,6 +34,7 @@ export default function Footer() {
               target="_blank"
               rel="noopener noreferrer"
               className="p-2 rounded-lg hover:bg-muted transition-colors"
+              title="GitHub"
             >
               <Github className="w-5 h-5" />
             </a>
@@ -42,12 +43,25 @@ export default function Footer() {
               target="_blank"
               rel="noopener noreferrer"
               className="p-2 rounded-lg hover:bg-muted transition-colors"
+              title="LinkedIn"
             >
               <Linkedin className="w-5 h-5" />
             </a>
             <a
+              href="https://www.hackerrank.com/profile/debpriya3011"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-2 rounded-lg hover:bg-muted transition-colors"
+              title="HackerRank"
+            >
+              <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
+                <path d="M12 0a12 12 0 1 0 12 12A12.013 12.013 0 0 0 12 0Zm3.75 16.5h-2.25v-3.5h-3v3.5H8.25v-9h2.25v3.25h3V7.5h2.25v9Z" />
+              </svg>
+            </a>
+            <a
               href="mailto:debpriya3011@gmail.com"
               className="p-2 rounded-lg hover:bg-muted transition-colors"
+              title="Email"
             >
               <Mail className="w-5 h-5" />
             </a>

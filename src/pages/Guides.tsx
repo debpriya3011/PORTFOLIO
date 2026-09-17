@@ -15,7 +15,8 @@ import {
   Code2,
   Clock,
   CheckCircle2,
-  Loader2
+  Loader2,
+  ExternalLink
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { automationGuides } from '@/data/guidesData';
@@ -169,7 +170,15 @@ export default function Guides() {
                       }`}>
                       {guide.badge}
                     </span>
-                    <span className="text-xs text-muted-foreground">{guide.difficulty}</span>
+                    <div className="flex items-center gap-1.5">
+                      {guide.liveUrl && (
+                        <span className="flex items-center gap-1 text-[10px] font-semibold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-full">
+                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                          Live App
+                        </span>
+                      )}
+                      <span className="text-xs text-muted-foreground">{guide.difficulty}</span>
+                    </div>
                   </div>
 
                   <h4 className={`font-bold text-base mb-2 transition-colors ${isSelected ? 'text-violet-300' : 'text-foreground group-hover:text-violet-400'
@@ -265,6 +274,21 @@ export default function Guides() {
                 </span>
               ))}
             </div>
+
+            {/* Live Web App Action Button */}
+            {selectedGuide.liveUrl && (
+              <div className="mb-6 flex flex-wrap gap-3">
+                <a
+                  href={selectedGuide.liveUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-violet-600 via-indigo-600 to-purple-600 hover:from-violet-500 hover:to-indigo-500 text-white font-semibold text-xs sm:text-sm shadow-lg shadow-violet-500/25 transition-all transform hover:-translate-y-0.5"
+                >
+                  <ExternalLink className="w-4 h-4" />
+                  Launch Live Web App ({selectedGuide.title.split('—')[0].trim()})
+                </a>
+              </div>
+            )}
 
             {/* Why This Is Rare Callout Box (Only shown if whyRare is specified) */}
             {Boolean(selectedGuide.whyRare) && (
@@ -483,15 +507,27 @@ export default function Guides() {
                         </div>
 
                         <div className="flex items-center gap-3 pt-3 border-t border-border/40">
-                          <a
-                            href={item.url}
-                            download={item.fileName}
-                            onClick={() => handleDownload(item)}
-                            className="flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-violet-600 hover:bg-violet-500 text-white font-semibold text-xs transition-colors shadow-md shadow-violet-600/20"
-                          >
-                            <Download className="w-3.5 h-3.5" />
-                            Download {item.fileName}
-                          </a>
+                          {item.url.startsWith('http') ? (
+                            <a
+                              href={item.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white font-semibold text-xs transition-colors shadow-md shadow-violet-600/20"
+                            >
+                              <ExternalLink className="w-3.5 h-3.5" />
+                              Go to {item.title}
+                            </a>
+                          ) : (
+                            <a
+                              href={item.url}
+                              download={item.fileName}
+                              onClick={() => handleDownload(item)}
+                              className="flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-violet-600 hover:bg-violet-500 text-white font-semibold text-xs transition-colors shadow-md shadow-violet-600/20"
+                            >
+                              <Download className="w-3.5 h-3.5" />
+                              Download {item.fileName}
+                            </a>
+                          )}
                         </div>
                       </div>
                     ))}

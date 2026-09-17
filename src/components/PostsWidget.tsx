@@ -55,7 +55,7 @@ export default function PostsWidget() {
     const script = [
       {
         delay: 1000,
-        text: "Hi! I'm Debpriya's digital assistant. 🤖",
+        text: "Hi! I'm Debpriya's digital assistant.",
       },
       {
         delay: 2400,
@@ -120,12 +120,12 @@ export default function PostsWidget() {
     let targetPath: string | null = null;
 
     if (option === 'blueprints') {
-      userText = "Show me the blueprints! 📐";
-      botText = "Awesome! Redirecting you to the blueprints page now... Enjoy! 📐";
+      userText = "Show me the blueprints!";
+      botText = "Awesome! Redirecting you to the blueprints page now... Enjoy!";
       targetPath = '/guides';
     } else if (option === 'posts') {
-      userText = "Yes, show me the posts! 🚀";
-      botText = "Awesome! Redirecting you to the posts page now... Enjoy! 📚";
+      userText = "Yes, show me the posts!";
+      botText = "Awesome! Redirecting you to the posts page now... Enjoy!";
       targetPath = '/posts';
     } else {
       userText = "No thanks, maybe later.";
@@ -304,8 +304,8 @@ export default function PostsWidget() {
                   onClick={() => handleReply('blueprints')}
                   className="w-full py-2.5 px-4 bg-gradient-to-r from-violet-600 via-indigo-600 to-purple-600 hover:from-violet-500 hover:to-indigo-500 text-white font-semibold rounded-xl text-xs shadow-md shadow-violet-500/20 hover:shadow-violet-500/35 transition-all flex items-center justify-center gap-2 cursor-pointer border border-white/10"
                 >
-                  <Sparkles className="w-3.5 h-3.5 animate-pulse" />
-                  Explore Blueprints & Guides! 📐
+                  {/* <Sparkles className="w-3.5 h-3.5 animate-pulse" /> */}
+                  Explore Blueprints & Guides!
                 </motion.button>
                 <motion.button
                   whileHover={{ scale: 1.02, y: -1 }}
@@ -314,7 +314,7 @@ export default function PostsWidget() {
                   className="w-full py-2.5 px-4 bg-gradient-to-r from-fuchsia-600 via-pink-600 to-rose-600 hover:from-fuchsia-500 hover:to-pink-500 text-white font-semibold rounded-xl text-xs shadow-md shadow-fuchsia-500/20 hover:shadow-fuchsia-500/35 transition-all flex items-center justify-center gap-2 cursor-pointer border border-white/10"
                 >
                   <Linkedin className="w-3.5 h-3.5" />
-                  Yes, show me the posts! 🚀
+                  Yes, show me the posts!
                 </motion.button>
                 <motion.button
                   whileHover={{ scale: 1.01 }}

@@ -1316,9 +1316,8 @@ function MessagesManager() {
               key={msg.id}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              className={`glass rounded-xl p-5 border transition-all ${
-                !msg.is_read ? 'border-violet-500/40 bg-violet-500/5' : 'border-border/40'
-              }`}
+              className={`glass rounded-xl p-5 border transition-all ${!msg.is_read ? 'border-violet-500/40 bg-violet-500/5' : 'border-border/40'
+                }`}
             >
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3 pb-3 border-b border-border/40">
                 <div className="flex items-center gap-2">
