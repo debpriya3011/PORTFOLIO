@@ -116,7 +116,7 @@ export default function Hero() {
                 <div className="text-[11px] sm:text-sm text-muted-foreground">Projects</div>
               </div>
               <div>
-                <div className="text-xl sm:text-3xl font-bold gradient-text">8+</div>
+                <div className="text-xl sm:text-3xl font-bold gradient-text">10+</div>
                 <div className="text-[11px] sm:text-sm text-muted-foreground">Certs</div>
               </div>
             </motion.div>
