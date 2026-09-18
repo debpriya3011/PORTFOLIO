@@ -95,7 +95,7 @@ export default function WorkflowVisualization() {
     <div className="relative w-full max-w-2xl mx-auto py-2 select-none">
       {/* Background Blueprint Grid of square boxes */}
       <div className="relative w-full rounded-2xl overflow-hidden py-4 sm:py-6">
-        
+
         {/* The Grid Boxes */}
         <div className="absolute inset-0 opacity-20 dark:opacity-25 pointer-events-none">
           <svg width="100%" height="100%">
