@@ -63,7 +63,7 @@ export default function Hero() {
               transition={{ delay: 0.4 }}
               className="text-base sm:text-xl text-muted-foreground mb-2 sm:mb-4 font-medium"
             >
-              Knowledge / Data Engineer & Software Developer
+              Data Engineer & Software Developer
             </motion.p>
 
             <motion.p
