@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { useState } from 'react';
+import { useTheme } from '../contexts/ThemeContext';
 import {
   Database,
   FileCode,
@@ -90,6 +91,8 @@ const wavePath = `
 
 export default function WorkflowVisualization() {
   const [hoveredNode, setHoveredNode] = useState<string | null>(null);
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
 
   return (
     <div className="relative w-full max-w-2xl mx-auto py-2 select-none">
@@ -101,7 +104,12 @@ export default function WorkflowVisualization() {
           <svg width="100%" height="100%">
             <defs>
               <pattern id="wf-grid-pattern" width="40" height="40" patternUnits="userSpaceOnUse">
-                <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(168, 85, 247, 0.4)" strokeWidth="0.8" />
+                <path
+                  d="M 40 0 L 0 0 0 40"
+                  fill="none"
+                  stroke={isDark ? "rgba(168, 85, 247, 0.4)" : "rgba(139, 92, 246, 0.25)"}
+                  strokeWidth="0.8"
+                />
               </pattern>
             </defs>
             <rect width="100%" height="100%" fill="url(#wf-grid-pattern)" />
@@ -120,7 +128,7 @@ export default function WorkflowVisualization() {
           ].map((pt, i) => (
             <motion.div
               key={i}
-              className="absolute w-2 h-2 rounded-full bg-violet-400/30"
+              className={`absolute w-2 h-2 rounded-full ${isDark ? 'bg-violet-400/30' : 'bg-violet-500/25'}`}
               style={{ left: pt.x, top: pt.y }}
               animate={{
                 y: [0, -6, 0],
@@ -147,12 +155,12 @@ export default function WorkflowVisualization() {
             <defs>
               {/* Neon Wave Gradient */}
               <linearGradient id="wf-wave-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor="#a855f7" stopOpacity="0.8" />
-                <stop offset="20%" stopColor="#3b82f6" stopOpacity="0.8" />
-                <stop offset="40%" stopColor="#10b981" stopOpacity="0.8" />
-                <stop offset="60%" stopColor="#f59e0b" stopOpacity="0.8" />
-                <stop offset="80%" stopColor="#ec4899" stopOpacity="0.8" />
-                <stop offset="100%" stopColor="#06b6d4" stopOpacity="0.8" />
+                <stop offset="0%" stopColor="#a855f7" stopOpacity="0.85" />
+                <stop offset="20%" stopColor="#3b82f6" stopOpacity="0.85" />
+                <stop offset="40%" stopColor="#10b981" stopOpacity="0.85" />
+                <stop offset="60%" stopColor="#f59e0b" stopOpacity="0.85" />
+                <stop offset="80%" stopColor="#ec4899" stopOpacity="0.85" />
+                <stop offset="100%" stopColor="#06b6d4" stopOpacity="0.85" />
               </linearGradient>
 
               {/* Glowing Blur Filter */}
@@ -169,7 +177,7 @@ export default function WorkflowVisualization() {
               stroke="url(#wf-wave-gradient)"
               strokeWidth="4.5"
               strokeLinecap="round"
-              opacity="0.35"
+              opacity={isDark ? "0.35" : "0.45"}
               filter="url(#wf-glow)"
             />
 
@@ -180,7 +188,7 @@ export default function WorkflowVisualization() {
               stroke="url(#wf-wave-gradient)"
               strokeWidth="2"
               strokeLinecap="round"
-              opacity="0.9"
+              opacity={isDark ? "0.9" : "1"}
             />
 
             {/* Animated Laser Light Pulses traveling across the wave */}
@@ -188,8 +196,8 @@ export default function WorkflowVisualization() {
               <motion.circle
                 key={idx}
                 r="4.5"
-                fill="#ffffff"
-                filter="drop-shadow(0 0 6px #ec4899)"
+                fill={isDark ? "#ffffff" : "#a855f7"}
+                filter={isDark ? "drop-shadow(0 0 6px #ec4899)" : "drop-shadow(0 0 4px #ec4899)"}
                 initial={{ offsetDistance: '0%' }}
                 animate={{ offsetDistance: '100%' }}
                 transition={{
@@ -234,11 +242,23 @@ export default function WorkflowVisualization() {
                     <div
                       className="w-[52px] h-[52px] sm:w-[68px] sm:h-[68px] md:w-[76px] md:h-[76px] rounded-xl sm:rounded-2xl p-2 flex flex-col items-center justify-center transition-all duration-300 backdrop-blur-md"
                       style={{
-                        background: `linear-gradient(135deg, ${node.color}15, rgba(15, 15, 25, 0.85))`,
-                        border: `1.5px solid ${isHovered ? node.color : `${node.color}40`}`,
+                        background: isDark
+                          ? `linear-gradient(135deg, ${node.color}20, rgba(15, 15, 25, 0.85))`
+                          : `linear-gradient(135deg, ${node.color}18, rgba(255, 255, 255, 0.92))`,
+                        border: `1.5px solid ${
+                          isHovered
+                            ? node.color
+                            : isDark
+                              ? `${node.color}40`
+                              : `${node.color}45`
+                        }`,
                         boxShadow: isHovered
-                          ? `0 0 20px ${node.glowColor}, inset 0 0 10px ${node.color}20`
-                          : `0 4px 12px rgba(0, 0, 0, 0.4)`,
+                          ? isDark
+                            ? `0 0 20px ${node.glowColor}, inset 0 0 10px ${node.color}20`
+                            : `0 8px 24px ${node.glowColor.replace('0.5', '0.3')}, inset 0 0 10px ${node.color}15`
+                          : isDark
+                            ? `0 4px 12px rgba(0, 0, 0, 0.4)`
+                            : `0 4px 16px -2px ${node.color}25, 0 2px 6px -1px rgba(0, 0, 0, 0.05)`,
                       }}
                     >
                       {/* Icon */}
@@ -252,7 +272,13 @@ export default function WorkflowVisualization() {
                       {/* Node Label */}
                       <span
                         className="text-[8px] sm:text-[9.5px] md:text-[10px] font-semibold text-center mt-1 leading-tight tracking-tight whitespace-nowrap transition-colors"
-                        style={{ color: isHovered ? node.color : 'rgba(240, 240, 255, 0.9)' }}
+                        style={{
+                          color: isHovered
+                            ? node.color
+                            : isDark
+                              ? 'rgba(240, 240, 255, 0.95)'
+                              : '#1e293b',
+                        }}
                       >
                         {node.label}
                       </span>
@@ -260,7 +286,7 @@ export default function WorkflowVisualization() {
 
                     {/* Subtle outer pulse dot under node */}
                     <div
-                      className="absolute -bottom-1 w-1.5 h-1.5 rounded-full opacity-60 transition-opacity"
+                      className="absolute -bottom-1 w-1.5 h-1.5 rounded-full opacity-70 transition-opacity"
                       style={{ background: node.color }}
                     />
                   </motion.div>
@@ -272,11 +298,12 @@ export default function WorkflowVisualization() {
 
         {/* Bottom Caption matching original */}
         <div className="mt-3 sm:mt-5 flex items-center justify-center gap-2 text-xs sm:text-sm text-muted-foreground/80 font-medium">
-          <Workflow className="w-3.5 h-3.5 text-violet-400" />
+          <Workflow className="w-3.5 h-3.5 text-violet-500 dark:text-violet-400" />
           <span>Data Engineering Workflow</span>
-          <Layers className="w-3.5 h-3.5 text-violet-400" />
+          <Layers className="w-3.5 h-3.5 text-violet-500 dark:text-violet-400" />
         </div>
       </div>
     </div>
   );
 }
+

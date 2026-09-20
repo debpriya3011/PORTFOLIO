@@ -243,10 +243,10 @@ export default function Guides() {
 
             {/* Top Metadata */}
             <div className="flex flex-wrap items-center gap-2.5 mb-4">
-              <span className="px-3 py-1 rounded-full bg-violet-500/20 text-violet-400 text-xs font-semibold border border-violet-500/30">
+              <span className="px-3 py-1 rounded-full bg-violet-500/15 dark:bg-violet-500/20 text-violet-700 dark:text-violet-300 text-xs font-semibold border border-violet-500/30">
                 {selectedGuide.badge}
               </span>
-              <span className="px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-medium border border-emerald-500/20 flex items-center gap-1">
+              <span className="px-3 py-1 rounded-full bg-emerald-500/15 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 text-xs font-medium border border-emerald-500/20 flex items-center gap-1">
                 <ShieldCheck className="w-3.5 h-3.5" />
                 Verified Sanitized Blueprint
               </span>
@@ -292,14 +292,14 @@ export default function Guides() {
 
             {/* Why This Is Rare Callout Box (Only shown if whyRare is specified) */}
             {Boolean(selectedGuide.whyRare) && (
-              <div className="p-4 sm:p-5 rounded-2xl bg-amber-500/10 border border-amber-500/20 mb-8">
+              <div className="p-4 sm:p-5 rounded-2xl bg-amber-500/10 border border-amber-500/30 dark:border-amber-500/20 mb-8">
                 <div className="flex items-start gap-3">
-                  <Zap className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
+                  <Zap className="w-5 h-5 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
                   <div>
-                    <h4 className="text-sm font-semibold text-amber-300 mb-1">
+                    <h4 className="text-sm font-bold text-amber-800 dark:text-amber-300 mb-1">
                       Why this engineering blueprint is rare & hard to find
                     </h4>
-                    <p className="text-xs sm:text-sm text-amber-200/80 leading-relaxed">
+                    <p className="text-xs sm:text-sm text-amber-950/90 dark:text-amber-200/80 leading-relaxed font-medium dark:font-normal">
                       {selectedGuide.whyRare}
                     </p>
                   </div>
@@ -395,14 +395,14 @@ export default function Guides() {
                       Sequential Execution Pipeline ({selectedGuide.pipelineSteps.length} Stages)
                     </h3>
 
-                    <div className="space-y-4 relative before:absolute before:inset-0 before:left-6 before:w-0.5 before:bg-border/60 before:hidden sm:before:block">
+                    <div className="space-y-4 relative before:absolute before:top-8 before:bottom-8 before:left-9 before:w-0.5 before:bg-violet-500/40 dark:before:bg-violet-500/25 before:hidden sm:before:block">
                       {selectedGuide.pipelineSteps.map((step) => (
                         <div
                           key={step.stepNumber}
                           className="relative flex flex-col sm:flex-row gap-4 p-5 rounded-2xl bg-card/40 border border-border/60 hover:border-border transition-colors"
                         >
                           <div className="flex items-center gap-3 sm:block">
-                            <div className="w-8 h-8 rounded-full bg-violet-600/20 text-violet-400 border border-violet-500/30 flex items-center justify-center font-bold text-xs shrink-0 z-10">
+                            <div className="w-8 h-8 rounded-full bg-card text-violet-600 dark:text-violet-400 border border-violet-500/40 shadow-sm flex items-center justify-center font-bold text-xs shrink-0 relative z-10">
                               {step.stepNumber}
                             </div>
                             <span
