@@ -208,7 +208,7 @@ export default function Experience() {
           </motion.div>
 
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4">
-             <span className="gradient-text">Experience</span>
+            Work <span className="gradient-text">Experience</span>
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
             Professional journey in data engineering and software development,
