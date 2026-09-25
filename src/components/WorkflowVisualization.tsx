@@ -27,8 +27,8 @@ const workflowNodes: WorkflowNode[] = [
     id: '1',
     icon: Globe,
     label: 'Web Scraping',
-    color: '#a855f7',
-    glowColor: 'rgba(168, 85, 247, 0.5)',
+    color: '#0284c7', // Sky
+    glowColor: 'rgba(2, 132, 199, 0.4)',
     x: 80,
     y: 165
   },
@@ -36,44 +36,44 @@ const workflowNodes: WorkflowNode[] = [
     id: '2',
     icon: Database,
     label: 'Data Storage',
-    color: '#3b82f6',
-    glowColor: 'rgba(59, 130, 246, 0.5)',
+    color: '#2563eb', // Blue
+    glowColor: 'rgba(37, 99, 235, 0.4)',
     x: 195,
     y: 95
   },
   {
     id: '3',
     icon: FileCode,
-    label: 'Processing',
-    color: '#10b981',
-    glowColor: 'rgba(16, 185, 129, 0.5)',
+    label: 'ETL Pipeline',
+    color: '#059669', // Emerald
+    glowColor: 'rgba(5, 150, 105, 0.4)',
     x: 310,
     y: 175
   },
   {
     id: '4',
     icon: Brain,
-    label: 'ML Models',
-    color: '#f59e0b',
-    glowColor: 'rgba(245, 158, 11, 0.5)',
+    label: 'ML Workflows',
+    color: '#d97706', // Amber
+    glowColor: 'rgba(217, 119, 6, 0.4)',
     x: 425,
     y: 95
   },
   {
     id: '5',
     icon: BarChart3,
-    label: 'Visualization',
-    color: '#ec4899',
-    glowColor: 'rgba(236, 72, 153, 0.5)',
+    label: 'Analytics',
+    color: '#4f46e5', // Indigo
+    glowColor: 'rgba(79, 70, 229, 0.4)',
     x: 540,
     y: 175
   },
   {
     id: '6',
     icon: Server,
-    label: 'Deployment',
-    color: '#06b6d4',
-    glowColor: 'rgba(6, 182, 212, 0.5)',
+    label: 'Automation',
+    color: '#0d9488', // Teal
+    glowColor: 'rgba(13, 148, 136, 0.4)',
     x: 655,
     y: 95
   }
@@ -96,53 +96,24 @@ export default function WorkflowVisualization() {
 
   return (
     <div className="relative w-full max-w-2xl mx-auto py-2 select-none">
-      {/* Background Blueprint Grid of square boxes */}
-      <div className="relative w-full rounded-2xl overflow-hidden py-4 sm:py-6">
+      {/* Blueprint Grid Container */}
+      <div className="relative w-full rounded-2xl overflow-hidden py-4 sm:py-6 border border-border/50 bg-card/30 backdrop-blur-sm">
 
         {/* The Grid Boxes */}
-        <div className="absolute inset-0 opacity-20 dark:opacity-25 pointer-events-none">
+        <div className="absolute inset-0 opacity-15 dark:opacity-20 pointer-events-none">
           <svg width="100%" height="100%">
             <defs>
-              <pattern id="wf-grid-pattern" width="40" height="40" patternUnits="userSpaceOnUse">
+              <pattern id="wf-grid-pattern" width="32" height="32" patternUnits="userSpaceOnUse">
                 <path
-                  d="M 40 0 L 0 0 0 40"
+                  d="M 32 0 L 0 0 0 32"
                   fill="none"
-                  stroke={isDark ? "rgba(168, 85, 247, 0.4)" : "rgba(139, 92, 246, 0.25)"}
-                  strokeWidth="0.8"
+                  stroke={isDark ? "rgba(148, 163, 184, 0.4)" : "rgba(100, 116, 139, 0.3)"}
+                  strokeWidth="0.75"
                 />
               </pattern>
             </defs>
             <rect width="100%" height="100%" fill="url(#wf-grid-pattern)" />
           </svg>
-        </div>
-
-        {/* Floating Particle Dots */}
-        <div className="absolute inset-0 pointer-events-none">
-          {[
-            { x: '18%', y: '24%', delay: 0 },
-            { x: '38%', y: '28%', delay: 1.2 },
-            { x: '58%', y: '22%', delay: 0.6 },
-            { x: '28%', y: '72%', delay: 1.8 },
-            { x: '48%', y: '74%', delay: 0.4 },
-            { x: '78%', y: '72%', delay: 1.5 },
-          ].map((pt, i) => (
-            <motion.div
-              key={i}
-              className={`absolute w-2 h-2 rounded-full ${isDark ? 'bg-violet-400/30' : 'bg-violet-500/25'}`}
-              style={{ left: pt.x, top: pt.y }}
-              animate={{
-                y: [0, -6, 0],
-                opacity: [0.25, 0.6, 0.25],
-                scale: [1, 1.2, 1],
-              }}
-              transition={{
-                duration: 3 + i * 0.4,
-                repeat: Infinity,
-                delay: pt.delay,
-                ease: 'easeInOut',
-              }}
-            />
-          ))}
         </div>
 
         {/* Interactive Responsive SVG Canvas */}
@@ -153,55 +124,47 @@ export default function WorkflowVisualization() {
             preserveAspectRatio="xMidYMid meet"
           >
             <defs>
-              {/* Neon Wave Gradient */}
+              {/* Technical Precision Gradient */}
               <linearGradient id="wf-wave-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor="#a855f7" stopOpacity="0.85" />
-                <stop offset="20%" stopColor="#3b82f6" stopOpacity="0.85" />
-                <stop offset="40%" stopColor="#10b981" stopOpacity="0.85" />
-                <stop offset="60%" stopColor="#f59e0b" stopOpacity="0.85" />
-                <stop offset="80%" stopColor="#ec4899" stopOpacity="0.85" />
-                <stop offset="100%" stopColor="#06b6d4" stopOpacity="0.85" />
+                <stop offset="0%" stopColor="#0284c7" stopOpacity="0.8" />
+                <stop offset="25%" stopColor="#2563eb" stopOpacity="0.8" />
+                <stop offset="50%" stopColor="#059669" stopOpacity="0.8" />
+                <stop offset="75%" stopColor="#d97706" stopOpacity="0.8" />
+                <stop offset="100%" stopColor="#0d9488" stopOpacity="0.8" />
               </linearGradient>
-
-              {/* Glowing Blur Filter */}
-              <filter id="wf-glow" x="-20%" y="-20%" width="140%" height="140%">
-                <feGaussianBlur stdDeviation="4" result="blur" />
-                <feComposite in="SourceGraphic" in2="blur" operator="over" />
-              </filter>
             </defs>
 
-            {/* Glowing Backdrop Wave */}
+            {/* Subtle Backdrop Line */}
             <path
               d={wavePath}
               fill="none"
               stroke="url(#wf-wave-gradient)"
-              strokeWidth="4.5"
+              strokeWidth="3"
               strokeLinecap="round"
-              opacity={isDark ? "0.35" : "0.45"}
-              filter="url(#wf-glow)"
+              opacity={isDark ? "0.2" : "0.25"}
             />
 
-            {/* Crisp Foreground Wave Line */}
+            {/* Crisp Foreground Line */}
             <path
               d={wavePath}
               fill="none"
               stroke="url(#wf-wave-gradient)"
-              strokeWidth="2"
+              strokeWidth="1.75"
               strokeLinecap="round"
-              opacity={isDark ? "0.9" : "1"}
+              opacity={isDark ? "0.85" : "0.95"}
             />
 
-            {/* Animated Laser Light Pulses traveling across the wave */}
+            {/* Animated Laser Light Pulses */}
             {[0, 2.2].map((delay, idx) => (
               <motion.circle
                 key={idx}
-                r="4.5"
-                fill={isDark ? "#ffffff" : "#a855f7"}
-                filter={isDark ? "drop-shadow(0 0 6px #ec4899)" : "drop-shadow(0 0 4px #ec4899)"}
+                r="3.5"
+                fill={isDark ? "#38bdf8" : "#0284c7"}
+                filter="drop-shadow(0 0 4px #38bdf8)"
                 initial={{ offsetDistance: '0%' }}
                 animate={{ offsetDistance: '100%' }}
                 transition={{
-                  duration: 4.5,
+                  duration: 5,
                   repeat: Infinity,
                   ease: 'linear',
                   delay,
@@ -213,12 +176,11 @@ export default function WorkflowVisualization() {
             ))}
           </svg>
 
-          {/* HTML Overlay Nodes perfectly positioned over the SVG wave */}
+          {/* HTML Overlay Nodes */}
           <div className="absolute inset-0 pointer-events-none">
             {workflowNodes.map((node) => {
               const Icon = node.icon;
               const isHovered = hoveredNode === node.id;
-              // Convert SVG coords (735 x 270) to percentages
               const leftPercent = (node.x / 735) * 100;
               const topPercent = (node.y / 270) * 100;
 
@@ -234,59 +196,50 @@ export default function WorkflowVisualization() {
                   onMouseLeave={() => setHoveredNode(null)}
                 >
                   <motion.div
-                    whileHover={{ scale: 1.1, y: -2 }}
+                    whileHover={{ scale: 1.06, y: -2 }}
                     transition={{ type: 'spring', stiffness: 400, damping: 20 }}
                     className="relative flex flex-col items-center justify-center cursor-pointer group"
                   >
                     {/* Node Card Box */}
                     <div
-                      className="w-[52px] h-[52px] sm:w-[68px] sm:h-[68px] md:w-[76px] md:h-[76px] rounded-xl sm:rounded-2xl p-2 flex flex-col items-center justify-center transition-all duration-300 backdrop-blur-md"
+                      className="w-[52px] h-[52px] sm:w-[68px] sm:h-[68px] md:w-[76px] md:h-[76px] rounded-xl p-2 flex flex-col items-center justify-center transition-all duration-200 backdrop-blur-md"
                       style={{
                         background: isDark
-                          ? `linear-gradient(135deg, ${node.color}20, rgba(15, 15, 25, 0.85))`
-                          : `linear-gradient(135deg, ${node.color}18, rgba(255, 255, 255, 0.92))`,
-                        border: `1.5px solid ${
+                          ? 'rgba(15, 23, 42, 0.85)'
+                          : 'rgba(255, 255, 255, 0.9)',
+                        border: `1px solid ${
                           isHovered
                             ? node.color
                             : isDark
-                              ? `${node.color}40`
-                              : `${node.color}45`
+                              ? 'rgba(255, 255, 255, 0.1)'
+                              : 'rgba(0, 0, 0, 0.08)'
                         }`,
                         boxShadow: isHovered
                           ? isDark
-                            ? `0 0 20px ${node.glowColor}, inset 0 0 10px ${node.color}20`
-                            : `0 8px 24px ${node.glowColor.replace('0.5', '0.3')}, inset 0 0 10px ${node.color}15`
-                          : isDark
-                            ? `0 4px 12px rgba(0, 0, 0, 0.4)`
-                            : `0 4px 16px -2px ${node.color}25, 0 2px 6px -1px rgba(0, 0, 0, 0.05)`,
+                            ? `0 4px 16px ${node.glowColor}`
+                            : `0 4px 12px ${node.glowColor.replace('0.4', '0.2')}`
+                          : 'none',
                       }}
                     >
                       {/* Icon */}
                       <div className="relative">
                         <Icon
-                          className="w-4 h-4 sm:w-6 sm:h-6 transition-transform duration-300 group-hover:scale-110"
+                          className="w-4 h-4 sm:w-5 sm:h-5 transition-transform duration-200 group-hover:scale-110"
                           style={{ color: node.color }}
                         />
                       </div>
 
                       {/* Node Label */}
                       <span
-                        className="text-[8px] sm:text-[9.5px] md:text-[10px] font-semibold text-center mt-1 leading-tight tracking-tight whitespace-nowrap transition-colors"
-                        style={{
-                          color: isHovered
-                            ? node.color
-                            : isDark
-                              ? 'rgba(240, 240, 255, 0.95)'
-                              : '#1e293b',
-                        }}
+                        className="text-[8px] sm:text-[9.5px] md:text-[10px] font-medium font-mono text-center mt-1 leading-tight tracking-tight whitespace-nowrap transition-colors text-foreground"
                       >
                         {node.label}
                       </span>
                     </div>
 
-                    {/* Subtle outer pulse dot under node */}
+                    {/* Subtle status dot under node */}
                     <div
-                      className="absolute -bottom-1 w-1.5 h-1.5 rounded-full opacity-70 transition-opacity"
+                      className="absolute -bottom-1 w-1.5 h-1.5 rounded-full opacity-80"
                       style={{ background: node.color }}
                     />
                   </motion.div>
@@ -296,11 +249,11 @@ export default function WorkflowVisualization() {
           </div>
         </div>
 
-        {/* Bottom Caption matching original */}
-        <div className="mt-3 sm:mt-5 flex items-center justify-center gap-2 text-xs sm:text-sm text-muted-foreground/80 font-medium">
-          <Workflow className="w-3.5 h-3.5 text-violet-500 dark:text-violet-400" />
-          <span>Data Engineering Workflow</span>
-          <Layers className="w-3.5 h-3.5 text-violet-500 dark:text-violet-400" />
+        {/* Bottom Caption */}
+        <div className="mt-3 sm:mt-4 flex items-center justify-center gap-2 text-xs text-muted-foreground font-mono">
+          <Workflow className="w-3.5 h-3.5 text-sky-500" />
+          <span>Data Engineering & Automation Pipeline</span>
+          <Layers className="w-3.5 h-3.5 text-emerald-500" />
         </div>
       </div>
     </div>

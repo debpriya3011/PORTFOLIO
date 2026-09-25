@@ -200,13 +200,13 @@ export default function PostsWidget() {
               <X className="w-3 h-3" />
             </button>
             <div className="flex gap-2.5 items-start">
-              <div className="w-6 h-6 rounded-full bg-violet-500/10 flex items-center justify-center shrink-0 mt-0.5">
-                <Sparkles className="w-3.5 h-3.5 text-violet-500 animate-pulse" />
+              <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center shrink-0 mt-0.5">
+                <Sparkles className="w-3.5 h-3.5 text-foreground" />
               </div>
               <div>
-                <p className="text-xs font-semibold text-foreground">New updates available!</p>
-                <p className="text-[11px] text-muted-foreground mt-0.5 leading-snug group-hover:text-violet-500 transition-colors">
-                  Check out blueprints & LinkedIn posts.
+                <p className="text-xs font-semibold text-foreground">Updates & Blueprints</p>
+                <p className="text-[11px] text-muted-foreground mt-0.5 leading-snug">
+                  Explore blueprints & LinkedIn notes.
                 </p>
               </div>
             </div>
@@ -224,20 +224,20 @@ export default function PostsWidget() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 15, scale: 0.92, transformOrigin: 'bottom right' }}
             transition={{ type: 'spring', damping: 26, stiffness: 320 }}
-            className="mb-4 w-[320px] sm:w-[360px] h-[460px] glass border border-white/15 rounded-3xl shadow-2xl flex flex-col overflow-hidden backdrop-blur-xl"
+            className="mb-4 w-[320px] sm:w-[360px] h-[460px] glass border border-border/80 rounded-2xl shadow-xl flex flex-col overflow-hidden backdrop-blur-xl bg-card/90"
           >
             {/* Header */}
-            <div className="px-4 py-3 bg-gradient-to-r from-violet-500/10 via-fuchsia-500/10 to-violet-500/10 border-b border-white/10 flex items-center justify-between">
+            <div className="px-4 py-3 bg-muted/60 border-b border-border/60 flex items-center justify-between">
               <div className="flex items-center gap-2.5">
                 <div className="relative">
-                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-violet-500 to-fuchsia-500 flex items-center justify-center text-white font-bold text-sm shadow-md">
-                    D
+                  <div className="w-7 h-7 rounded-lg bg-primary text-primary-foreground flex items-center justify-center font-mono font-bold text-xs shadow-xs">
+                    DS
                   </div>
-                  <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 border-2 border-background rounded-full animate-pulse" />
+                  <span className="absolute -bottom-0.5 -right-0.5 w-2 h-2 bg-emerald-500 border-2 border-background rounded-full" />
                 </div>
                 <div>
-                  <h4 className="text-xs font-bold text-foreground">Debpriya's Assistant</h4>
-                  <p className="text-[10px] text-muted-foreground flex items-center gap-1 font-medium">
+                  <h4 className="text-xs font-bold text-foreground">Interactive Assistant</h4>
+                  <p className="text-[10px] text-muted-foreground font-mono">
                     Online
                   </p>
                 </div>
@@ -246,7 +246,7 @@ export default function PostsWidget() {
                 variant="ghost"
                 size="icon"
                 onClick={handleOpenToggle}
-                className="w-7 h-7 rounded-lg hover:bg-white/10 text-muted-foreground hover:text-foreground transition-transform active:scale-90"
+                className="w-7 h-7 rounded-lg hover:bg-muted text-muted-foreground hover:text-foreground transition-transform active:scale-90"
               >
                 <X className="w-4 h-4" />
               </Button>
@@ -263,9 +263,9 @@ export default function PostsWidget() {
                   className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
                 >
                   <div
-                    className={`max-w-[85%] rounded-2xl px-3.5 py-2.5 text-xs leading-relaxed shadow-sm ${msg.sender === 'user'
-                      ? 'bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white shadow-md rounded-tr-none'
-                      : 'bg-muted/80 text-foreground rounded-tl-none border border-border/20 backdrop-blur-sm'
+                    className={`max-w-[85%] rounded-xl px-3.5 py-2.5 text-xs leading-relaxed ${msg.sender === 'user'
+                      ? 'bg-primary text-primary-foreground shadow-xs'
+                      : 'bg-muted border border-border text-foreground'
                       }`}
                   >
                     {msg.text}
@@ -280,7 +280,7 @@ export default function PostsWidget() {
                   animate={{ opacity: 1, y: 0 }}
                   className="flex justify-start"
                 >
-                  <div className="bg-muted/80 rounded-2xl rounded-tl-none border border-border/20 px-3.5 py-2.5 flex items-center gap-1">
+                  <div className="bg-muted rounded-xl border border-border px-3 py-2 flex items-center gap-1">
                     <span className="w-1.5 h-1.5 bg-muted-foreground/60 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
                     <span className="w-1.5 h-1.5 bg-muted-foreground/60 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
                     <span className="w-1.5 h-1.5 bg-muted-foreground/60 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
@@ -296,31 +296,30 @@ export default function PostsWidget() {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.2 }}
-                className="p-3.5 pt-0 flex flex-col gap-2 bg-background/25 backdrop-blur-sm border-t border-white/5"
+                className="p-3 pt-0 flex flex-col gap-1.5 bg-background/50 border-t border-border/50"
               >
                 <motion.button
-                  whileHover={{ scale: 1.02, y: -1 }}
-                  whileTap={{ scale: 0.97 }}
+                  whileHover={{ scale: 1.01, y: -1 }}
+                  whileTap={{ scale: 0.98 }}
                   onClick={() => handleReply('blueprints')}
-                  className="w-full py-2.5 px-4 bg-gradient-to-r from-violet-600 via-indigo-600 to-purple-600 hover:from-violet-500 hover:to-indigo-500 text-white font-semibold rounded-xl text-xs shadow-md shadow-violet-500/20 hover:shadow-violet-500/35 transition-all flex items-center justify-center gap-2 cursor-pointer border border-white/10"
+                  className="w-full py-2 px-3 bg-primary text-primary-foreground font-medium rounded-lg text-xs shadow-xs transition-all flex items-center justify-center gap-2 cursor-pointer"
                 >
-                  {/* <Sparkles className="w-3.5 h-3.5 animate-pulse" /> */}
-                  Explore Blueprints & Guides!
+                  Explore Blueprints & Guides
                 </motion.button>
                 <motion.button
-                  whileHover={{ scale: 1.02, y: -1 }}
-                  whileTap={{ scale: 0.97 }}
+                  whileHover={{ scale: 1.01, y: -1 }}
+                  whileTap={{ scale: 0.98 }}
                   onClick={() => handleReply('posts')}
-                  className="w-full py-2.5 px-4 bg-gradient-to-r from-fuchsia-600 via-pink-600 to-rose-600 hover:from-fuchsia-500 hover:to-pink-500 text-white font-semibold rounded-xl text-xs shadow-md shadow-fuchsia-500/20 hover:shadow-fuchsia-500/35 transition-all flex items-center justify-center gap-2 cursor-pointer border border-white/10"
+                  className="w-full py-2 px-3 bg-muted hover:bg-accent text-foreground font-medium rounded-lg text-xs border border-border transition-colors flex items-center justify-center gap-2 cursor-pointer"
                 >
-                  <Linkedin className="w-3.5 h-3.5" />
-                  Yes, show me the posts!
+                  <Linkedin className="w-3 h-3 text-sky-500" />
+                  View LinkedIn Posts
                 </motion.button>
                 <motion.button
                   whileHover={{ scale: 1.01 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={() => handleReply('dismiss')}
-                  className="w-full py-2 px-4 bg-secondary/80 hover:bg-secondary text-foreground font-semibold rounded-xl text-xs transition-colors cursor-pointer"
+                  className="w-full py-1.5 px-3 text-muted-foreground hover:text-foreground font-medium rounded-lg text-[11px] transition-colors cursor-pointer"
                 >
                   Not now, just browsing
                 </motion.button>
@@ -333,12 +332,11 @@ export default function PostsWidget() {
       {/* Floating Action Button */}
       <motion.button
         onClick={handleOpenToggle}
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.92 }}
-        className="w-14 h-14 bg-gradient-to-br from-violet-500 to-fuchsia-500 rounded-full flex items-center justify-center text-white shadow-2xl shadow-violet-500/40 relative border border-white/20 select-none cursor-pointer group"
-        aria-label="Toggle chatbot"
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+        className="w-12 h-12 bg-primary text-primary-foreground rounded-full flex items-center justify-center shadow-lg shadow-black/20 relative border border-border select-none cursor-pointer group"
+        aria-label="Toggle assistant"
       >
-        <div className="absolute inset-0 rounded-full bg-gradient-to-r from-violet-500 to-fuchsia-500 animate-ping opacity-20 pointer-events-none group-hover:opacity-40 transition-opacity" />
         <AnimatePresence mode="wait">
           {isOpen ? (
             <motion.div
@@ -348,7 +346,7 @@ export default function PostsWidget() {
               exit={{ rotate: 90, opacity: 0 }}
               transition={{ duration: 0.15 }}
             >
-              <X className="w-6 h-6" />
+              <X className="w-5 h-5" />
             </motion.div>
           ) : (
             <motion.div
@@ -359,11 +357,9 @@ export default function PostsWidget() {
               transition={{ duration: 0.15 }}
               className="relative"
             >
-              <MessageSquare className="w-6 h-6" />
+              <MessageSquare className="w-5 h-5" />
               {hasNewNotification && (
-                <span className="absolute -top-2.5 -right-2.5 w-5 h-5 bg-red-500 border-2 border-background rounded-full flex items-center justify-center text-[10px] font-bold text-white shadow-md animate-pulse">
-                  1
-                </span>
+                <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-emerald-500 border-2 border-background rounded-full animate-ping" />
               )}
             </motion.div>
           )}

@@ -128,29 +128,29 @@ export default function Posts() {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-12"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-violet-500/10 border border-violet-500/20 mb-4">
-            <Linkedin className="w-4 h-4 text-violet-500" />
-            <span className="text-sm text-violet-500 font-medium">LinkedIn Posts</span>
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-muted border border-border/80 mb-3.5">
+            <Linkedin className="w-3.5 h-3.5 text-muted-foreground" />
+            <span className="text-xs font-mono font-medium text-foreground tracking-wide">LinkedIn Activity</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4">
-            My <span className="gradient-text">LinkedIn Activity</span>
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight mb-3 text-foreground">
+            Activity & Engineering Notes
           </h1>
-          <p className="text-muted-foreground max-w-2xl mx-auto mb-6">
-            Curated posts from my professional journey, insights, and learnings shared on LinkedIn.
+          <p className="text-muted-foreground max-w-2xl mx-auto mb-6 text-sm sm:text-base">
+            Curated updates, technical insights, and pipeline architecture notes shared on LinkedIn.
           </p>
           <Button
             onClick={handleManualRefresh}
             disabled={refreshing}
             variant="outline"
             size="sm"
-            className="gap-2"
+            className="gap-2 border-border hover:bg-accent text-xs font-mono"
           >
-            <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} />
-            {refreshing ? 'Refreshing...' : 'Refresh Posts'}
+            <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? 'animate-spin' : ''}`} />
+            {refreshing ? 'Refreshing...' : 'Sync Activity'}
           </Button>
         </motion.div>
 

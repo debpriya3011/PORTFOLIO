@@ -24,68 +24,63 @@ interface SkillCategory {
 
 const defaultSkillCategories: SkillCategory[] = [
   {
-    title: 'Industry Knowledge',
+    title: 'Core Disciplines',
     icon: Brain,
-    color: '#8b5cf6',
+    color: '#4f46e5',
     skills: [
-      { name: 'Debugging', sources: 'Data Engineer, Software Engineer at Capsule Labs' },
+      { name: 'Data Pipelines', sources: 'Data Engineer, Software Engineer at Capsule Labs' },
       { name: 'Automation', sources: 'Data Engineer, Software Engineer at Capsule Labs' },
       { name: 'Workflow Management', sources: 'Data Engineer, Software Engineer at Capsule Labs' },
       { name: 'Web Scraping', sources: 'Data Engineer at Capsule Labs' },
-      { name: 'Computer Science', sources: 'Data Engineer, Software Engineer, B.P. Poddar' },
-      { name: 'Design', sources: 'PwC Switzerland' },
       { name: 'Data Analysis', sources: 'Data Engineer, Software Engineer, Accenture' },
       { name: 'Machine Learning', sources: 'B.P. Poddar, British Airways, Cutshort' },
-      { name: 'Research Skills', sources: 'Data Engineer, Software Engineer, B.P. Poddar' },
+      { name: 'Debugging & Profiling', sources: 'Data Engineer, Software Engineer at Capsule Labs' },
+      { name: 'Computer Science', sources: 'Data Engineer, Software Engineer, B.P. Poddar' },
       { name: 'Project Management', sources: 'Data Engineer, B.P. Poddar, Accenture' },
-      { name: 'Engineering', sources: 'Data Engineer, Software Engineer, B.P. Poddar, Accenture, J.P. Morgan, PwC' },
+      { name: 'Engineering Design', sources: 'Data Engineer, Software Engineer, PwC' },
     ]
   },
   {
-    title: 'Tools & Technologies',
+    title: 'Tools & Frameworks',
     icon: Wrench,
-    color: '#3b82f6',
+    color: '#0284c7',
     skills: [
-      { name: 'PostgreSQL', sources: 'Data Engineer, Software Engineer, B.P. Poddar' },
-      { name: 'Selenium', sources: 'Data Engineer at Capsule Labs' },
-      { name: 'REST APIs', sources: 'Data Engineer, Software Engineer at Capsule Labs' },
-      { name: 'Beautiful Soup', sources: 'Data Engineer at Capsule Labs' },
       { name: 'Python', sources: 'Data Engineer at Capsule Labs' },
+      { name: 'PostgreSQL', sources: 'Data Engineer, Software Engineer, B.P. Poddar' },
       { name: 'Pandas', sources: 'Data Engineer at Capsule Labs' },
-      { name: 'n8n', sources: 'Data Engineer, Software Engineer at Capsule Labs' },
-      { name: 'AWS', sources: 'Data Engineer at Capsule Labs' },
-      { name: 'Git', sources: 'Data Engineer at Capsule Labs' },
-      { name: 'Microsoft Power BI', sources: 'Data Engineer, Software Engineer, PwC' },
+      { name: 'n8n Workflows', sources: 'Data Engineer, Software Engineer at Capsule Labs' },
+      { name: 'AWS Cloud', sources: 'Data Engineer at Capsule Labs' },
+      { name: 'REST APIs', sources: 'Data Engineer, Software Engineer at Capsule Labs' },
+      { name: 'Selenium', sources: 'Data Engineer at Capsule Labs' },
+      { name: 'Beautiful Soup', sources: 'Data Engineer at Capsule Labs' },
+      { name: 'Git & GitHub', sources: 'Data Engineer at Capsule Labs' },
+      { name: 'Power BI', sources: 'Data Engineer, Software Engineer, PwC' },
       { name: 'Tableau', sources: 'Data Engineer, Software Engineer, PwC' },
-      { name: 'Tkinter', sources: 'Data Engineer at Capsule Labs' },
-      { name: 'WordPress', sources: 'Data Engineer, Software Engineer at Capsule Labs' },
-      { name: 'Microsoft PowerPoint', sources: 'B.P. Poddar, M.D.B.D.A.V, Accenture' },
-      { name: 'Microsoft Excel', sources: 'Data Engineer, Software Engineer, Accenture, PwC' },
+      { name: 'Docker / Linux', sources: 'Data Engineer at Capsule Labs' },
+      { name: 'Excel / SQL Queries', sources: 'Data Engineer, Software Engineer, Accenture, PwC' },
     ]
   },
   {
-    title: 'Interpersonal Skills',
+    title: 'Engineering Practices',
     icon: Users,
-    color: '#10b981',
+    color: '#059669',
     skills: [
-      { name: 'Teamwork', sources: 'Data Engineer, B.P. Poddar' },
-      { name: 'Leadership', sources: 'Data Engineer, B.P. Poddar, M.D.B.D.A.V' },
+      { name: 'System Architecture', sources: 'Data Engineer at Capsule Labs' },
       { name: 'Problem Solving', sources: 'Data Engineer, B.P. Poddar, Accenture' },
-      { name: 'Communication', sources: 'Data Engineer, Software Engineer, B.P. Poddar, M.D.B.D.A.V' },
-      { name: 'Analytical Skills', sources: 'Data Engineer, Software Engineer, Accenture' },
-      { name: 'Creative Problem Solving', sources: 'Data Engineer at Capsule Labs' },
-      { name: 'Critical Thinking', sources: 'Data Engineer at Capsule Labs' },
-      { name: 'Research Skills', sources: 'Data Engineer at Capsule Labs' },
+      { name: 'Code Reviews', sources: 'Data Engineer, Software Engineer at Capsule Labs' },
+      { name: 'Technical Documentation', sources: 'Data Engineer, B.P. Poddar' },
+      { name: 'Cross-functional Collaboration', sources: 'Data Engineer, B.P. Poddar' },
+      { name: 'Analytical Thinking', sources: 'Data Engineer, Software Engineer, Accenture' },
     ]
   },
   {
-    title: 'Languages',
+    title: 'Languages & Communication',
     icon: Code2,
-    color: '#f59e0b',
+    color: '#d97706',
     skills: [
-      { name: 'English', sources: 'B.P. Poddar, M.D.B.D.A.V' },
-      { name: 'Bengali', sources: 'M.D.B.D.A.V' },
-      { name: 'Hindi', sources: 'B.P. Poddar, M.D.B.D.A.V' },
+      { name: 'English (Fluent)', sources: 'B.P. Poddar, M.D.B.D.A.V' },
+      { name: 'Bengali (Native)', sources: 'M.D.B.D.A.V' },
+      { name: 'Hindi (Proficient)', sources: 'B.P. Poddar, M.D.B.D.A.V' },
     ]
   },
 ];
@@ -99,34 +94,37 @@ function SkillCard({ category, index }: { category: SkillCategory; index: number
   // Theme-aware tooltip colors
   const tooltipStyles = theme === 'dark'
     ? {
-      bg: 'bg-slate-800/95 backdrop-blur-md border border-slate-600',
-      text: 'text-white',
-      arrow: 'border-t-slate-800'
+      bg: 'bg-zinc-900 border border-zinc-700/80 shadow-lg',
+      text: 'text-zinc-100',
+      arrow: 'border-t-zinc-900'
     }
     : {
-      bg: 'bg-gray-900/95 backdrop-blur-md border border-gray-700',
-      text: 'text-gray-100',
-      arrow: 'border-t-gray-900'
+      bg: 'bg-zinc-900 border border-zinc-800 shadow-lg',
+      text: 'text-zinc-100',
+      arrow: 'border-t-zinc-900'
     };
 
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, y: 50 }}
-      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
-      transition={{ duration: 0.6, delay: index * 0.1 }}
+      initial={{ opacity: 0, y: 30 }}
+      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+      transition={{ duration: 0.5, delay: index * 0.08 }}
       className="group"
     >
-      <div className="glass rounded-2xl p-6 h-full card-hover">
+      <div className="glass rounded-2xl p-5 sm:p-6 h-full card-hover border border-border/70 bg-card/40">
         {/* Header */}
-        <div className="flex items-center gap-3 mb-6">
+        <div className="flex items-center gap-3 mb-5">
           <div
-            className="w-12 h-12 rounded-xl flex items-center justify-center"
-            style={{ background: `${category.color}20` }}
+            className="w-10 h-10 rounded-lg flex items-center justify-center border"
+            style={{
+              background: `${category.color}15`,
+              borderColor: `${category.color}30`
+            }}
           >
-            <Icon className="w-6 h-6" style={{ color: category.color }} />
+            <Icon className="w-5 h-5" style={{ color: category.color }} />
           </div>
-          <h3 className="text-xl font-bold">{category.title}</h3>
+          <h3 className="text-lg font-bold text-foreground">{category.title}</h3>
         </div>
 
         {/* Skills Grid */}
@@ -134,17 +132,17 @@ function SkillCard({ category, index }: { category: SkillCategory; index: number
           {category.skills.map((skill, skillIndex) => (
             <motion.div
               key={skill.name}
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.8 }}
-              transition={{ duration: 0.3, delay: index * 0.1 + skillIndex * 0.05 }}
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.95 }}
+              transition={{ duration: 0.25, delay: index * 0.08 + skillIndex * 0.03 }}
               className="relative group/skill"
             >
               <span
-                className="inline-block px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-300 cursor-default"
+                className="inline-block px-2.5 py-1 rounded-md text-xs font-medium transition-all duration-200 cursor-default border"
                 style={{
-                  background: `${category.color}15`,
+                  background: `${category.color}0D`,
                   color: category.color,
-                  border: `1px solid ${category.color}30`,
+                  borderColor: `${category.color}25`,
                 }}
               >
                 {skill.name}
@@ -152,15 +150,12 @@ function SkillCard({ category, index }: { category: SkillCategory; index: number
 
               {/* Tooltip */}
               {skill.sources && (
-                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 opacity-0 invisible group-hover/skill:opacity-100 group-hover/skill:visible transition-all duration-300 z-50 pointer-events-none">
-                  <div className={`${tooltipStyles.bg} px-4 py-2 rounded-lg text-xs whitespace-nowrap`}>
+                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 opacity-0 invisible group-hover/skill:opacity-100 group-hover/skill:visible transition-all duration-200 z-50 pointer-events-none">
+                  <div className={`${tooltipStyles.bg} px-3 py-1.5 rounded-md text-[11px] font-mono whitespace-nowrap`}>
                     <div className={tooltipStyles.text}>{skill.sources}</div>
                   </div>
                   <div
-                    className="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-4 border-transparent"
-                    style={{
-                      borderTopColor: theme === 'dark' ? 'rgb(30,41,59)' : 'rgb(17,24,39)'
-                    }}
+                    className="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-4 border-transparent border-t-zinc-900"
                   />
                 </div>
               )}
@@ -244,7 +239,7 @@ export default function Skills() {
             merged.push({
               title: categoryName,
               icon,
-              color: '#8b5cf6',
+              color: '#0284c7',
               skills: skillsByCategory[categoryName]
             });
           }
@@ -258,31 +253,25 @@ export default function Skills() {
   };
 
   return (
-    <section id="skills" className="py-24 relative">
+    <section id="skills" className="py-20 sm:py-24 relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <motion.div
           ref={ref}
-          initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
-          className="text-center mb-16"
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+          className="text-center mb-14"
         >
-          <motion.div
-            initial={{ opacity: 0, scale: 0.5 }}
-            animate={isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.5 }}
-            transition={{ delay: 0.2 }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-violet-500/10 border border-violet-500/20 mb-4"
-          >
-            <Workflow className="w-4 h-4 text-violet-500" />
-            <span className="text-sm text-violet-500 font-medium">Expertise</span>
-          </motion.div>
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-muted border border-border/80 mb-3.5">
+            <Workflow className="w-3.5 h-3.5 text-muted-foreground" />
+            <span className="text-xs font-mono font-medium text-foreground tracking-wide">Technical Stack</span>
+          </div>
 
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4">
-            Skills & <span className="gradient-text">Technologies</span>
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight mb-3 text-foreground">
+            Skills & Core Competencies
           </h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
-            A comprehensive set of skills developed through education, professional experience,
-            and continuous learning in data engineering and software development.
+          <p className="text-muted-foreground max-w-2xl mx-auto text-sm sm:text-base">
+            Technical proficiencies across data engineering, pipeline design, automated workflows, and backend development.
           </p>
         </motion.div>
 

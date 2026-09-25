@@ -129,7 +129,7 @@ export default function Navbar() {
       {indicatorVisible && (
         <motion.div
           animate={controls}
-          className="fixed z-[60] h-0.5 bg-gradient-to-r from-violet-500 via-fuchsia-500 to-violet-500 pointer-events-none origin-center rounded-full shadow-[0_0_8px_rgba(139,92,246,0.6)]"
+          className="fixed z-[60] h-0.5 bg-foreground pointer-events-none origin-center rounded-full"
           style={{ willChange: 'transform, top, left, opacity' }}
         />
       )}
@@ -143,11 +143,13 @@ export default function Navbar() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
-            <Link to="/" className="flex items-center space-x-2">
-              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-gradient-to-br from-violet-500 to-fuchsia-500 flex items-center justify-center">
-                <span className="text-white font-bold text-sm sm:text-lg">D</span>
+            <Link to="/" className="flex items-center space-x-2.5 group">
+              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-primary text-primary-foreground flex items-center justify-center font-mono font-bold text-sm shadow-xs group-hover:scale-105 transition-transform">
+                DS
               </div>
-              <span className="text-sm sm:text-xl font-bold gradient-text hidden sm:block">Debpriya</span>
+              <span className="text-sm sm:text-lg font-bold tracking-tight text-foreground hidden sm:block">
+                Debpriya Santra
+              </span>
             </Link>
 
             {/* Desktop Navigation */}
@@ -157,9 +159,9 @@ export default function Navbar() {
                   key={link.path}
                   to={link.path}
                   ref={(el) => { linkRefs.current[link.path] = el; }}
-                  className={`relative text-sm font-medium transition-colors ${currentPath === link.path
-                      ? 'text-violet-500'
-                      : 'text-muted-foreground hover:text-foreground'
+                  className={`relative text-sm transition-colors ${currentPath === link.path
+                      ? 'text-foreground font-semibold'
+                      : 'text-muted-foreground hover:text-foreground font-medium'
                     }`}
                 >
                   {link.label}
@@ -175,37 +177,37 @@ export default function Navbar() {
                   href="https://github.com/debpriya3011"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-2 rounded-lg hover:bg-muted transition-colors"
+                  className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
                   title="GitHub"
                 >
-                  <Github className="w-5 h-5" />
+                  <Github className="w-4 h-4" />
                 </a>
                 <a
                   href="https://www.linkedin.com/in/debpriya-santra-459519251/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-2 rounded-lg hover:bg-muted transition-colors"
+                  className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
                   title="LinkedIn"
                 >
-                  <Linkedin className="w-5 h-5" />
+                  <Linkedin className="w-4 h-4" />
                 </a>
                 <a
                   href="https://www.hackerrank.com/profile/debpriya3011"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-2 rounded-lg hover:bg-muted transition-colors"
+                  className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
                   title="HackerRank"
                 >
-                  <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
+                  <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
                     <path d="M12 0a12 12 0 1 0 12 12A12.013 12.013 0 0 0 12 0Zm3.75 16.5h-2.25v-3.5h-3v3.5H8.25v-9h2.25v3.25h3V7.5h2.25v9Z" />
                   </svg>
                 </a>
                 <a
                   href="mailto:debpriya3011@gmail.com"
-                  className="p-2 rounded-lg hover:bg-muted transition-colors"
+                  className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
                   title="Email"
                 >
-                  <Mail className="w-5 h-5" />
+                  <Mail className="w-4 h-4" />
                 </a>
               </div>
 
@@ -214,12 +216,12 @@ export default function Navbar() {
                 variant="ghost"
                 size="icon"
                 onClick={toggleTheme}
-                className="rounded-lg"
+                className="rounded-lg h-9 w-9 text-muted-foreground hover:text-foreground"
               >
                 {theme === 'dark' ? (
-                  <Sun className="w-5 h-5" />
+                  <Sun className="w-4 h-4" />
                 ) : (
-                  <Moon className="w-5 h-5" />
+                  <Moon className="w-4 h-4" />
                 )}
               </Button>
 
@@ -234,7 +236,7 @@ export default function Navbar() {
               <Button
                 variant="ghost"
                 size="icon"
-                className="md:hidden"
+                className="md:hidden h-9 w-9"
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               >
                 {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -250,17 +252,17 @@ export default function Navbar() {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
-              className="md:hidden glass border-t"
+              className="md:hidden glass border-t border-border"
             >
-              <div className="px-4 py-4 space-y-2">
+              <div className="px-4 py-4 space-y-1">
                 {navLinks.map((link) => (
                   <Link
                     key={link.path}
                     to={link.path}
                     onClick={() => setMobileMenuOpen(false)}
-                    className={`block py-2 px-4 rounded-lg ${currentPath === link.path
-                      ? 'bg-violet-500/20 text-violet-500'
-                      : 'hover:bg-muted'
+                    className={`block py-2 px-3 rounded-md text-sm font-medium transition-colors ${currentPath === link.path
+                      ? 'bg-accent text-foreground font-semibold'
+                      : 'text-muted-foreground hover:bg-accent/50 hover:text-foreground'
                       }`}
                   >
                     {link.label}

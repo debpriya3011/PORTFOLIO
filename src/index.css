@@ -84,22 +84,35 @@
   }
   
   .glass {
-    @apply bg-background/80 backdrop-blur-md border border-border/50;
+    @apply bg-background/80 backdrop-blur-md border border-border/60;
+  }
+
+  .glass-card {
+    @apply bg-card/60 backdrop-blur-md border border-border/80 shadow-sm transition-all duration-300;
   }
   
   .gradient-text {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-violet-500 to-fuchsia-500;
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-foreground via-foreground/90 to-muted-foreground;
+  }
+
+  .gradient-accent {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-sky-400 via-indigo-400 to-emerald-400;
   }
   
   .card-hover {
-    @apply transition-all duration-300 hover:shadow-lg hover:shadow-violet-500/10 hover:border-violet-500/30;
+    @apply transition-all duration-300 hover:shadow-md hover:border-border hover:-translate-y-0.5;
   }
   
   .grid-bg {
     background-image: 
-      linear-gradient(rgba(139, 92, 246, 0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(139, 92, 246, 0.03) 1px, transparent 1px);
-    background-size: 50px 50px;
+      linear-gradient(rgba(148, 163, 184, 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(148, 163, 184, 0.05) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+
+  .dot-bg {
+    background-image: radial-gradient(rgba(148, 163, 184, 0.1) 1px, transparent 1px);
+    background-size: 24px 24px;
   }
   
   @media (max-width: 640px) {

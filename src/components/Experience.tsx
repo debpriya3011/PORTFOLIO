@@ -63,32 +63,32 @@ function ExperienceCard({ experience, index }: { experience: ExperienceItem; ind
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
-      animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
-      transition={{ duration: 0.6, delay: index * 0.2 }}
+      initial={{ opacity: 0, y: 24 }}
+      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 }}
+      transition={{ duration: 0.5, delay: index * 0.15 }}
       className="relative"
     >
-      <div className="glass rounded-2xl p-6 md:p-8 card-hover">
+      <div className="glass rounded-2xl p-6 md:p-8 card-hover border border-border/70 bg-card/40">
         {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-6">
+        <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-5">
           <div>
             <div className="flex items-center gap-3 mb-2">
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-violet-500 to-fuchsia-500 flex items-center justify-center">
-                <Building2 className="w-6 h-6 text-white" />
+              <div className="w-10 h-10 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center text-foreground">
+                <Building2 className="w-5 h-5" />
               </div>
               <div>
-                <h3 className="text-xl font-bold">{experience.role}</h3>
-                <p className="text-violet-500 font-medium">{experience.company}</p>
+                <h3 className="text-xl font-bold text-foreground">{experience.role}</h3>
+                <p className="text-sm font-medium text-foreground/70">{experience.company}</p>
               </div>
             </div>
           </div>
 
-          <div className="flex flex-wrap gap-2 text-sm text-muted-foreground">
-            <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-muted">
+          <div className="flex flex-wrap gap-2 text-xs font-mono text-muted-foreground">
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-muted border border-border">
               <Briefcase className="w-3 h-3 flex-shrink-0" />
               {experience.type}
             </span>
-            <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-muted max-w-full">
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-muted border border-border max-w-full">
               <MapPin className="w-3 h-3 flex-shrink-0" />
               <span className="truncate">{experience.location}</span>
             </span>
@@ -97,8 +97,8 @@ function ExperienceCard({ experience, index }: { experience: ExperienceItem; ind
 
         {/* Duration */}
         {experience.duration && (
-          <div className="flex items-center gap-2 text-sm text-muted-foreground mb-4">
-            <Calendar className="w-4 h-4" />
+          <div className="flex items-center gap-2 text-xs font-mono text-muted-foreground mb-4">
+            <Calendar className="w-3.5 h-3.5" />
             <span>{experience.duration}</span>
           </div>
         )}
@@ -109,12 +109,12 @@ function ExperienceCard({ experience, index }: { experience: ExperienceItem; ind
             {descriptionArray.map((item, i) => (
               <motion.li
                 key={i}
-                initial={{ opacity: 0, x: -20 }}
-                animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }}
-                transition={{ delay: index * 0.2 + i * 0.1 }}
-                className="flex items-start gap-2 text-muted-foreground"
+                initial={{ opacity: 0, x: -10 }}
+                animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -10 }}
+                transition={{ delay: index * 0.15 + i * 0.05 }}
+                className="flex items-start gap-2.5 text-sm text-muted-foreground leading-relaxed"
               >
-                <span className="w-1.5 h-1.5 rounded-full bg-violet-500 mt-2 flex-shrink-0" />
+                <span className="w-1.5 h-1.5 rounded-full bg-foreground/40 mt-2 flex-shrink-0" />
                 <span>{item}</span>
               </motion.li>
             ))}
@@ -123,11 +123,11 @@ function ExperienceCard({ experience, index }: { experience: ExperienceItem; ind
 
         {/* Skills */}
         {skillsArray.length > 0 && (
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-1.5 pt-3 border-t border-border/50">
             {skillsArray.map((skill: string) => (
               <span
                 key={skill}
-                className="px-3 py-1 rounded-lg text-xs font-medium bg-violet-500/10 text-violet-500 border border-violet-500/20"
+                className="px-2.5 py-0.5 rounded-md text-xs font-mono font-medium bg-muted/80 text-foreground/80 border border-border/80"
               >
                 {skill}
               </span>
@@ -138,12 +138,7 @@ function ExperienceCard({ experience, index }: { experience: ExperienceItem; ind
 
       {/* Timeline connector */}
       {index < (defaultExperiences.length - 1) && (
-        <motion.div
-          initial={{ scaleY: 0 }}
-          animate={isInView ? { scaleY: 1 } : { scaleY: 0 }}
-          transition={{ duration: 0.6, delay: index * 0.2 + 0.3 }}
-          className="absolute left-8 top-full w-0.5 h-8 bg-gradient-to-b from-violet-500 to-transparent origin-top"
-        />
+        <div className="hidden sm:block absolute left-9 top-full w-px h-8 bg-border origin-top" />
       )}
     </motion.div>
   );
@@ -188,36 +183,31 @@ export default function Experience() {
   };
 
   return (
-    <section id="experience" className="py-24 relative">
+    <section id="experience" className="py-20 sm:py-24 relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <motion.div
           ref={ref}
-          initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
-          className="text-center mb-16"
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+          className="text-center mb-14"
         >
-          <motion.div
-            initial={{ opacity: 0, scale: 0.5 }}
-            animate={isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.5 }}
-            transition={{ delay: 0.2 }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-violet-500/10 border border-violet-500/20 mb-4"
-          >
-            <Briefcase className="w-4 h-4 text-violet-500" />
-            <span className="text-sm text-violet-500 font-medium">Career</span>
-          </motion.div>
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-muted border border-border/80 mb-3.5">
+            <Briefcase className="w-3.5 h-3.5 text-muted-foreground" />
+            <span className="text-xs font-mono font-medium text-foreground tracking-wide">Work History</span>
+          </div>
 
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4">
-            Work <span className="gradient-text">Experience</span>
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight mb-3 text-foreground">
+            Professional Experience
           </h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-muted-foreground max-w-2xl mx-auto text-sm sm:text-base">
             Professional journey in data engineering and software development,
-            building scalable solutions and automation systems.
+            building resilient ETL pipelines and automation systems.
           </p>
         </motion.div>
 
         {/* Experience Cards */}
-        <div className="space-y-8 max-w-4xl mx-auto">
+        <div className="space-y-6 max-w-4xl mx-auto">
           {experiences.map((exp, index) => (
             <ExperienceCard key={`${exp.company}-${exp.role}`} experience={exp} index={index} />
           ))}

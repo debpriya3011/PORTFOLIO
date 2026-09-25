@@ -79,17 +79,16 @@ export default function Guides() {
     <div className="min-h-screen pt-24 pb-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
       {/* Header */}
       <motion.div
-        initial={{ opacity: 0, y: 30 }}
+        initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         className="text-center max-w-3xl mx-auto mb-12"
       >
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-violet-500/10 border border-violet-500/20 text-violet-400 text-xs font-semibold uppercase tracking-wider mb-4">
-          {/* <Sparkles className="w-3.5 h-3.5" /> */}
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-muted border border-border/80 text-foreground text-xs font-mono tracking-wide mb-3.5">
           Production Blueprints & Technical Guides
         </div>
 
-        <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight mb-4">
-          API Architecture & <span className="gradient-text">Automation Blueprints</span>
+        <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight mb-4 text-foreground">
+          API Architecture & Automation Blueprints
         </h1>
 
         <p className="text-muted-foreground text-base sm:text-lg leading-relaxed">
@@ -106,7 +105,7 @@ export default function Guides() {
             placeholder="Search blueprints, APIs, tags..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 text-sm rounded-xl bg-card/60 border border-border focus:border-violet-500 focus:outline-none focus:ring-1 focus:ring-violet-500 transition-colors"
+            className="w-full pl-10 pr-4 py-2 text-sm rounded-xl bg-card/60 border border-border focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-colors"
           />
         </div>
 
