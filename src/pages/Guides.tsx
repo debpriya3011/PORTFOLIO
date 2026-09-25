@@ -171,12 +171,14 @@ export default function Guides() {
                     </span>
                     <div className="flex items-center gap-2">
                       {guide.liveUrl && (
-                        <span className="flex items-center gap-1.5 text-[10px] font-mono font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-md shadow-xs">
-                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                        <span className="flex items-center gap-1 text-[10px] font-mono font-medium text-foreground/80 bg-muted border border-border px-2 py-0.5 rounded-md">
+                          <ExternalLink className="w-3 h-3 text-sky-500" />
                           Live App
                         </span>
                       )}
-                      <span className="text-[10px] font-mono text-muted-foreground font-medium px-2 py-0.5 rounded-md bg-muted/70 border border-border/60">{guide.difficulty}</span>
+                      <span className="text-[10px] font-mono text-muted-foreground font-medium px-2 py-0.5 rounded-md bg-muted/60 border border-border/60">
+                        {guide.difficulty}
+                      </span>
                     </div>
                   </div>
 
@@ -238,9 +240,9 @@ export default function Guides() {
               <span className="px-3 py-1 rounded-md bg-primary/10 text-foreground text-xs font-mono font-semibold border border-primary/20">
                 {selectedGuide.badge}
               </span>
-              <span className="px-3 py-1 rounded-md bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-xs font-mono font-medium border border-emerald-500/20 flex items-center gap-1">
-                <ShieldCheck className="w-3.5 h-3.5" />
-                Verified Sanitized Blueprint
+              <span className="px-2.5 py-1 rounded-md bg-muted text-foreground/80 text-xs font-mono font-medium border border-border flex items-center gap-1.5">
+                <ShieldCheck className="w-3.5 h-3.5 text-sky-500" />
+                Verified Blueprint
               </span>
               <span className="text-xs font-mono text-muted-foreground flex items-center gap-1 ml-auto">
                 <Clock className="w-3.5 h-3.5" />

@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MessageSquare, X, Linkedin, Sparkles, Workflow } from 'lucide-react';
+import { MessageSquare, X, Linkedin, Workflow } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 interface Message {
@@ -190,7 +190,7 @@ export default function PostsWidget() {
             initial={{ opacity: 0, y: 15, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 10, scale: 0.95 }}
-            className="mb-4 mr-1 max-w-[240px] p-3 rounded-2xl glass border-violet-500/30 shadow-xl relative cursor-pointer group"
+            className="mb-4 mr-1 max-w-[250px] p-3.5 rounded-2xl bg-card border border-border shadow-xl relative cursor-pointer group"
             onClick={handleOpenToggle}
           >
             <button
@@ -200,18 +200,18 @@ export default function PostsWidget() {
               <X className="w-3 h-3" />
             </button>
             <div className="flex gap-2.5 items-start">
-              <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center shrink-0 mt-0.5">
-                <Sparkles className="w-3.5 h-3.5 text-foreground" />
+              <div className="w-6 h-6 rounded-lg bg-sky-500/10 border border-sky-500/20 text-sky-600 dark:text-sky-400 flex items-center justify-center shrink-0 mt-0.5 shadow-xs">
+                <Workflow className="w-3.5 h-3.5" />
               </div>
               <div>
-                <p className="text-xs font-semibold text-foreground">Updates & Blueprints</p>
+                <p className="text-xs font-bold text-foreground">Interactive Assistant</p>
                 <p className="text-[11px] text-muted-foreground mt-0.5 leading-snug">
-                  Explore blueprints & LinkedIn notes.
+                  Quick access to blueprints & LinkedIn notes.
                 </p>
               </div>
             </div>
             {/* Tooltip speech bubble tail */}
-            <div className="absolute bottom-[-6px] right-6 w-3 h-3 rotate-45 border-r border-b border-border/50 bg-background/80 backdrop-blur-md" />
+            <div className="absolute bottom-[-6px] right-6 w-3 h-3 rotate-45 border-r border-b border-border bg-card" />
           </motion.div>
         )}
       </AnimatePresence>
@@ -224,10 +224,10 @@ export default function PostsWidget() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 15, scale: 0.92, transformOrigin: 'bottom right' }}
             transition={{ type: 'spring', damping: 26, stiffness: 320 }}
-            className="mb-4 w-[320px] sm:w-[360px] h-[460px] glass border border-border/80 rounded-2xl shadow-xl flex flex-col overflow-hidden backdrop-blur-xl bg-card/90"
+            className="mb-4 w-[320px] sm:w-[360px] h-[460px] border border-border rounded-2xl shadow-2xl flex flex-col overflow-hidden bg-card"
           >
             {/* Header */}
-            <div className="px-4 py-3 bg-muted/60 border-b border-border/60 flex items-center justify-between">
+            <div className="px-4 py-3 bg-muted/40 border-b border-border flex items-center justify-between">
               <div className="flex items-center gap-2.5">
                 <div className="relative">
                   <div className="w-7 h-7 rounded-lg bg-primary text-primary-foreground flex items-center justify-center font-mono font-bold text-xs shadow-xs">
