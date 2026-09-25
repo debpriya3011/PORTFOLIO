@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MessageSquare, X, Linkedin, Sparkles } from 'lucide-react';
+import { MessageSquare, X, Linkedin, Sparkles, Workflow } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 interface Message {
@@ -296,30 +296,31 @@ export default function PostsWidget() {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.2 }}
-                className="p-3 pt-0 flex flex-col gap-1.5 bg-background/50 border-t border-border/50"
+                className="p-3.5 pt-0 flex flex-col gap-2 bg-muted/20 border-t border-border"
               >
                 <motion.button
                   whileHover={{ scale: 1.01, y: -1 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={() => handleReply('blueprints')}
-                  className="w-full py-2 px-3 bg-primary text-primary-foreground font-medium rounded-lg text-xs shadow-xs transition-all flex items-center justify-center gap-2 cursor-pointer"
+                  className="w-full py-2.5 px-4 bg-sky-600 hover:bg-sky-700 dark:bg-sky-500 dark:hover:bg-sky-600 text-white font-semibold rounded-xl text-xs shadow-xs transition-all flex items-center justify-center gap-2 cursor-pointer"
                 >
-                  Explore Blueprints & Guides
+                  <Workflow className="w-3.5 h-3.5" />
+                  <span>Explore Blueprints & Guides</span>
                 </motion.button>
                 <motion.button
                   whileHover={{ scale: 1.01, y: -1 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={() => handleReply('posts')}
-                  className="w-full py-2 px-3 bg-muted hover:bg-accent text-foreground font-medium rounded-lg text-xs border border-border transition-colors flex items-center justify-center gap-2 cursor-pointer"
+                  className="w-full py-2.5 px-4 bg-card hover:bg-muted text-foreground font-semibold rounded-xl text-xs border border-border transition-all flex items-center justify-center gap-2 cursor-pointer shadow-xs"
                 >
-                  <Linkedin className="w-3 h-3 text-sky-500" />
-                  View LinkedIn Posts
+                  <Linkedin className="w-3.5 h-3.5 text-sky-500 shrink-0" />
+                  <span>View LinkedIn Posts</span>
                 </motion.button>
                 <motion.button
                   whileHover={{ scale: 1.01 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={() => handleReply('dismiss')}
-                  className="w-full py-1.5 px-3 text-muted-foreground hover:text-foreground font-medium rounded-lg text-[11px] transition-colors cursor-pointer"
+                  className="w-full py-1.5 px-3 text-muted-foreground hover:text-foreground font-medium rounded-lg text-[11px] transition-colors cursor-pointer text-center"
                 >
                   Not now, just browsing
                 </motion.button>

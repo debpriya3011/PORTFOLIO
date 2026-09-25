@@ -20,30 +20,14 @@ export default function Hero() {
             transition={{ duration: 0.6, ease: 'easeOut' }}
             className="text-center lg:text-left"
           >
-            {/* Status Pill Badge */}
-            <motion.div
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.15 }}
-              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/25 mb-4 sm:mb-6"
-            >
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
-              </span>
-              <span className="text-xs font-mono font-medium text-emerald-600 dark:text-emerald-400 tracking-wide">
-                Available for opportunities
-              </span>
-            </motion.div>
-
             <motion.h1
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.25 }}
+              transition={{ delay: 0.15 }}
               className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-extrabold tracking-tight mb-3 sm:mb-4 md:mb-6 text-foreground"
             >
               Hi, I'm{' '}
-              <span className="gradient-text font-black">
+              <span className="gradient-brand font-black">
                 Debpriya Santra
               </span>
             </motion.h1>

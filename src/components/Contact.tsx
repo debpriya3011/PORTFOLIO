@@ -117,101 +117,107 @@ export default function Contact() {
           </p>
         </motion.div>
 
-        <div className="grid sm:grid-cols-1 md:grid-cols-2 gap-6 md:gap-12 max-w-5xl mx-auto items-start">
-          {/* Contact Info */}
+        <div className="grid sm:grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 max-w-5xl mx-auto items-stretch">
+          {/* Contact Info Card */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }}
-            className="order-1 md:order-1"
+            className="order-1 md:order-1 h-full"
             transition={{ delay: 0.2 }}
           >
-            <h3 className="text-xl font-bold mb-5 tracking-tight text-foreground">
-              Contact Information
-            </h3>
-            <div className="space-y-3">
-              {contactInfo.map((item, index) => {
-                const Icon = item.icon;
-                return (
-                  <motion.a
-                    key={item.label}
-                    href={item.href}
-                    target={item.href.startsWith('http') ? '_blank' : undefined}
-                    rel={item.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-                    initial={{ opacity: 0, y: 15 }}
-                    animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 15 }}
-                    transition={{ delay: 0.25 + index * 0.08 }}
-                    className="flex items-center gap-3.5 p-4 rounded-2xl card-hover border border-border bg-card shadow-sm"
-                  >
-                    <div className="w-10 h-10 rounded-xl bg-sky-500/10 border border-sky-500/20 flex items-center justify-center text-sky-600 dark:text-sky-400 flex-shrink-0 shadow-xs">
-                      <Icon className="w-4 h-4" />
-                    </div>
-                    <div className="min-w-0">
-                      <p className="text-xs font-mono text-muted-foreground">{item.label}</p>
-                      <p className="font-semibold text-sm truncate text-foreground">{item.value}</p>
-                    </div>
-                  </motion.a>
-                );
-              })}
+            <div className="p-6 sm:p-8 rounded-2xl border border-border bg-card shadow-sm h-full flex flex-col justify-between">
+              <div>
+                <h3 className="text-xl font-bold mb-5 tracking-tight text-foreground">
+                  Contact Information
+                </h3>
+                <div className="space-y-2.5">
+                  {contactInfo.map((item, index) => {
+                    const Icon = item.icon;
+                    return (
+                      <motion.a
+                        key={item.label}
+                        href={item.href}
+                        target={item.href.startsWith('http') ? '_blank' : undefined}
+                        rel={item.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+                        initial={{ opacity: 0, y: 15 }}
+                        animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 15 }}
+                        transition={{ delay: 0.25 + index * 0.06 }}
+                        className="flex items-center gap-3.5 p-3 sm:p-3.5 rounded-xl card-hover border border-border bg-background shadow-xs hover:border-sky-500/40 hover:bg-sky-500/5 transition-all"
+                      >
+                        <div className="w-9 h-9 rounded-lg bg-sky-500/10 border border-sky-500/20 flex items-center justify-center text-sky-600 dark:text-sky-400 flex-shrink-0 shadow-xs">
+                          <Icon className="w-4 h-4" />
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <p className="text-[11px] font-mono text-muted-foreground">{item.label}</p>
+                          <p className="font-semibold text-xs sm:text-sm truncate text-foreground">{item.value}</p>
+                        </div>
+                      </motion.a>
+                    );
+                  })}
+                </div>
+              </div>
             </div>
           </motion.div>
 
-          {/* Contact Form */}
+          {/* Contact Form Card */}
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 20 }}
-            className="order-2 md:order-2"
+            className="order-2 md:order-2 h-full"
             transition={{ delay: 0.2 }}
           >
-            <div className="p-6 sm:p-8 rounded-2xl border border-border bg-card shadow-sm">
-              <h3 className="text-xl font-bold mb-5 tracking-tight text-foreground">
-                Send a Message
-              </h3>
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div>
-                  <label className="block text-xs font-mono font-medium mb-1.5 text-foreground">Name</label>
-                  <Input
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    placeholder="Your name"
-                    required
-                    className="bg-background border-border focus:border-sky-500 focus:ring-1 focus:ring-sky-500"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-mono font-medium mb-1.5 text-foreground">Email</label>
-                  <Input
-                    type="email"
-                    value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    placeholder="your@email.com"
-                    required
-                    className="bg-background border-border focus:border-sky-500 focus:ring-1 focus:ring-sky-500"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-mono font-medium mb-1.5 text-foreground">Message</label>
-                  <Textarea
-                    value={formData.message}
-                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                    placeholder="Your message..."
-                    required
-                    rows={4}
-                    className="bg-background border-border focus:border-sky-500 focus:ring-1 focus:ring-sky-500 resize-none"
-                  />
-                </div>
-                <Button
-                  type="submit"
-                  disabled={submitting}
-                  className="w-full bg-sky-600 hover:bg-sky-700 dark:bg-sky-500 dark:hover:bg-sky-600 text-white font-medium py-2.5 rounded-xl shadow-xs transition-all"
-                >
-                  {submitting ? (
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  ) : (
-                    <Send className="w-4 h-4 mr-2" />
-                  )}
-                  {submitting ? 'Sending Message...' : 'Send Message'}
-                </Button>
-              </form>
+            <div className="p-6 sm:p-8 rounded-2xl border border-border bg-card shadow-sm h-full flex flex-col justify-between">
+              <div>
+                <h3 className="text-xl font-bold mb-5 tracking-tight text-foreground">
+                  Send a Message
+                </h3>
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <div>
+                    <label className="block text-xs font-mono font-medium mb-1.5 text-foreground">Name</label>
+                    <Input
+                      value={formData.name}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      placeholder="Your name"
+                      required
+                      className="bg-background border-border focus:border-sky-500 focus:ring-1 focus:ring-sky-500 rounded-xl"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-mono font-medium mb-1.5 text-foreground">Email</label>
+                    <Input
+                      type="email"
+                      value={formData.email}
+                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                      placeholder="your@email.com"
+                      required
+                      className="bg-background border-border focus:border-sky-500 focus:ring-1 focus:ring-sky-500 rounded-xl"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-mono font-medium mb-1.5 text-foreground">Message</label>
+                    <Textarea
+                      value={formData.message}
+                      onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                      placeholder="Your message..."
+                      required
+                      rows={4}
+                      className="bg-background border-border focus:border-sky-500 focus:ring-1 focus:ring-sky-500 resize-none rounded-xl"
+                    />
+                  </div>
+                  <Button
+                    type="submit"
+                    disabled={submitting}
+                    className="w-full bg-sky-600 hover:bg-sky-700 dark:bg-sky-500 dark:hover:bg-sky-600 text-white font-medium py-2.5 rounded-xl shadow-xs transition-all"
+                  >
+                    {submitting ? (
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    ) : (
+                      <Send className="w-4 h-4 mr-2" />
+                    )}
+                    {submitting ? 'Sending Message...' : 'Send Message'}
+                  </Button>
+                </form>
+              </div>
             </div>
           </motion.div>
         </div>
