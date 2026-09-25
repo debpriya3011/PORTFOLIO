@@ -169,14 +169,14 @@ export default function Guides() {
                       }`}>
                       {guide.badge}
                     </span>
-                    <div className="flex items-center gap-1.5">
+                    <div className="flex items-center gap-2">
                       {guide.liveUrl && (
-                        <span className="flex items-center gap-1 text-[10px] font-mono font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-md">
-                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                        <span className="flex items-center gap-1.5 text-[10px] font-mono font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-md shadow-xs">
+                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
                           Live App
                         </span>
                       )}
-                      <span className="text-xs font-mono text-muted-foreground">{guide.difficulty}</span>
+                      <span className="text-[10px] font-mono text-muted-foreground font-medium px-2 py-0.5 rounded-md bg-muted/70 border border-border/60">{guide.difficulty}</span>
                     </div>
                   </div>
 
@@ -284,14 +284,16 @@ export default function Guides() {
 
             {/* Why This Is Rare Callout Box */}
             {Boolean(selectedGuide.whyRare) && (
-              <div className="p-4 sm:p-5 rounded-2xl bg-amber-500/10 border border-amber-500/30 dark:border-amber-500/20 mb-8">
-                <div className="flex items-start gap-3">
-                  <Zap className="w-5 h-5 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
+              <div className="p-4 sm:p-5 rounded-2xl bg-sky-500/5 dark:bg-sky-500/10 border border-sky-500/20 mb-8 shadow-xs">
+                <div className="flex items-start gap-3.5">
+                  <div className="w-8 h-8 rounded-xl bg-sky-500/10 border border-sky-500/20 flex items-center justify-center text-sky-600 dark:text-sky-400 shrink-0 mt-0.5 shadow-xs">
+                    <Zap className="w-4 h-4" />
+                  </div>
                   <div>
-                    <h4 className="text-sm font-bold text-amber-800 dark:text-amber-300 mb-1 font-mono">
+                    <h4 className="text-sm font-bold text-sky-900 dark:text-sky-300 mb-1 font-mono">
                       Why this engineering blueprint is rare & hard to find
                     </h4>
-                    <p className="text-xs sm:text-sm text-amber-950/90 dark:text-amber-200/80 leading-relaxed font-medium dark:font-normal">
+                    <p className="text-xs sm:text-sm text-foreground/85 dark:text-sky-100/80 leading-relaxed font-normal">
                       {selectedGuide.whyRare}
                     </p>
                   </div>

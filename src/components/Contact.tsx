@@ -166,12 +166,12 @@ export default function Contact() {
             className="order-2 md:order-2 h-full"
             transition={{ delay: 0.2 }}
           >
-            <div className="p-6 sm:p-8 rounded-2xl border border-border bg-card shadow-sm h-full flex flex-col justify-between">
-              <div>
-                <h3 className="text-xl font-bold mb-5 tracking-tight text-foreground">
-                  Send a Message
-                </h3>
-                <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="p-6 sm:p-8 rounded-2xl border border-border bg-card shadow-sm h-full flex flex-col">
+              <h3 className="text-xl font-bold mb-5 tracking-tight text-foreground">
+                Send a Message
+              </h3>
+              <form onSubmit={handleSubmit} className="flex-1 flex flex-col justify-between">
+                <div className="space-y-4">
                   <div>
                     <label className="block text-xs font-mono font-medium mb-1.5 text-foreground">Name</label>
                     <Input
@@ -204,6 +204,9 @@ export default function Contact() {
                       className="bg-background border-border focus:border-sky-500 focus:ring-1 focus:ring-sky-500 resize-none rounded-xl"
                     />
                   </div>
+                </div>
+
+                <div className="pt-6 mt-auto">
                   <Button
                     type="submit"
                     disabled={submitting}
@@ -216,8 +219,8 @@ export default function Contact() {
                     )}
                     {submitting ? 'Sending Message...' : 'Send Message'}
                   </Button>
-                </form>
-              </div>
+                </div>
+              </form>
             </div>
           </motion.div>
         </div>
