@@ -173,7 +173,7 @@ export default function Guides() {
                       {guide.liveUrl && (
                         <span className="flex items-center gap-1 text-[10px] font-mono font-medium text-foreground/80 bg-muted border border-border px-2 py-0.5 rounded-md">
                           <ExternalLink className="w-3 h-3 text-sky-500" />
-                          Live App
+                          {guide.liveUrl.includes('github.com') ? 'GitHub' : 'Live App'}
                         </span>
                       )}
                       <span className="text-[10px] font-mono text-muted-foreground font-medium px-2 py-0.5 rounded-md bg-muted/60 border border-border/60">
@@ -269,7 +269,7 @@ export default function Guides() {
               ))}
             </div>
 
-            {/* Live Web App Action Button */}
+            {/* Live Web App / GitHub Action Button */}
             {selectedGuide.liveUrl && (
               <div className="mb-6 flex flex-wrap gap-3">
                 <a
@@ -279,7 +279,9 @@ export default function Guides() {
                   className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-primary-foreground hover:bg-primary/90 font-medium text-xs sm:text-sm shadow-sm transition-all"
                 >
                   <ExternalLink className="w-4 h-4" />
-                  Launch Live Web App ({selectedGuide.title.split('—')[0].trim()})
+                  {selectedGuide.liveUrl.includes('github.com')
+                    ? 'View Source Repository (GitHub)'
+                    : `Launch Live Web App (${selectedGuide.title.split('—')[0].trim()})`}
                 </a>
               </div>
             )}

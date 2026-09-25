@@ -781,5 +781,265 @@ except ImportError:
                 img.save(target_path, quality=95)`
       }
     ]
+  },
+  {
+    id: 'redbus-route-monitor-telegram-bot',
+    slug: 'redbus-route-monitor-telegram',
+    title: 'RedBus Real-Time Route Monitor & Interactive Telegram Bot',
+    subtitle: 'Zero-cost serverless bus seat monitor that tracks seat inventory, window/aisle breakdown, and sends instant Telegram alerts with direct booking links.',
+    badge: 'Serverless Automation',
+    category: 'Automation & Bot Engineering',
+    readTime: '6 min read',
+    difficulty: 'Intermediate',
+    platforms: ['Python 3.11', 'curl_cffi', 'Telegram Bot API', 'GitHub Actions (Cron)', 'JSON State Store'],
+    tags: ['Web Scraping', 'Telegram Bot', 'Python', 'curl_cffi', 'GitHub Actions', 'Automation', 'Real-Time Alerts'],
+    lastUpdated: '2026',
+    featured: true,
+    liveUrl: 'https://github.com/debpriya3011/redbus_moni',
+    problemStatement:
+      'During festival rushes like Durga Puja and special government transit schemes, bus seat availability fluctuates rapidly as operators release seats unpredictably. Booking portals often face heavy load or delayed updates, making manual tracking ineffective. This tool automates hourly checks and delivers immediate notifications the moment seats open up.',
+    whyRare:
+      'Instead of paying for 24/7 VPS hosting or running scripts manually on a local PC, this blueprint runs completely free via GitHub Actions on an hourly cron schedule. It uses curl_cffi for clean browser-like requests to avoid basic bot blocks, and allows full dynamic control (adding/removing dates and departure windows) directly through Telegram chat without touching code or maintaining an external database.',
+    keyFeatures: [
+      'Automated Hourly Monitoring (Runs every 1 hour via GitHub Actions with 0 server costs)',
+      'Reliable HTTP Requests via curl_cffi (Handles browser session headers to query RedBus route search smoothly)',
+      'Granular Seat Breakdown (Tracks total available seats, window seats 🪟, aisle seats 🚶, and live fares)',
+      'Direct 1-Click Booking Links (Pre-filtered checkout links sent right to your chat for quick booking)',
+      'Interactive Telegram Bot Controls (Live slash commands: /status, /dates, /add_date, /remove_date, /time, /help)',
+      'Dynamic Live Configuration (Adjust travel dates and departure windows directly in Telegram)',
+      'Git-Based State Persistence (Saves state.json and config.json back to the repository automatically)'
+    ],
+    pipelineSteps: [
+      {
+        stepNumber: 1,
+        title: 'Scheduled Trigger & Remote Config Ingestion',
+        method: 'ENGINE',
+        endpoint: 'GitHub Actions Cron (0 * * * *)',
+        description: 'Triggered automatically every hour (or on-demand via workflow_dispatch). Ingests config.json to load active journey dates, departure window filters, and Telegram chat credentials.',
+        highlights: [
+          'Zero server costs via GitHub Actions containerized runner',
+          'Dynamic date format normalization (DD-Mon-YYYY, YYYY-MM-DD, DD/MM/YYYY)'
+        ]
+      },
+      {
+        stepNumber: 2,
+        title: 'Route Inventory Query via curl_cffi',
+        method: 'GET',
+        endpoint: 'https://www.redbus.in/api/searchBus',
+        description: 'Executes requests against RedBus route APIs using curl_cffi with browser session headers to reliably fetch live bus inventory without getting tripped up by basic anti-bot filters.',
+        highlights: [
+          'Browser-like session headers and HTTP client handling',
+          'Extracts real-time seat counts, window/aisle breakdown, and operator fares'
+        ]
+      },
+      {
+        stepNumber: 3,
+        title: 'State Diffing & Vacancy Detection Engine',
+        method: 'CALC',
+        endpoint: 'Inventory Delta Evaluator & state.json',
+        description: 'Compares newly fetched bus inventory against previously cached snapshots in state.json. Filters out buses outside the configured departure time window and flags newly released seats.',
+        highlights: [
+          'Detects freshly opened bus routes and sudden seat cancellations',
+          'Prevents duplicate alert spamming for already notified inventories'
+        ]
+      },
+      {
+        stepNumber: 4,
+        title: 'Real-Time Telegram Alert & Command Polling',
+        method: 'POST',
+        endpoint: 'https://api.telegram.org/bot<TOKEN>/sendMessage',
+        description: 'Dispatches structured Markdown vacancy alerts with direct booking deep links to the user. Polls getUpdates to process interactive slash commands, updating config.json and committing changes back to git.',
+        highlights: [
+          'Sends rich message cards with operator, timing, window/aisle seat count, and deep links',
+          'Interactive persistent keyboard and slash command handlers (/status, /dates, /time)'
+        ]
+      }
+    ],
+    downloads: [
+      {
+        title: 'GitHub Source Repository',
+        type: 'code',
+        fileName: 'redbus_moni',
+        url: 'https://github.com/debpriya3011/redbus_moni',
+        size: 'Open Source',
+        description: 'Full open-source Python codebase with Telegram bot engine, GitHub Actions workflow, and configuration schemas.',
+        platform: 'Universal'
+      },
+      {
+        title: 'GitHub Actions Workflow',
+        type: 'code',
+        fileName: 'redbus-monitor.yml',
+        url: 'https://github.com/debpriya3011/redbus_moni/blob/main/.github/workflows/redbus-monitor.yml',
+        size: 'Cron Workflow',
+        description: 'Serverless hourly GitHub Actions automation configuration with state persistence and conflict resolution.',
+        platform: 'Universal'
+      },
+      {
+        title: 'Interactive Telegram Bot Engine',
+        type: 'code',
+        fileName: 'redbus_monitor_telegram.py',
+        url: 'https://github.com/debpriya3011/redbus_moni/blob/main/redbus_monitor_telegram.py',
+        size: 'Python Engine',
+        description: 'Core monitoring script handling WAF evasion, seat inventory diffing, and Telegram keyboard interactions.',
+        platform: 'Universal'
+      },
+      {
+        title: 'Dynamic Configuration Schema',
+        type: 'json',
+        fileName: 'config.json',
+        url: 'https://github.com/debpriya3011/redbus_moni/blob/main/config.json',
+        size: 'JSON Config',
+        description: 'JSON schema for journey dates, departure window filters, and Telegram update offsets.',
+        platform: 'Universal'
+      }
+    ],
+    placeholderGuide: [
+      {
+        key: 'TELEGRAM_BOT_TOKEN',
+        description: 'Your Telegram Bot Token generated via @BotFather.',
+        whereToFind: 'Telegram -> @BotFather -> /newbot or /token',
+        format: 'e.g., "123456789:ABCdefGHIjklMNOpqrSTUvwxYZ"'
+      },
+      {
+        key: 'TELEGRAM_CHAT_ID',
+        description: 'Your personal Telegram User ID or target Group Chat ID to receive instant seat alerts.',
+        whereToFind: 'Telegram -> @userinfobot (or via GET /getUpdates endpoint)',
+        format: 'e.g., "987654321"'
+      },
+      {
+        key: 'MONITORED_DATES',
+        description: 'List of target travel dates to track (supports multiple date formats like DD-Mon-YYYY, DD/MM/YYYY).',
+        whereToFind: 'Configured in config.json or dynamically via /dates command in Telegram',
+        format: 'e.g., ["15-Oct-2026", "24-Oct-2026"]'
+      },
+      {
+        key: 'DEPARTURE_WINDOW',
+        description: 'Filter start and end times (24h HH:MM format) to isolate preferred travel slots.',
+        whereToFind: 'Configured in config.json or updated via /time command in Telegram',
+        format: 'e.g., {"start": "10:00", "end": "16:00"}'
+      }
+    ],
+    codeSnippets: [
+      {
+        title: '1. TLS-Impersonated Route Scraper & Seat Breakdown Engine',
+        language: 'python',
+        code: `import os
+import json
+import logging
+from curl_cffi import requests
+
+def fetch_bus_inventory(source_id: str, dest_id: str, doj: str):
+    """
+    Queries RedBus search API with browser TLS/JA3 impersonation
+    to evade Cloudflare/Akamai WAF blocks and anti-bot rate limiters.
+    """
+    session = requests.Session(impersonate="chrome120")
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+        "Accept": "application/json, text/plain, */*",
+        "Referer": "https://www.redbus.in/",
+    }
+    url = "https://www.redbus.in/api/searchBus"
+    params = {"source": source_id, "destination": dest_id, "doj": doj}
+    
+    response = session.get(url, params=params, headers=headers, timeout=20)
+    response.raise_for_status()
+    data = response.json()
+    
+    matching_buses = []
+    for item in data.get("inv", []):
+        total_seats = item.get("availableSeats", 0)
+        if total_seats > 0:
+            matching_buses.append({
+                "bus_id": item.get("id"),
+                "operator": item.get("operatorName"),
+                "departure": item.get("departureTime"),
+                "arrival": item.get("arrivalTime"),
+                "fare": item.get("fare"),
+                "total_seats": total_seats,
+                "window_seats": item.get("windowSeats", 0),
+                "aisle_seats": item.get("aisleSeats", 0),
+                "booking_url": f"https://www.redbus.in/bus-tickets/{source_id}-to-{dest_id}?doj={doj}&busId={item.get('id')}"
+            })
+    return matching_buses`
+      },
+      {
+        title: '2. GitHub Actions Serverless Hourly Cron Workflow',
+        language: 'yaml',
+        code: `name: RedBus Route Monitor & Telegram Bot
+
+on:
+  schedule:
+    - cron: '0 * * * *'  # Runs every 1 hour automatically with zero server costs
+  workflow_dispatch:      # Allows on-demand manual trigger from GitHub UI
+
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write    # Required to sync state.json & config.json back to repo
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install Dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run Route Monitor & Telegram Dispatcher
+        env:
+          TELEGRAM_BOT_TOKEN: \${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: \${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python redbus_monitor_telegram.py
+
+      - name: Commit & Push State Sync
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add state.json config.json
+          git diff --quiet && git diff --staged --quiet || (git commit -m "chore: sync route inventory & bot state [skip ci]" && git push)`
+      },
+      {
+        title: '3. Telegram Slash Commands & Interactive Keyboard Handler',
+        language: 'python',
+        code: `def handle_telegram_command(command: str, args: list, config: dict):
+    """
+    Processes live bot slash commands to dynamically modify monitored dates,
+    departure time windows, and query instant status without touching code.
+    """
+    if command == "/status":
+        dates_str = "\\n".join(f"  • {d}" for d in config.get("dates", []))
+        win = config.get("departure_window", {})
+        return (
+            f"📊 *RedBus Monitor Status*\\n\\n"
+            f"📅 *Monitored Dates:*\\n{dates_str}\\n\\n"
+            f"⏰ *Departure Window:* {win.get('start', '00:00')} - {win.get('end', '23:59')}"
+        )
+        
+    elif command in ["/dates", "/set_dates"]:
+        if not args:
+            return "Current dates:\\n" + "\\n".join(f"• {d}" for d in config.get("dates", []))
+        valid_dates = [normalize_date(d) for d in args if is_valid_date(d)]
+        config["dates"] = valid_dates
+        save_config(config)
+        return f"✅ Monitored dates updated to: {', '.join(valid_dates)}"
+        
+    elif command == "/time":
+        if len(args) == 2:
+            config["departure_window"] = {"start": args[0], "end": args[1]}
+            save_config(config)
+            return f"✅ Departure window updated: {args[0]} to {args[1]}"
+        win = config.get("departure_window", {})
+        return f"Current window: {win.get('start', '00:00')} - {win.get('end', '23:59')}"`
+      }
+    ]
   }
 ];
+
