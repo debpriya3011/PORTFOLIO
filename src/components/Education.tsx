@@ -191,10 +191,10 @@ function EducationCard({ item, index }: { item: EducationItem; index: number }) 
       initial={{ opacity: 0, y: 20 }}
       animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
       transition={{ duration: 0.45, delay: index * 0.1 }}
-      className="glass rounded-xl p-5 card-hover border border-border/70 bg-card/40"
+      className="rounded-2xl p-5 card-hover border border-border bg-card shadow-sm"
     >
       <div className="flex items-start gap-3.5">
-        <div className="w-10 h-10 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center flex-shrink-0 text-foreground">
+        <div className="w-10 h-10 rounded-xl bg-sky-500/10 border border-sky-500/20 flex items-center justify-center flex-shrink-0 text-sky-600 dark:text-sky-400 shadow-xs">
           <GraduationCap className="w-5 h-5" />
         </div>
         <div className="flex-1 min-w-0">
@@ -207,7 +207,7 @@ function EducationCard({ item, index }: { item: EducationItem; index: number }) 
           <div className="flex items-center gap-3 mt-2 text-xs font-mono text-muted-foreground">
             {duration && (
               <span className="flex items-center gap-1.5">
-                <Calendar className="w-3.5 h-3.5" />
+                <Calendar className="w-3.5 h-3.5 text-sky-500" />
                 {duration}
               </span>
             )}
@@ -238,10 +238,10 @@ function CertificationCard({ cert, index }: { cert: Certification; index: number
       initial={{ opacity: 0, y: 20 }}
       animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
       transition={{ duration: 0.45, delay: index * 0.08 }}
-      className="glass rounded-xl p-5 card-hover border border-border/70 bg-card/40"
+      className="rounded-2xl p-5 card-hover border border-border bg-card shadow-sm"
     >
       <div className="flex items-start gap-3.5">
-        <div className="w-10 h-10 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center flex-shrink-0 text-amber-500">
+        <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center flex-shrink-0 text-amber-600 dark:text-amber-400 shadow-xs">
           <Award className="w-5 h-5" />
         </div>
         <div className="flex-1 min-w-0">
@@ -250,7 +250,7 @@ function CertificationCard({ cert, index }: { cert: Certification; index: number
           {issueDate && (
             <div className="flex items-center gap-3 mt-1.5 text-xs font-mono text-muted-foreground">
               <span className="flex items-center gap-1">
-                <Calendar className="w-3 h-3" />
+                <Calendar className="w-3 h-3 text-amber-500" />
                 {issueDate}
                 {expiryDate && ` - ${expiryDate}`}
               </span>
@@ -346,13 +346,13 @@ export default function Education() {
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           className="text-center mb-14"
         >
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-muted border border-border/80 mb-3.5">
-            <GraduationCap className="w-3.5 h-3.5 text-muted-foreground" />
-            <span className="text-xs font-mono font-medium text-foreground tracking-wide">Academic Background</span>
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-sky-500/10 border border-sky-500/20 text-sky-600 dark:text-sky-400 mb-4">
+            <GraduationCap className="w-3.5 h-3.5" />
+            <span className="text-xs font-mono font-medium tracking-wide">Academic Background</span>
           </div>
 
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight mb-3 text-foreground">
-            Education & Certifications
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight mb-3 text-foreground">
+            Education & <span className="gradient-brand">Certifications</span>
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto text-sm sm:text-base">
             Academic foundation combined with verified certifications from Anthropic, Forage, and industry programs.

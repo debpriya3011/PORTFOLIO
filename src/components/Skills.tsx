@@ -112,11 +112,11 @@ function SkillCard({ category, index }: { category: SkillCategory; index: number
       transition={{ duration: 0.5, delay: index * 0.08 }}
       className="group"
     >
-      <div className="glass rounded-2xl p-5 sm:p-6 h-full card-hover border border-border/70 bg-card/40">
+      <div className="rounded-2xl p-5 sm:p-6 h-full card-hover border border-border bg-card shadow-sm">
         {/* Header */}
         <div className="flex items-center gap-3 mb-5">
           <div
-            className="w-10 h-10 rounded-lg flex items-center justify-center border"
+            className="w-10 h-10 rounded-xl flex items-center justify-center border shadow-xs"
             style={{
               background: `${category.color}15`,
               borderColor: `${category.color}30`
@@ -262,13 +262,13 @@ export default function Skills() {
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           className="text-center mb-14"
         >
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-muted border border-border/80 mb-3.5">
-            <Workflow className="w-3.5 h-3.5 text-muted-foreground" />
-            <span className="text-xs font-mono font-medium text-foreground tracking-wide">Technical Stack</span>
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-sky-500/10 border border-sky-500/20 text-sky-600 dark:text-sky-400 mb-4">
+            <Workflow className="w-3.5 h-3.5" />
+            <span className="text-xs font-mono font-medium tracking-wide">Technical Stack</span>
           </div>
 
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight mb-3 text-foreground">
-            Skills & Core Competencies
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight mb-3 text-foreground">
+            Skills & <span className="gradient-brand">Core Competencies</span>
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto text-sm sm:text-base">
             Technical proficiencies across data engineering, pipeline design, automated workflows, and backend development.

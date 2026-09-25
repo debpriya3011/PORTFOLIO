@@ -83,12 +83,13 @@ export default function Guides() {
         animate={{ opacity: 1, y: 0 }}
         className="text-center max-w-3xl mx-auto mb-12"
       >
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-muted border border-border/80 text-foreground text-xs font-mono tracking-wide mb-3.5">
-          Production Blueprints & Technical Guides
+        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-sky-500/10 border border-sky-500/20 text-sky-600 dark:text-sky-400 text-xs font-mono font-medium tracking-wide mb-4">
+          <Workflow className="w-3.5 h-3.5" />
+          <span>Production Blueprints & Technical Guides</span>
         </div>
 
         <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight mb-4 text-foreground">
-          API Architecture & Automation Blueprints
+          API Architecture & <span className="gradient-brand">Automation Blueprints</span>
         </h1>
 
         <p className="text-muted-foreground text-base sm:text-lg leading-relaxed">
@@ -105,7 +106,7 @@ export default function Guides() {
             placeholder="Search blueprints, APIs, tags..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 text-sm rounded-xl bg-card/60 border border-border focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-colors"
+            className="w-full pl-10 pr-4 py-2 text-sm rounded-xl bg-card border border-border focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500 transition-colors shadow-xs"
           />
         </div>
 
@@ -116,8 +117,8 @@ export default function Guides() {
               key={tag}
               onClick={() => setSelectedTag(tag)}
               className={`px-3 py-1.5 rounded-lg text-xs font-medium font-mono whitespace-nowrap transition-all ${selectedTag === tag
-                ? 'bg-primary text-primary-foreground shadow-xs'
-                : 'bg-muted/60 text-muted-foreground hover:text-foreground hover:bg-muted'
+                ? 'bg-sky-500 text-white shadow-xs font-semibold'
+                : 'bg-card border border-border text-muted-foreground hover:text-foreground hover:border-sky-500/30'
                 }`}
             >
               {tag}
@@ -147,15 +148,15 @@ export default function Guides() {
               <div
                 key={guide.id}
                 onClick={() => selectBlueprint(guide)}
-                className={`rounded-2xl p-6 transition-all cursor-pointer flex flex-col justify-between relative group ${isSelected
-                  ? 'bg-card border-2 border-foreground/40 shadow-md ring-1 ring-foreground/20'
-                  : 'bg-card/40 border border-border/80 hover:border-border hover:bg-card/70'
+                className={`rounded-2xl p-6 transition-all duration-300 cursor-pointer flex flex-col justify-between relative group ${isSelected
+                  ? 'bg-card border-2 border-sky-500 shadow-lg shadow-sky-500/10 ring-1 ring-sky-500/30 -translate-y-1'
+                  : 'bg-card border border-border hover:border-sky-500/40 hover:shadow-md hover:-translate-y-0.5'
                   }`}
               >
                 {/* Active Selection Indicator Ribbon */}
                 {isSelected && (
-                  <div className="absolute -top-3 right-4 px-2.5 py-0.5 rounded-full bg-primary text-primary-foreground text-[10px] font-mono font-bold uppercase tracking-wider flex items-center gap-1 shadow-sm">
-                    <CheckCircle2 className="w-3 h-3 text-emerald-400" />
+                  <div className="absolute -top-3 right-4 px-2.5 py-0.5 rounded-full bg-sky-500 text-white text-[10px] font-mono font-bold uppercase tracking-wider flex items-center gap-1 shadow-sm">
+                    <CheckCircle2 className="w-3 h-3 text-white" />
                     Active Blueprint
                   </div>
                 )}
@@ -163,15 +164,15 @@ export default function Guides() {
                 <div>
                   <div className="flex items-center justify-between mb-3">
                     <span className={`px-2.5 py-0.5 rounded-md text-[10px] font-mono font-semibold ${isSelected
-                      ? 'bg-primary/10 text-foreground border border-primary/20'
-                      : 'bg-muted text-muted-foreground'
+                      ? 'bg-sky-500/10 text-sky-600 dark:text-sky-400 border border-sky-500/20'
+                      : 'bg-muted border border-border/60 text-muted-foreground'
                       }`}>
                       {guide.badge}
                     </span>
                     <div className="flex items-center gap-1.5">
                       {guide.liveUrl && (
-                        <span className="flex items-center gap-1 text-[10px] font-mono font-semibold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-md">
-                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                        <span className="flex items-center gap-1 text-[10px] font-mono font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-md">
+                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                           Live App
                         </span>
                       )}
@@ -179,7 +180,7 @@ export default function Guides() {
                     </div>
                   </div>
 
-                  <h4 className="font-bold text-base mb-2 transition-colors text-foreground group-hover:text-foreground/90">
+                  <h4 className="font-bold text-base mb-2 transition-colors text-foreground group-hover:text-sky-600 dark:group-hover:text-sky-400">
                     {guide.title}
                   </h4>
                   <p className="text-xs text-muted-foreground mb-4 line-clamp-2 leading-relaxed">
@@ -188,12 +189,12 @@ export default function Guides() {
 
                   <div className="flex flex-wrap gap-1.5 mb-4">
                     {guide.platforms.slice(0, 3).map((p) => (
-                      <span key={p} className="px-2 py-0.5 rounded text-[10px] font-mono bg-muted/60 text-muted-foreground border border-border/40">
+                      <span key={p} className="px-2 py-0.5 rounded text-[10px] font-mono bg-sky-500/5 dark:bg-sky-500/10 text-foreground/80 border border-sky-500/15">
                         {p}
                       </span>
                     ))}
                     {guide.platforms.length > 3 && (
-                      <span className="px-1.5 py-0.5 rounded text-[10px] font-mono bg-muted/60 text-muted-foreground">
+                      <span className="px-1.5 py-0.5 rounded text-[10px] font-mono bg-muted text-muted-foreground border border-border">
                         +{guide.platforms.length - 3}
                       </span>
                     )}
@@ -201,19 +202,19 @@ export default function Guides() {
                 </div>
 
                 <div className={`flex items-center justify-between pt-4 border-t text-xs font-semibold font-mono transition-colors ${isSelected
-                  ? 'border-border text-foreground'
-                  : 'border-border/40 text-muted-foreground group-hover:text-foreground'
+                  ? 'border-sky-500/20 text-sky-600 dark:text-sky-400'
+                  : 'border-border text-muted-foreground group-hover:text-foreground'
                   }`}>
                   <span>{isSelected ? 'Currently Inspecting ↓' : 'Inspect Blueprint'}</span>
-                  <ArrowRight className={`w-4 h-4 transition-transform ${isSelected ? 'rotate-90 text-foreground' : 'group-hover:translate-x-1'}`} />
+                  <ArrowRight className={`w-4 h-4 transition-transform ${isSelected ? 'rotate-90 text-sky-500' : 'group-hover:translate-x-1'}`} />
                 </div>
               </div>
             );
           })}
 
           {/* Future Guide Placeholder Card */}
-          <div className="rounded-2xl p-6 bg-card/20 border border-dashed border-border/80 flex flex-col items-center justify-center text-center min-h-[220px]">
-            <Workflow className="w-10 h-10 mb-3 text-muted-foreground/60 shrink-0" />
+          <div className="rounded-2xl p-6 bg-card/60 border border-dashed border-border flex flex-col items-center justify-center text-center min-h-[220px]">
+            <Workflow className="w-10 h-10 mb-3 text-muted-foreground/50 shrink-0" />
             <h4 className="font-semibold text-sm mb-1 text-foreground">More Blueprints Coming Soon</h4>
             <p className="text-xs text-muted-foreground max-w-xs">
               Upcoming guides on Multi-Tenant Webhooks, Distributed Scraping Engines, and Cloud Vector Pipelines.
@@ -230,7 +231,7 @@ export default function Guides() {
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.25 }}
-            className="rounded-3xl p-6 sm:p-8 bg-card/40 border border-border/80 backdrop-blur-xl shadow-lg relative overflow-hidden mb-12"
+            className="rounded-3xl p-6 sm:p-8 bg-card border border-border shadow-xl backdrop-blur-xl relative overflow-hidden mb-12"
           >
             {/* Top Metadata */}
             <div className="flex flex-wrap items-center gap-2.5 mb-4">
