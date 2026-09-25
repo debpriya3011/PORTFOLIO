@@ -129,7 +129,7 @@ export default function PostsWidget() {
       targetPath = '/posts';
     } else {
       userText = "No thanks, maybe later.";
-      botText = "No problem! You can always click the 'Blueprints' or 'Posts' tabs in the navbar or tap me anytime to see them. Have a great day! 👋";
+      botText = "No problem! You can always click the 'Blueprints' or 'Posts' tabs in the navbar or tap me anytime to see them. Have a great day!";
     }
 
     // Record user response in chat

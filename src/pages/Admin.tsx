@@ -248,13 +248,13 @@ function LoginForm() {
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-md p-8 glass rounded-2xl border border-border/80 bg-card/80 shadow-xl"
+        className="w-full max-w-md p-8 rounded-2xl border border-border bg-card shadow-xl"
       >
         <div className="text-center mb-6">
-          <div className="w-12 h-12 rounded-xl bg-primary text-primary-foreground flex items-center justify-center mx-auto mb-3 shadow-xs">
+          <div className="w-12 h-12 rounded-xl bg-sky-500/10 border border-sky-500/20 text-sky-600 dark:text-sky-400 flex items-center justify-center mx-auto mb-3 shadow-xs">
             <Lock className="w-5 h-5" />
           </div>
-          <h1 className="text-2xl font-extrabold tracking-tight text-foreground">Admin Portal</h1>
+          <h1 className="text-2xl font-extrabold tracking-tight text-foreground">Admin <span className="gradient-brand">Portal</span></h1>
           <p className="text-muted-foreground mt-1 text-xs font-mono">
             Exclusive Portal for Admin Authentication
           </p>
@@ -530,9 +530,9 @@ function LinkedInPostManager() {
   return (
     <div className="space-y-6">
       {/* Add New Post */}
-      <div className="glass rounded-xl p-6">
-        <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
-          <Linkedin className="w-5 h-5 text-violet-500" />
+      <div className="rounded-2xl p-6 border border-border bg-card shadow-sm">
+        <h3 className="text-lg font-bold mb-4 flex items-center gap-2 text-foreground">
+          <Linkedin className="w-5 h-5 text-sky-500" />
           Add LinkedIn Post
         </h3>
         <div className="flex flex-col sm:flex-row gap-3">
@@ -540,12 +540,12 @@ function LinkedInPostManager() {
             value={url}
             onChange={(e) => setUrl(e.target.value)}
             placeholder="https://www.linkedin.com/posts/..."
-            className="flex-1 min-w-0"
+            className="flex-1 min-w-0 bg-background border-border focus:border-sky-500"
           />
           <Button
             onClick={scrapePost}
             disabled={loading || !url}
-            className="bg-gradient-to-r from-violet-500 to-fuchsia-500 shrink-0"
+            className="bg-sky-600 hover:bg-sky-700 dark:bg-sky-500 dark:hover:bg-sky-600 text-white shrink-0 shadow-xs rounded-xl"
           >
             {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <RefreshCw className="w-4 h-4" />}
             Preview
@@ -556,15 +556,15 @@ function LinkedInPostManager() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mt-6 p-4 rounded-xl bg-muted/50"
+            className="mt-6 p-5 rounded-2xl bg-muted/40 border border-border"
           >
-            <h4 className="font-bold mb-2 flex items-center gap-2">
-              <User className="w-4 h-4" />
+            <h4 className="font-bold mb-2 flex items-center gap-2 text-foreground">
+              <User className="w-4 h-4 text-sky-500" />
               Preview
             </h4>
-            <p className="text-sm text-muted-foreground mb-2">{scrapedData.author_name}</p>
-            <p className="text-sm mb-4">{scrapedData.content}</p>
-            <Button onClick={savePost} className="w-full">
+            <p className="text-sm font-semibold text-foreground mb-2">{scrapedData.author_name}</p>
+            <p className="text-sm text-muted-foreground mb-4 leading-relaxed">{scrapedData.content}</p>
+            <Button onClick={savePost} className="w-full bg-sky-600 hover:bg-sky-700 text-white rounded-xl shadow-xs">
               <Save className="w-4 h-4 mr-2" />
               Save to Neon Database
             </Button>
@@ -574,13 +574,13 @@ function LinkedInPostManager() {
 
       {/* Existing Posts */}
       <div className="space-y-4">
-        <h3 className="text-lg font-bold flex items-center justify-between">
+        <h3 className="text-lg font-bold flex items-center justify-between text-foreground">
           <span>Posts in Neon ({posts.length})</span>
-          {fetching && <Loader2 className="w-4 h-4 animate-spin" />}
+          {fetching && <Loader2 className="w-4 h-4 animate-spin text-sky-500" />}
         </h3>
 
         {posts.length === 0 && !fetching ? (
-          <div className="glass rounded-xl p-8 text-center">
+          <div className="rounded-2xl p-8 text-center bg-card border border-border shadow-sm">
             <p className="text-muted-foreground">No posts yet. Add your first LinkedIn post above!</p>
           </div>
         ) : (
@@ -589,25 +589,24 @@ function LinkedInPostManager() {
               key={post.id}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="glass rounded-xl p-4"
+              className="rounded-2xl p-5 border border-border bg-card shadow-sm card-hover"
             >
-              <div className="flex items-start gap-3">
+              <div className="flex items-start gap-3.5">
                 <div className="flex-shrink-0">
                   {post.author_image ? (
-                    <img src={post.author_image.replace(/&amp;/g, '&')} alt="" className="w-10 h-10 rounded-full object-cover" />
+                    <img src={post.author_image.replace(/&amp;/g, '&')} alt="" className="w-10 h-10 rounded-full object-cover border border-border" />
                   ) : (
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-r from-violet-500 to-fuchsia-500 flex items-center justify-center">
-                      <span className="text-white font-bold">{post.author_name?.[0] || 'U'}</span>
+                    <div className="w-10 h-10 rounded-full bg-sky-500/10 border border-sky-500/20 text-sky-600 dark:text-sky-400 flex items-center justify-center font-bold shadow-xs">
+                      <span>{post.author_name?.[0] || 'U'}</span>
                     </div>
                   )}
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-start justify-between gap-2">
                     <div className="flex-1 min-w-0">
-                      <p className="font-medium truncate">{post.author_name || 'Unknown'}</p>
-                      <p className="text-xs text-muted-foreground">
+                      <p className="font-bold text-foreground truncate">{post.author_name || 'Unknown'}</p>
+                      <p className="text-xs font-mono text-muted-foreground">
                         {(() => {
-                          // Postgres BIGINT comes back as a numeric string e.g. "1725280423"
                           const epoch = parseInt(String(post.created_at), 10);
                           const d = new Date(epoch * 1000);
                           return isNaN(d.getTime()) ? 'Date unavailable' : d.toLocaleDateString();
@@ -618,12 +617,12 @@ function LinkedInPostManager() {
                       variant="ghost"
                       size="sm"
                       onClick={() => deletePost(post.id)}
-                      className="text-red-500 hover:text-red-600 flex-shrink-0"
+                      className="text-red-500 hover:text-red-600 hover:bg-red-500/10 flex-shrink-0 rounded-lg h-8 w-8 p-0"
                     >
                       <Trash2 className="w-4 h-4" />
                     </Button>
                   </div>
-                  <p className="text-sm text-muted-foreground mt-2 line-clamp-3">{post.content}</p>
+                  <p className="text-sm text-muted-foreground mt-2 line-clamp-3 leading-relaxed">{post.content}</p>
                 </div>
               </div>
             </motion.div>
@@ -710,9 +709,9 @@ function SkillsManager() {
   return (
     <div className="space-y-6">
       {/* Add Skill */}
-      <div className="glass rounded-xl p-6">
-        <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
-          <Award className="w-5 h-5 text-violet-500" />
+      <div className="rounded-2xl p-6 border border-border bg-card shadow-sm">
+        <h3 className="text-lg font-bold mb-4 flex items-center gap-2 text-foreground">
+          <Award className="w-5 h-5 text-sky-500" />
           Add Skill to Neon
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -720,9 +719,10 @@ function SkillsManager() {
             placeholder="Skill name (e.g., React, Python)"
             value={newSkill.name}
             onChange={(e) => setNewSkill({ ...newSkill, name: e.target.value })}
+            className="bg-background border-border focus:border-sky-500"
           />
           <select
-            className="px-3 py-2 rounded-md bg-background border"
+            className="px-3 py-2 rounded-xl bg-background border border-border text-foreground text-sm focus:border-sky-500 focus:outline-none"
             value={newSkill.category}
             onChange={(e) => setNewSkill({ ...newSkill, category: e.target.value })}
           >
@@ -731,7 +731,7 @@ function SkillsManager() {
             <option>Interpersonal Skills</option>
             <option>Languages</option>
           </select>
-          <Button onClick={addSkill} className="bg-gradient-to-r from-violet-500 to-fuchsia-500">
+          <Button onClick={addSkill} className="bg-sky-600 hover:bg-sky-700 text-white rounded-xl shadow-xs">
             <Plus className="w-4 h-4 mr-2" />
             Add Skill
           </Button>
@@ -741,7 +741,7 @@ function SkillsManager() {
       {/* Skills List */}
       {loading ? (
         <div className="flex justify-center py-8">
-          <Loader2 className="w-6 h-6 animate-spin text-violet-500" />
+          <Loader2 className="w-6 h-6 animate-spin text-sky-500" />
         </div>
       ) : (
         <div className="space-y-2">
@@ -753,17 +753,17 @@ function SkillsManager() {
                 key={skill.id}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="glass rounded-lg p-3 flex items-center justify-between"
+                className="rounded-xl p-3.5 flex items-center justify-between border border-border bg-card shadow-xs"
               >
                 <div>
-                  <span className="font-medium">{skill.name}</span>
-                  <span className="text-sm text-muted-foreground ml-2">({skill.category})</span>
+                  <span className="font-semibold text-foreground text-sm">{skill.name}</span>
+                  <span className="text-xs text-muted-foreground ml-2 font-mono">({skill.category})</span>
                 </div>
                 <Button
                   variant="ghost"
                   size="icon"
                   onClick={() => deleteSkill(skill.id)}
-                  className="text-red-500 hover:text-red-600"
+                  className="text-red-500 hover:text-red-600 hover:bg-red-500/10 h-8 w-8 rounded-lg"
                 >
                   <Trash2 className="w-4 h-4" />
                 </Button>
@@ -860,9 +860,9 @@ function ExperienceManager() {
   return (
     <div className="space-y-6">
       {/* Add Experience */}
-      <div className="glass rounded-xl p-6">
-        <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
-          <Briefcase className="w-5 h-5 text-violet-500" />
+      <div className="rounded-2xl p-6 border border-border bg-card shadow-sm">
+        <h3 className="text-lg font-bold mb-4 flex items-center gap-2 text-foreground">
+          <Briefcase className="w-5 h-5 text-sky-500" />
           Add Experience to Neon
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
@@ -870,19 +870,22 @@ function ExperienceManager() {
             placeholder="Company *"
             value={newExp.company}
             onChange={(e) => setNewExp({ ...newExp, company: e.target.value })}
+            className="bg-background border-border focus:border-sky-500"
           />
           <Input
             placeholder="Role *"
             value={newExp.role}
             onChange={(e) => setNewExp({ ...newExp, role: e.target.value })}
+            className="bg-background border-border focus:border-sky-500"
           />
           <Input
             placeholder="Location"
             value={newExp.location}
             onChange={(e) => setNewExp({ ...newExp, location: e.target.value })}
+            className="bg-background border-border focus:border-sky-500"
           />
           <select
-            className="px-3 py-2 rounded-md bg-background border"
+            className="px-3 py-2 rounded-xl bg-background border border-border text-foreground text-sm focus:border-sky-500 focus:outline-none"
             value={newExp.type}
             onChange={(e) => setNewExp({ ...newExp, type: e.target.value })}
           >
@@ -895,21 +898,23 @@ function ExperienceManager() {
             placeholder="Start Date (e.g., Jan 2020)"
             value={newExp.start_date}
             onChange={(e) => setNewExp({ ...newExp, start_date: e.target.value })}
+            className="bg-background border-border focus:border-sky-500"
           />
           <Input
             placeholder="End Date (or 'Present')"
             value={newExp.end_date}
             onChange={(e) => setNewExp({ ...newExp, end_date: e.target.value })}
+            className="bg-background border-border focus:border-sky-500"
           />
         </div>
         <Textarea
           placeholder="Description (use bullet points with -)"
           value={newExp.description}
           onChange={(e) => setNewExp({ ...newExp, description: e.target.value })}
-          className="mb-4"
+          className="mb-4 bg-background border-border focus:border-sky-500 resize-none"
           rows={4}
         />
-        <Button onClick={addExperience} className="bg-gradient-to-r from-violet-500 to-fuchsia-500">
+        <Button onClick={addExperience} className="bg-sky-600 hover:bg-sky-700 text-white rounded-xl shadow-xs">
           <Plus className="w-4 h-4 mr-2" />
           Add Experience
         </Button>
@@ -918,7 +923,7 @@ function ExperienceManager() {
       {/* Experience List */}
       {loading ? (
         <div className="flex justify-center py-8">
-          <Loader2 className="w-6 h-6 animate-spin text-violet-500" />
+          <Loader2 className="w-6 h-6 animate-spin text-sky-500" />
         </div>
       ) : (
         <div className="space-y-4">
@@ -930,12 +935,12 @@ function ExperienceManager() {
                 key={exp.id}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="glass rounded-xl p-4 flex items-center justify-between gap-2"
+                className="rounded-2xl p-5 border border-border bg-card shadow-sm flex items-center justify-between gap-3 card-hover"
               >
                 <div className="flex-1 min-w-0">
-                  <p className="font-bold truncate">{exp.role}</p>
-                  <p className="text-sm text-violet-500 truncate">{exp.company}</p>
-                  <p className="text-xs text-muted-foreground break-words">
+                  <p className="font-bold text-foreground text-sm sm:text-base truncate">{exp.role}</p>
+                  <p className="text-xs sm:text-sm font-semibold text-sky-600 dark:text-sky-400 truncate">{exp.company}</p>
+                  <p className="text-xs font-mono text-muted-foreground break-words mt-1">
                     {exp.start_date} - {exp.end_date || 'Present'} • {exp.location}
                   </p>
                 </div>
@@ -943,7 +948,7 @@ function ExperienceManager() {
                   variant="ghost"
                   size="icon"
                   onClick={() => deleteExperience(exp.id)}
-                  className="text-red-500 hover:text-red-600"
+                  className="text-red-500 hover:text-red-600 hover:bg-red-500/10 rounded-lg h-8 w-8 shrink-0"
                 >
                   <Trash2 className="w-4 h-4" />
                 </Button>
@@ -1069,18 +1074,18 @@ function SecurityManager() {
   };
 
   return (
-    <div className="glass rounded-2xl p-6 space-y-6 max-w-2xl mx-auto">
-      <div className="flex items-center justify-between border-b border-border/40 pb-4">
+    <div className="rounded-2xl border border-border bg-card shadow-sm p-6 space-y-6 max-w-2xl mx-auto">
+      <div className="flex items-center justify-between border-b border-border/60 pb-4">
         <div className="flex items-center gap-3">
-          <div className={`p-3 rounded-xl ${totpEnabled ? 'bg-emerald-500/10 text-emerald-500' : 'bg-amber-500/10 text-amber-500'}`}>
+          <div className={`p-3 rounded-xl shadow-xs ${totpEnabled ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20' : 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20'}`}>
             <ShieldCheck className="w-6 h-6" />
           </div>
           <div>
-            <h2 className="text-xl font-bold">Google Authenticator (2FA)</h2>
-            <p className="text-xs text-muted-foreground">Admin Multi-Factor Authentication</p>
+            <h2 className="text-xl font-bold text-foreground">Google Authenticator (2FA)</h2>
+            <p className="text-xs text-muted-foreground font-mono">Admin Multi-Factor Authentication</p>
           </div>
         </div>
-        <div className={`px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1.5 ${totpEnabled ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-amber-500/10 text-amber-400 border border-amber-500/20'}`}>
+        <div className={`px-3 py-1 rounded-full text-xs font-mono font-semibold flex items-center gap-1.5 ${totpEnabled ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20' : 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20'}`}>
           <span className={`w-2 h-2 rounded-full ${totpEnabled ? 'bg-emerald-500 animate-pulse' : 'bg-amber-500'}`} />
           {totpEnabled ? '2FA Enabled' : '2FA Disabled'}
         </div>
@@ -1088,22 +1093,22 @@ function SecurityManager() {
 
       {loading ? (
         <div className="flex justify-center py-8">
-          <Loader2 className="w-6 h-6 animate-spin text-violet-500" />
+          <Loader2 className="w-6 h-6 animate-spin text-sky-500" />
         </div>
       ) : !totpEnabled && !setupData ? (
         <div className="text-center py-6 space-y-4">
-          <div className="w-16 h-16 rounded-full bg-violet-500/10 text-violet-500 flex items-center justify-center mx-auto">
+          <div className="w-16 h-16 rounded-2xl bg-sky-500/10 text-sky-600 dark:text-sky-400 border border-sky-500/20 flex items-center justify-center mx-auto shadow-xs">
             <Smartphone className="w-8 h-8" />
           </div>
           <div>
-            <h3 className="text-lg font-semibold">Secure Admin Account with Google Authenticator</h3>
-            <p className="text-sm text-muted-foreground max-w-md mx-auto mt-1">
+            <h3 className="text-lg font-bold text-foreground">Secure Admin Account with Google Authenticator</h3>
+            <p className="text-sm text-muted-foreground max-w-md mx-auto mt-1 leading-relaxed">
               Use any TOTP authenticator app (Google Authenticator, Authy, 1Password) to generate 2FA security codes for instant admin login.
             </p>
           </div>
           <Button
             onClick={handleStartSetup}
-            className="bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white gap-2 font-medium px-6"
+            className="bg-sky-600 hover:bg-sky-700 dark:bg-sky-500 dark:hover:bg-sky-600 text-white gap-2 font-medium px-6 rounded-xl shadow-xs"
           >
             <QrCode className="w-4 h-4" />
             Set Up Google Authenticator
@@ -1111,21 +1116,21 @@ function SecurityManager() {
         </div>
       ) : setupData ? (
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
-          <div className="p-4 bg-violet-500/5 rounded-xl border border-violet-500/20 text-sm text-violet-300">
-            <p className="font-semibold mb-1">Step 1: Scan QR Code with Google Authenticator App</p>
+          <div className="p-4 bg-sky-500/10 rounded-xl border border-sky-500/20 text-sm text-sky-700 dark:text-sky-300 font-medium">
+            <p className="font-bold mb-1">Step 1: Scan QR Code with Google Authenticator App</p>
             <p className="text-xs text-muted-foreground">Open Google Authenticator on your mobile phone, tap the <strong>+</strong> button, and choose <strong>Scan a QR code</strong>.</p>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-6 p-4 bg-background/50 rounded-2xl border border-border/40">
-            <div className="p-3 bg-white rounded-xl shadow-lg">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-6 p-5 bg-muted/30 rounded-2xl border border-border">
+            <div className="p-3 bg-white rounded-xl shadow-md border border-border">
               <img src={setupData.qrCodeUrl} alt="Google Authenticator QR Code" className="w-44 h-44 rounded" />
             </div>
             <div className="space-y-3 max-w-xs text-center sm:text-left">
               <div>
-                <p className="text-xs text-muted-foreground uppercase font-semibold">Manual Setup Key</p>
-                <div className="flex items-center gap-2 mt-1 bg-muted/50 p-2 rounded-lg font-mono text-xs break-all">
+                <p className="text-xs text-muted-foreground uppercase font-mono font-semibold">Manual Setup Key</p>
+                <div className="flex items-center gap-2 mt-1 bg-card border border-border p-2 rounded-lg font-mono text-xs break-all">
                   <span>{setupData.secret}</span>
-                  <Button variant="ghost" size="icon" onClick={copySecret} className="h-6 w-6 shrink-0">
+                  <Button variant="ghost" size="icon" onClick={copySecret} className="h-6 w-6 shrink-0 text-muted-foreground hover:text-foreground">
                     {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
                   </Button>
                 </div>
@@ -1137,20 +1142,20 @@ function SecurityManager() {
           </div>
 
           <div className="space-y-3 pt-2">
-            <label className="block text-sm font-semibold">Step 2: Enter 6-Digit Code from App to Verify</label>
+            <label className="block text-sm font-semibold text-foreground">Step 2: Enter 6-Digit Code from App to Verify</label>
             <div className="flex gap-2">
               <Input
                 type="text"
                 value={verifyCode}
                 onChange={(e) => setVerifyCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
                 placeholder="123456"
-                className="font-mono text-center tracking-widest text-lg h-11"
+                className="font-mono text-center tracking-widest text-lg h-11 bg-background border-border"
                 maxLength={6}
               />
               <Button
                 onClick={handleVerifySetup}
                 disabled={verifying || verifyCode.length !== 6}
-                className="bg-emerald-600 hover:bg-emerald-700 text-white font-medium px-6 h-11 shrink-0"
+                className="bg-emerald-600 hover:bg-emerald-700 text-white font-medium px-6 h-11 shrink-0 rounded-xl shadow-xs"
               >
                 {verifying ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Verify & Enable 2FA'}
               </Button>
@@ -1158,7 +1163,7 @@ function SecurityManager() {
           </div>
 
           <div className="flex justify-end">
-            <Button variant="ghost" size="sm" onClick={() => setSetupData(null)} className="text-xs text-muted-foreground">
+            <Button variant="ghost" size="sm" onClick={() => setSetupData(null)} className="text-xs text-muted-foreground hover:text-foreground">
               Cancel Setup
             </Button>
           </div>
@@ -1166,9 +1171,9 @@ function SecurityManager() {
       ) : (
         <div className="space-y-4">
           <div className="p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-xl flex items-start gap-3">
-            <ShieldCheck className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
+            <ShieldCheck className="w-5 h-5 text-emerald-500 shrink-0 mt-0.5" />
             <div className="text-sm">
-              <p className="font-semibold text-emerald-300">Google Authenticator is Active</p>
+              <p className="font-semibold text-emerald-600 dark:text-emerald-400">Google Authenticator is Active</p>
               <p className="text-xs text-muted-foreground mt-0.5">
                 Your admin account is protected by 2FA. You can log into the Admin portal anytime using your 6-digit Google Authenticator verification codes.
               </p>
@@ -1179,13 +1184,13 @@ function SecurityManager() {
             <Button
               variant="outline"
               onClick={() => setShowDisableForm(true)}
-              className="text-red-400 border-red-500/20 hover:bg-red-500/10 text-xs"
+              className="text-red-500 border-red-500/20 hover:bg-red-500/10 text-xs rounded-xl font-mono"
             >
               Disable Google Authenticator
             </Button>
           ) : (
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="p-4 glass rounded-xl space-y-3 border border-red-500/30">
-              <p className="text-sm font-semibold text-red-400">Confirm Disabling 2FA</p>
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="p-4 rounded-xl space-y-3 border border-red-500/30 bg-card shadow-sm">
+              <p className="text-sm font-semibold text-red-500">Confirm Disabling 2FA</p>
               <p className="text-xs text-muted-foreground">Enter your 6-digit code from Google Authenticator to confirm disabling 2FA.</p>
               <div className="flex gap-2">
                 <Input
@@ -1193,13 +1198,13 @@ function SecurityManager() {
                   value={disableCode}
                   onChange={(e) => setDisableCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
                   placeholder="123456"
-                  className="font-mono text-center tracking-widest text-sm"
+                  className="font-mono text-center tracking-widest text-sm bg-background border-border"
                   maxLength={6}
                 />
                 <Button
                   onClick={handleDisableTotp}
                   disabled={disabling}
-                  className="bg-red-600 hover:bg-red-700 text-white text-xs px-4 shrink-0"
+                  className="bg-red-600 hover:bg-red-700 text-white text-xs px-4 shrink-0 rounded-xl"
                 >
                   {disabling ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : 'Confirm Disable'}
                 </Button>
@@ -1276,23 +1281,23 @@ function MessagesManager() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between glass rounded-xl p-4">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-violet-500/10 text-violet-500 flex items-center justify-center">
+      <div className="flex items-center justify-between rounded-2xl p-5 border border-border bg-card shadow-sm">
+        <div className="flex items-center gap-3.5">
+          <div className="w-10 h-10 rounded-xl bg-sky-500/10 text-sky-600 dark:text-sky-400 border border-sky-500/20 flex items-center justify-center shadow-xs">
             <MessageSquare className="w-5 h-5" />
           </div>
           <div>
-            <h2 className="text-lg font-bold">Contact Messages Inbox</h2>
-            <p className="text-xs text-muted-foreground">Visitor submissions from portfolio contact form</p>
+            <h2 className="text-lg font-bold text-foreground">Contact Messages Inbox</h2>
+            <p className="text-xs text-muted-foreground font-mono">Visitor submissions from portfolio contact form</p>
           </div>
         </div>
         <div className="flex items-center gap-3">
           {unreadCount > 0 && (
-            <span className="px-3 py-1 rounded-full text-xs font-semibold bg-violet-500 text-white animate-pulse">
+            <span className="px-3 py-1 rounded-full text-xs font-mono font-bold bg-sky-500 text-white animate-pulse">
               {unreadCount} Unread
             </span>
           )}
-          <Button variant="ghost" size="icon" onClick={fetchMessages}>
+          <Button variant="ghost" size="icon" onClick={fetchMessages} className="rounded-lg hover:bg-muted text-muted-foreground hover:text-foreground">
             <RefreshCw className="w-4 h-4" />
           </Button>
         </div>
@@ -1300,12 +1305,12 @@ function MessagesManager() {
 
       {loading ? (
         <div className="flex justify-center py-12">
-          <Loader2 className="w-6 h-6 animate-spin text-violet-500" />
+          <Loader2 className="w-6 h-6 animate-spin text-sky-500" />
         </div>
       ) : messages.length === 0 ? (
-        <div className="text-center py-12 glass rounded-2xl space-y-3">
-          <Inbox className="w-10 h-10 text-muted-foreground mx-auto" />
-          <h3 className="text-base font-semibold">No messages yet</h3>
+        <div className="text-center py-12 rounded-2xl border border-border bg-card shadow-sm space-y-3">
+          <Inbox className="w-10 h-10 text-muted-foreground/50 mx-auto" />
+          <h3 className="text-base font-bold text-foreground">No messages yet</h3>
           <p className="text-xs text-muted-foreground max-w-sm mx-auto">
             Messages submitted by visitors through your contact form will appear here.
           </p>
@@ -1317,29 +1322,29 @@ function MessagesManager() {
               key={msg.id}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              className={`glass rounded-xl p-5 border transition-all ${!msg.is_read ? 'border-violet-500/40 bg-violet-500/5' : 'border-border/40'
+              className={`rounded-2xl p-5 border transition-all bg-card shadow-sm ${!msg.is_read ? 'border-sky-500/50 ring-1 ring-sky-500/20' : 'border-border'
                 }`}
             >
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3 pb-3 border-b border-border/40">
-                <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-violet-500 to-fuchsia-500 flex items-center justify-center text-white text-xs font-bold">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3 pb-3 border-b border-border/60">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-8 h-8 rounded-full bg-sky-500/10 border border-sky-500/20 flex items-center justify-center text-sky-600 dark:text-sky-400 text-xs font-bold shadow-xs">
                     {msg.name ? msg.name.charAt(0).toUpperCase() : 'U'}
                   </div>
                   <div>
-                    <h4 className="font-semibold text-sm flex items-center gap-2">
+                    <h4 className="font-bold text-sm text-foreground flex items-center gap-2">
                       {msg.name}
                       {!msg.is_read && (
-                        <span className="w-2 h-2 rounded-full bg-violet-500" />
+                        <span className="w-2 h-2 rounded-full bg-sky-500" />
                       )}
                     </h4>
-                    <a href={`mailto:${msg.email}`} className="text-xs text-violet-400 hover:underline flex items-center gap-1">
+                    <a href={`mailto:${msg.email}`} className="text-xs font-mono text-sky-600 dark:text-sky-400 hover:underline flex items-center gap-1">
                       <Mail className="w-3 h-3" />
                       {msg.email}
                     </a>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2 self-end sm:self-center text-xs text-muted-foreground">
+                <div className="flex items-center gap-2 self-end sm:self-center text-xs text-muted-foreground font-mono">
                   <span className="flex items-center gap-1">
                     <Clock className="w-3.5 h-3.5" />
                     {new Date(Number(msg.created_at) * 1000).toLocaleString()}
@@ -1349,7 +1354,7 @@ function MessagesManager() {
                       variant="ghost"
                       size="sm"
                       onClick={() => markAsRead(msg.id)}
-                      className="text-xs text-emerald-400 hover:bg-emerald-500/10 h-8 px-2"
+                      className="text-xs text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/10 h-8 px-2 rounded-lg"
                     >
                       <CheckCheck className="w-3.5 h-3.5 mr-1" />
                       Mark Read
@@ -1359,7 +1364,7 @@ function MessagesManager() {
                     variant="ghost"
                     size="icon"
                     onClick={() => deleteMessage(msg.id)}
-                    className="text-red-400 hover:bg-red-500/10 h-8 w-8"
+                    className="text-red-500 hover:bg-red-500/10 h-8 w-8 rounded-lg"
                   >
                     <Trash2 className="w-4 h-4" />
                   </Button>
@@ -1387,33 +1392,35 @@ function AdminDashboard() {
           animate={{ opacity: 1, y: 0 }}
           className="mb-8"
         >
-          <h1 className="text-2xl sm:text-3xl font-bold">Admin Dashboard</h1>
-          <p className="text-muted-foreground">Manage your portfolio content in Neon PostgreSQL</p>
+          <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-foreground">
+            Admin <span className="gradient-brand">Dashboard</span>
+          </h1>
+          <p className="text-muted-foreground mt-1 text-sm sm:text-base">Manage your portfolio content in Neon PostgreSQL</p>
         </motion.div>
 
         <Tabs defaultValue="posts" className="space-y-6">
-          <TabsList className="flex w-full justify-center overflow-x-auto gap-1 h-auto p-1 max-w-xl mx-auto">
+          <TabsList className="flex w-full justify-center overflow-x-auto gap-1.5 h-auto p-1.5 max-w-xl mx-auto bg-card border border-border rounded-2xl shadow-xs">
             <TabsTrigger
               value="posts"
-              className="flex items-center gap-2 text-xs py-2 px-4 whitespace-nowrap"
+              className="flex items-center gap-2 text-xs font-mono py-2 px-4 whitespace-nowrap rounded-xl data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
             >
-              <Linkedin className="w-4 h-4 shrink-0" />
+              <Linkedin className="w-4 h-4 shrink-0 text-sky-500" />
               <span>Posts</span>
             </TabsTrigger>
-            <TabsTrigger value="messages" className="flex items-center gap-2 text-xs py-2 px-4 whitespace-nowrap">
-              <MessageSquare className="w-4 h-4 shrink-0 text-violet-400" />
+            <TabsTrigger value="messages" className="flex items-center gap-2 text-xs font-mono py-2 px-4 whitespace-nowrap rounded-xl data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+              <MessageSquare className="w-4 h-4 shrink-0 text-sky-500" />
               <span>Messages</span>
             </TabsTrigger>
-            <TabsTrigger value="skills" className="flex items-center gap-2 text-xs py-2 px-4 whitespace-nowrap">
-              <Award className="w-4 h-4 shrink-0" />
+            <TabsTrigger value="skills" className="flex items-center gap-2 text-xs font-mono py-2 px-4 whitespace-nowrap rounded-xl data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+              <Award className="w-4 h-4 shrink-0 text-sky-500" />
               <span>Skills</span>
             </TabsTrigger>
-            <TabsTrigger value="experience" className="flex items-center gap-2 text-xs py-2 px-4 whitespace-nowrap">
-              <Briefcase className="w-4 h-4 shrink-0" />
+            <TabsTrigger value="experience" className="flex items-center gap-2 text-xs font-mono py-2 px-4 whitespace-nowrap rounded-xl data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+              <Briefcase className="w-4 h-4 shrink-0 text-sky-500" />
               <span>Exp</span>
             </TabsTrigger>
-            <TabsTrigger value="security" className="flex items-center gap-2 text-xs py-2 px-4 whitespace-nowrap">
-              <ShieldCheck className="w-4 h-4 shrink-0 text-emerald-400" />
+            <TabsTrigger value="security" className="flex items-center gap-2 text-xs font-mono py-2 px-4 whitespace-nowrap rounded-xl data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+              <ShieldCheck className="w-4 h-4 shrink-0 text-emerald-500" />
               <span>Security 2FA</span>
             </TabsTrigger>
           </TabsList>
