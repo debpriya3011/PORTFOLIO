@@ -10,7 +10,7 @@ dotenv.config({ path: path.join(__dirname, '.env') });
 dotenv.config({ path: path.join(__dirname, '../.env') });
 dotenv.config();
 
-const rawDbUrl = process.env.DATABASE_URL || 'postgresql://neondb_owner:npg_EjafupZ9YQI4@ep-old-morning-aix9an18-pooler.c-4.us-east-1.aws.neon.tech/neondb?sslmode=require';
+const rawDbUrl = process.env.DATABASE_URL || '';
 const dbUrl = rawDbUrl.replace(/&?channel_binding=[^&]+/g, '');
 
 // Create PostgreSQL pool (Neon)
