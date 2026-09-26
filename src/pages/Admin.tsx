@@ -303,7 +303,13 @@ function LoginForm() {
         </div>
 
         {loginMode === 'totp' ? (
-          <div className="space-y-5">
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              if (totpCode.length === 6 && !loading) verifyTotp();
+            }}
+            className="space-y-5"
+          >
             <div className="text-center space-y-3">
               <label className="block text-xs font-mono font-medium text-foreground">
                 Google Authenticator Code
@@ -314,6 +320,12 @@ function LoginForm() {
                   type="text"
                   value={totpCode}
                   onChange={(e) => setTotpCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && totpCode.length === 6 && !loading) {
+                      e.preventDefault();
+                      verifyTotp();
+                    }
+                  }}
                   placeholder="000000"
                   className="pl-9 pr-4 font-mono tracking-[0.2em] text-center text-xl h-11 rounded-lg border-border focus-visible:ring-1 focus-visible:ring-primary shadow-xs bg-background/50"
                   maxLength={6}
@@ -326,6 +338,7 @@ function LoginForm() {
             </div>
 
             <Button
+              type="submit"
               onClick={verifyTotp}
               disabled={loading || totpCode.length !== 6}
               className="w-full bg-primary text-primary-foreground hover:bg-primary/90 gap-2 h-10 text-xs font-mono font-semibold rounded-lg shadow-xs"
@@ -340,10 +353,19 @@ function LoginForm() {
                 <strong>First time setup?</strong> Log in using Google Sign-In or Email OTP above first, then open <strong>Admin Dashboard &gt; Security 2FA</strong> to scan your QR code.
               </p>
             </div>
-          </div>
+          </form>
         ) : (
           /* OTP Section */
-          <div className="space-y-4">
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              if (!loading && email) {
+                if (otpSent) verifyOTP();
+                else sendOTP();
+              }
+            }}
+            className="space-y-4"
+          >
             <div>
               <label className="block text-xs font-mono font-medium mb-1.5 text-foreground">Email</label>
               <div className="relative">
@@ -352,6 +374,13 @@ function LoginForm() {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && email && !loading) {
+                      e.preventDefault();
+                      if (otpSent) verifyOTP();
+                      else sendOTP();
+                    }
+                  }}
                   placeholder="abcd@gmail.com"
                   className="pl-10"
                   disabled={otpSent}
@@ -369,9 +398,16 @@ function LoginForm() {
                   type="text"
                   value={otp}
                   onChange={(e) => setOtp(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && otp.length === 6 && !loading) {
+                      e.preventDefault();
+                      verifyOTP();
+                    }
+                  }}
                   placeholder="Enter 6-digit OTP"
                   maxLength={6}
                   className="font-mono"
+                  autoFocus
                 />
                 <p className="text-xs text-muted-foreground mt-2 font-mono">
                   Check your Gmail inbox/spam for the OTP
@@ -380,6 +416,7 @@ function LoginForm() {
             )}
 
             <Button
+              type="submit"
               onClick={otpSent ? verifyOTP : sendOTP}
               disabled={loading || !email}
               className="w-full bg-primary text-primary-foreground hover:bg-primary/90 font-mono text-xs"
@@ -395,6 +432,7 @@ function LoginForm() {
 
             {otpSent && (
               <Button
+                type="button"
                 variant="ghost"
                 onClick={() => {
                   setOtpSent(false);
@@ -406,7 +444,7 @@ function LoginForm() {
                 Resend OTP
               </Button>
             )}
-          </div>
+          </form>
         )}
       </motion.div>
     </div>
@@ -1148,6 +1186,12 @@ function SecurityManager() {
                 type="text"
                 value={verifyCode}
                 onChange={(e) => setVerifyCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && verifyCode.length === 6 && !verifying) {
+                    e.preventDefault();
+                    handleVerifySetup();
+                  }
+                }}
                 placeholder="123456"
                 className="font-mono text-center tracking-widest text-lg h-11 bg-background border-border"
                 maxLength={6}

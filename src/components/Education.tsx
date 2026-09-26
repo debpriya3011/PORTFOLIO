@@ -36,6 +36,7 @@ const defaultEducation: EducationItem[] = [
   {
     institution: 'B.P. Poddar Institute Of Management and Technology',
     duration: '2021 - 2025',
+    grade: '8.15 CGPA',
     skills: ['Communication', 'Hindi', 'Computer Science', 'Machine Learning', 'Microsoft PowerPoint', 'Project Management', 'Engineering', 'PostgreSQL', 'Research Skills', 'Teamwork', 'English', 'Leadership', 'Problem Solving']
   },
   {
