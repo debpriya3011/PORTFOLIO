@@ -202,7 +202,7 @@ export default function WorkflowVisualization() {
                   >
                     {/* Node Card Box */}
                     <div
-                      className="w-[52px] h-[52px] sm:w-[68px] sm:h-[68px] md:w-[76px] md:h-[76px] rounded-xl p-2 flex flex-col items-center justify-center transition-all duration-200 backdrop-blur-md"
+                      className="w-[48px] h-[52px] min-[390px]:w-[52px] min-[390px]:h-[54px] sm:w-[70px] sm:h-[70px] md:w-[78px] md:h-[78px] rounded-xl px-1 py-1.5 sm:p-2 flex flex-col items-center justify-center transition-all duration-200 backdrop-blur-md overflow-hidden"
                       style={{
                         background: isDark
                           ? 'rgba(15, 23, 42, 0.85)'
@@ -222,24 +222,24 @@ export default function WorkflowVisualization() {
                       }}
                     >
                       {/* Icon */}
-                      <div className="relative">
+                      <div className="relative flex-shrink-0">
                         <Icon
-                          className="w-4 h-4 sm:w-5 sm:h-5 transition-transform duration-200 group-hover:scale-110"
+                          className="w-3.5 h-3.5 sm:w-5 sm:h-5 transition-transform duration-200 group-hover:scale-110"
                           style={{ color: node.color }}
                         />
                       </div>
 
                       {/* Node Label */}
                       <span
-                        className="text-[8px] sm:text-[9.5px] md:text-[10px] font-medium font-mono text-center mt-1 leading-tight tracking-tight whitespace-nowrap transition-colors text-foreground"
+                        className="text-[7px] min-[390px]:text-[8px] sm:text-[9px] md:text-[10px] font-medium font-mono text-center mt-0.5 sm:mt-1 leading-[1.1] sm:leading-tight tracking-tight transition-colors text-foreground px-0.5 whitespace-pre-line"
                       >
-                        {node.label}
+                        {node.label.replace(' ', '\n')}
                       </span>
                     </div>
 
                     {/* Subtle status dot under node */}
                     <div
-                      className="absolute -bottom-1 w-1.5 h-1.5 rounded-full opacity-80"
+                      className="absolute -bottom-1 sm:-bottom-1.5 w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full opacity-80"
                       style={{ background: node.color }}
                     />
                   </motion.div>
