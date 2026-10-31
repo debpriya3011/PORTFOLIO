@@ -1,6 +1,6 @@
 # Debpriya Santra — Engineering Portfolio & Architecture Blueprints
 
-🌐 **Live Demo:** [portfolio-7xje.onrender.com](https://portfolio-7xje.onrender.com/)
+🌐 **Live Demo :** [portfolio-7xje.onrender.com](https://portfolio-7xje.onrender.com/)
 
 A modern, high-performance personal portfolio and engineering platform engineered with a bespoke dark/light technical design system, interactive data pipeline visualization, production automation blueprints, real-time LinkedIn activity sync, and an authenticated administrative suite.
 
