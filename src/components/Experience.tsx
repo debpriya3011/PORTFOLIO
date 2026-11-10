@@ -22,7 +22,7 @@ const defaultExperiences: ExperienceItem[] = [
     role: 'Data Engineer',
     type: 'Full-time',
     location: 'Kolkata, West Bengal, India',
-    duration: 'Jul 2025 - Present (1 yr 2 mos)',
+    duration: 'Jul 2025 - Present (1 yr 4 mos)',
     description: [
       'Built and optimized large-scale data pipelines for web scraping, extraction, transformation, and ingestion',
       'Developed automated data collection and workflows using n8n, Make, and custom automation scripts',
